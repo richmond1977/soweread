@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>行動版優化指南 - 潤讀 So We Read</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #faf8f5;
+      color: #3d3d3d;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #1a1a1a;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e8dfd6;
+      padding-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      color: #1a1a1a;
+      margin: 40px 0 20px;
+      border-left: 4px solid #6b5b4d;
+      padding-left: 15px;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      color: #3d3d3d;
+      margin: 25px 0 15px;
+      font-weight: 600;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-bottom: 15px;
+      line-height: 1.8;
+    }
+
+    ul, ol {
+      margin-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    li {
+      margin-bottom: 12px;
+    }
+
+    code {
+      background: #f0ebe5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      color: #6b5b4d;
+    }
+
+    .specs {
+      background: #f0ebe5;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 20px 0;
+      border-left: 4px solid #6b5b4d;
+    }
+
+    .specs strong {
+      color: #6b5b4d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    th, td {
+      border: 1px solid #e8dfd6;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f0ebe5;
+      font-weight: 600;
+      color: #6b5b4d;
+    }
+
+    .checklist {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      margin: 20px 0;
+    }
+
+    .checklist li {
+      list-style: none;
+      padding-left: 30px;
+      position: relative;
+    }
+
+    .checklist li:before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: #6b5b4d;
+      font-weight: bold;
+    }
+
+    .note {
+      background: #e8f5e9;
+      border-left: 4px solid #7fb069;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+
+    .grid-example {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .grid-item {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 4px;
+      border: 1px solid #e8dfd6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .grid-example {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📱 行動版優化指南</h1>
+    <p><strong>潤讀 So We Read - Direction 4</strong></p>
+    <p>本文檔為所有 6 個頁面提供詳細的行動版優化規範。</p>
+
+    <h2>1. 全局設定</h2>
+
+    <h3>1.1 斷點設置</h3>
+    <div class="specs">
+      <strong>行動版斷點：480px 以下</strong><br>
+      當屏幕寬度 ≤ 480px 時，應用以下變更：
+      <ul>
+        <li>單欄佈局（移除側欄）</li>
+        <li>導航轉換為漢堡菜單</li>
+        <li>字體自適應縮放</li>
+        <li>圖片有 16px 邊距</li>
+      </ul>
+    </div>
+
+    <h3>1.2 觸控目標最小尺寸</h3>
+    <div class="specs">
+      <strong>所有可點擊元素最小尺寸：48px × 48px</strong><br>
+      符合 WCAG 2.5.5 Level AAA 無障礙標準。
+      <ul>
+        <li>按鈕、連結：padding ≥ 12px</li>
+        <li>菜單項目：height ≥ 48px</li>
+        <li>表單控制：height ≥ 44px</li>
+        <li>間距：相鄰元素間距 ≥ 8px</li>
+      </ul>
+    </div>
+
+    <h3>1.3 自適應字體</h3>
+    <table>
+      <tr>
+        <th>元素</th>
+        <th>桌面版</th>
+        <th>行動版</th>
+      </tr>
+      <tr>
+        <td>H1 / Page Title</td>
+        <td>2.8rem</td>
+        <td>2rem</td>
+      </tr>
+      <tr>
+        <td>H2 / Section</td>
+        <td>2rem</td>
+        <td>1.5rem</td>
+      </tr>
+      <tr>
+        <td>H3 / Subsection</td>
+        <td>1.2rem</td>
+        <td>1.1rem</td>
+      </tr>
+      <tr>
+        <td>Body Text</td>
+        <td>1rem</td>
+        <td>0.95rem</td>
+      </tr>
+      <tr>
+        <td>Meta / Small</td>
+        <td>0.9rem</td>
+        <td>0.85rem</td>
+      </tr>
+    </table>
+
+    <h2>2. 導航優化</h2>
+
+    <h3>2.1 漢堡菜單實現</h3>
+    <div class="specs">
+      <strong>行動版導航規範：</strong>
+      <ul>
+        <li>Logo：48px × 48px（可點擊，回首頁）</li>
+        <li>漢堡按鈕：48px × 48px，位於右上角</li>
+        <li>菜單展開：全寬覆蓋，滑動動畫</li>
+        <li>菜單項目：48px 高，左對齊，16px padding</li>
+        <li>背景：白色 (#ffffff)，陰影效果</li>
+        <li>關閉按鈕：X 圖標，48px × 48px</li>
+      </ul>
+    </div>
+
+    <h3>2.2 菜單結構</h3>
+    <pre><code>|- Logo (首頁)
+|- 漢堡按鈕 ☰
+   ├─ 首頁
+   ├─ 潤讀故事
+   ├─ 部落格
+   ├─ 聯絡
+   ├─ 權利聲明
+   └─ 開始閱讀 (CTA 按鈕)</code></pre>
+
+    <h2>3. 內容區域優化</h2>
+
+    <h3>3.1 邊距與寬度</h3>
+    <div class="specs">
+      <strong>行動版容器：</strong>
+      <ul>
+        <li>左右邊距：16px（不是 40px）</li>
+        <li>最大寬度：移除（全寬 - 16px 邊距）</li>
+        <li>頂部邊距：32px（不是 60px）</li>
+        <li>底部邊距：32px（不是 60px）</li>
+      </ul>
+    </div>
+
+    <h3>3.2 圖片處理</h3>
+    <div class="specs">
+      <strong>圖片在行動版：</strong>
+      <ul>
+        <li>寬度：100% - 32px（16px 左右邊距）</li>
+        <li>高度：auto（保持寬高比）</li>
+        <li>最小高度：180px（文章卡片）</li>
+        <li>邊框半徑：4px</li>
+        <li>圖片容器邊距：0（圖片自行負責邊距）</li>
+      </ul>
+    </div>
+
+    <h2>4. 各頁面特殊優化</h2>
+
+    <h3>4.1 首頁 (Homepage)</h3>
+    <div class="checklist">
+      <ul>
+        <li>Hero 部分：padding 32px 16px</li>
+        <li>標題字體：2rem（不是 2.8rem）</li>
+        <li>文章網格：1 欄（不是 3 欄）</li>
+        <li>訂閱區：padding 32px 16px，按鈕全寬 (max-width: none)</li>
+        <li>按鈕：全寬 (width: 100%)</li>
+        <li>表單輸入：stack 垂直排列，全寬</li>
+      </ul>
+    </div>
+
+    <h3>4.2 故事頁 (Story Page)</h3>
+    <div class="checklist">
+      <ul>
+        <li>標題字體：2rem</li>
+        <li>特色卡片網格：1 欄</li>
+        <li>卡片 padding：20px（不是 24px）</li>
+        <li>Section spacing：30px（不是 50px）</li>
+      </ul>
+    </div>
+
+    <h3>4.3 部落格頁 (Blog Page)</h3>
+    <div class="checklist">
+      <ul>
+        <li>主欄 + 側欄：→ 單欄 stack</li>
+        <li>排序按鈕：全寬 stack，48px 高</li>
+        <li>文章卡片：padding 20px</li>
+        <li>側欄卡片：移到底部</li>
+        <li>分類/標籤：移動友善的 flex wrap</li>
+        <li>分頁：horizontal scroll （可選）或 inline</li>
+      </ul>
+    </div>
+
+    <h3>4.4 文章詳情頁 (Article Page)</h3>
+    <div class="checklist">
+      <ul>
+        <li>主欄 + 側欄：→ 單欄 stack</li>
+        <li>文章內容 max-width：移除（適應容器寬度）</li>
+        <li>評論表單：全寬輸入框</li>
+        <li>側欄（標籤、熱門文章）：移到底部</li>
+      </ul>
+    </div>
+
+    <h3>4.5 聯絡頁 (Contact Page)</h3>
+    <div class="checklist">
+      <ul>
+        <li>表單欄位：全寬 (grid-template-columns: 1fr)</li>
+        <li>聯絡資訊卡片：1 欄 stack</li>
+        <li>按鈕：全寬</li>
+      </ul>
+    </div>
+
+    <h3>4.6 權利聲明頁 (Privacy Page)</h3>
+    <div class="checklist">
+      <ul>
+        <li>內容 max-width：移除</li>
+        <li>標題字體：2rem</li>
+        <li>列表項目：padding 12px 0</li>
+      </ul>
+    </div>
+
+    <h2>5. 常見元件優化</h2>
+
+    <h3>5.1 表單</h3>
+    <div class="specs">
+      <ul>
+        <li>輸入框高度：44px（最小）</li>
+        <li>標籤字體：0.95rem</li>
+        <li>輸入框字體：1rem（防止自動縮放）</li>
+        <li>邊距：底部 20px（不是 24px）</li>
+        <li>按鈕：width 100%，height 48px，font-size 1rem</li>
+      </ul>
+    </div>
+
+    <h3>5.2 卡片</h3>
+    <div class="specs">
+      <ul>
+        <li>Padding：20px（不是 24-32px）</li>
+        <li>邊框半徑：4px（保持一致）</li>
+        <li>邊距：底部 16px（不是 32px）</li>
+        <li>box-shadow：0 2px 8px（保持細膩）</li>
+      </ul>
+    </div>
+
+    <h3>5.3 按鈕</h3>
+    <div class="specs">
+      <ul>
+        <li>最小高度：48px</li>
+        <li>最小寬度：120px（如果不是全寬）</li>
+        <li>Padding：12px 24px（垂直 12px，水平 24px）</li>
+        <li>字體：1rem（不小於 0.9rem）</li>
+        <li>按鈕組間距：8px</li>
+      </ul>
+    </div>
+
+    <h2>6. 實現檢查清單</h2>
+
+    <div class="checklist">
+      <h3>CSS Media Query</h3>
+      <ul>
+        <li>添加 @media (max-width: 480px) 規則到所有頁面</li>
+        <li>測試於真實手機設備（不只是瀏覽器模擬）</li>
+        <li>驗證所有觸控目標 ≥ 48px</li>
+        <li>確保沒有水平溢出</li>
+      </ul>
+
+      <h3>JavaScript（漢堡菜單）</h3>
+      <ul>
+        <li>菜單點擊時展開/關閉</li>
+        <li>點擊菜單項目後自動關閉</li>
+        <li>點擊背景時關閉菜單</li>
+        <li>ESC 鍵關閉菜單</li>
+        <li>使用 transform + transition 做動畫（性能更好）</li>
+      </ul>
+
+      <h3>測試</h3>
+      <ul>
+        <li>iPhone SE / 13 / 14 Plus（375px - 768px）</li>
+        <li>Android 手機（360px - 540px）</li>
+        <li>平板設備（768px - 1024px）</li>
+        <li>橫屏 + 豎屏方向</li>
+        <li>縮放層級 100% - 150%</li>
+        <li>低速網路下的加載（Chrome DevTools throttling）</li>
+      </ul>
+
+      <h3>無障礙</h3>
+      <ul>
+        <li>所有按鈕有 aria-label</li>
+        <li>菜單有 role="navigation"</li>
+        <li>觸發按鈕有 aria-expanded</li>
+        <li>顏色對比度 ≥ 4.5:1（普通文字）</li>
+        <li>沒有小於 12px 的文字（最小化視覺障礙）</li>
+      </ul>
+    </div>
+
+    <h2>7. 性能優化建議</h2>
+
+    <div class="note">
+      <h3>🚀 性能最佳實踐</h3>
+      <ul>
+        <li><strong>圖片優化：</strong>使用 WebP 格式（帶 fallback）+ srcset</li>
+        <li><strong>延遲加載：</strong>圖片和下方內容使用 loading="lazy"</li>
+        <li><strong>關鍵 CSS：</strong>內聯首屏 CSS，延遲加載其他樣式</li>
+        <li><strong>減少重排：</strong>避免動態改變 DOM 結構</li>
+        <li><strong>字體加載：</strong>使用 font-display: swap</li>
+        <li><strong>壓縮：</strong>Gzip 壓縮所有資源（≥ 1KB）</li>
+      </ul>
+    </div>
+
+    <h2>8. 範例代碼片段</h2>
+
+    <h3>8.1 漢堡菜單 CSS</h3>
+    <pre><code>@media (max-width: 480px) {
+  .nav-links {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    gap: 0;
+    display: none;
+    z-index: 99;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li {
+    border-bottom: 1px solid #e8dfd6;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 16px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: block;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+}</code></pre>
+
+    <h3>8.2 響應式容器</h3>
+    <pre><code>@media (max-width: 480px) {
+  .container {
+    padding: 32px 16px;
+  }
+
+  .blog-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .article-grid {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+
+    <h2>9. 部署後監控</h2>
+
+    <div class="warning">
+      <h3>⚠️ 上線前檢查</h3>
+      <ul>
+        <li>運用 Google Lighthouse 檢查行動版分數（目標 ≥ 90）</li>
+        <li>Core Web Vitals：LCP &lt; 2.5s，FID &lt; 100ms，CLS &lt; 0.1</li>
+        <li>使用 Chrome DevTools 測試 4G 和 WiFi 下的表現</li>
+        <li>檢查真實設備上的視覺效果和交互</li>
+        <li>監控錯誤：使用 Sentry 或類似工具追蹤行動版崩潰</li>
+      </ul>
+    </div>
+
+    <h2>10. 總結</h2>
+
+    <p>
+      本指南涵蓋了所有關鍵的行動版優化點。開發團隊應遵循以下優先順序：
+    </p>
+    <ol>
+      <li><strong>必須做：</strong>漢堡菜單、48px 觸控目標、單欄佈局、自適應字體</li>
+      <li><strong>應該做：</strong>圖片優化、表單改善、邊距調整</li>
+      <li><strong>可以做：</strong>動畫優化、性能調優、無障礙增強</li>
+    </ol>
+
+    <div class="note">
+      <strong>預計開發時間：</strong>2-3 天（6 個頁面）<br>
+      <strong>測試時間：</strong>1 天（多設備測試）<br>
+      <strong>總計：</strong>3-4 天
+    </div>
+  </div>
+</body>
+</html>

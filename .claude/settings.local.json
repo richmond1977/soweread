@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node -e \"const p = require\\('./node_modules/@tiptap/react/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:3000/admin/login)",
+      "Bash(curl -s http://127.0.0.1:3000/admin/login)",
+      "Bash(curl -s -D - -o /dev/null http://127.0.0.1:3000/admin)",
+      "Bash(pkill -f \"next dev\")",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__computer",
+      "Bash(node -e ' *)",
+      "mcp__Claude_in_Chrome__read_console_messages",
+      "Bash(npx prisma *)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\(JSON.stringify\\(p.prisma\\)\\)\")"
+    ]
+  }
+}

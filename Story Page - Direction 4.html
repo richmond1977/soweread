@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>潤讀故事 - 潤讀 So We Read</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body, #root {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #faf8f5;
+      color: #3d3d3d;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :root {
+      --primary: #6b5b4d;
+      --primary-light: #8b7d73;
+      --bg-light: #faf8f5;
+      --bg-medium: #f0ebe5;
+      --bg-dark: #e8dfd6;
+      --text-dark: #1a1a1a;
+      --text-medium: #3d3d3d;
+      --text-light: #666666;
+      --text-muted: #999999;
+      --white: #ffffff;
+    }
+
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .btn-cta {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-cta:hover {
+      background: #5a4d42;
+      box-shadow: 0 4px 12px rgba(107, 91, 77, 0.25);
+    }
+
+    .page-hero {
+      background: linear-gradient(135deg, #f0ebe5 0%, #faf8f5 100%);
+      padding: 80px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--bg-dark);
+    }
+
+    .page-hero h1 {
+      font-size: 3.2rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: var(--text-dark);
+      margin: 60px 0 30px;
+      font-weight: 400;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      color: var(--text-dark);
+      margin: 40px 0 20px;
+      font-weight: 400;
+    }
+
+    .section {
+      margin-bottom: 60px;
+    }
+
+    .section-content {
+      background: var(--white);
+      padding: 40px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .section p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-medium);
+      margin-bottom: 20px;
+    }
+
+    .section blockquote {
+      border-left: 4px solid var(--primary);
+      padding-left: 24px;
+      margin: 30px 0;
+      font-style: italic;
+      color: var(--primary);
+      font-size: 1.3rem;
+      line-height: 1.6;
+    }
+
+    .section ul {
+      margin-left: 30px;
+      margin-bottom: 20px;
+    }
+
+    .section li {
+      margin-bottom: 12px;
+      font-size: 1.05rem;
+      color: var(--text-medium);
+    }
+
+    .section-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin: 30px 0;
+      background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+      padding: 60px 40px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      background: var(--bg-light);
+      padding: 30px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .feature-card h4 {
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+
+    .feature-card p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: 60px 40px;
+      border-radius: 6px;
+      text-align: center;
+      margin: 60px 0;
+    }
+
+    .cta-section h3 {
+      color: var(--white);
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .cta-section p {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.05rem;
+      margin-bottom: 30px;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--primary);
+      padding: 14px 32px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 60px 40px 30px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: 12px;
+    }
+
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .page-hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .container {
+        padding: 40px 20px;
+      }
+
+      .section-content {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function StoryPage() {
+      return (
+        <>
+          {/* Header */}
+          <header>
+            <nav>
+              <div className="logo" onClick={() => window.location.href = 'Homepage - Direction 4.html'}>潤讀 So We Read</div>
+              <ul className="nav-links">
+                <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                <li><a href="#blog">部落格</a></li>
+                <li><a href="#contact">聯絡</a></li>
+                <li><a href="Privacy Page - Direction 4.html">權利聲明</a></li>
+              </ul>
+              <button className="btn-cta">開始閱讀</button>
+            </nav>
+          </header>
+
+          {/* Page Hero */}
+          <section className="page-hero">
+            <h1>潤讀故事</h1>
+            <p>在知識的洪流中，我們如何緩下腳步、沉澱思緒，為讀者梳理真實與價值</p>
+          </section>
+
+          {/* Main Content */}
+          <div className="container">
+            {/* Origin Section */}
+            <section className="section">
+              <h2>成立初衷 Origin</h2>
+              <div className="section-content">
+                <p>潤讀於 2026 年一月中創立，因緣際會之下，有幸能另闢蹊徑，以文字結交志同道合的朋友。</p>
+
+                <p>承蒙各界賢達賞光，抽空於百忙之中、在相同或者不同的時間來到此網域相會，一探耕讀究竟。無論是出於好奇、希望更深入了解，或尋找靈感的火花的八方讀者，潅讀都深表歡迎。</p>
+
+                <p>自成立以來，潤讀透過清晰的呈現幫助讀者深度理解各類知識與趨勢。潤讀為讀者提供深刻的見解，並幫助他們在繁雜的信息中找到真正有價值的內容。從讀者的反饋與好評之中，我們建立穩固與長久的讀者社群。</p>
+
+                <blockquote>「您的關注與分享，不僅能讓這份書寫與思索的旅程延續，更是讓潤讀盡棉薄之力的最大推進力。」</blockquote>
+              </div>
+            </section>
+
+            {/* Mission Section */}
+            <section className="section">
+              <h2>我們的使命 Mission</h2>
+              <div className="section-content">
+                <p>在瞬息萬變的資訊洪流中，我們常常被大量資訊淹沒，卻難以找到真正有價值的知識。潤讀應運而生，致力於為讀者篩選、整理和呈現最有價值的知識。</p>
+
+                <blockquote>「慢下腳步，沉澱知識，用心梳理每一份資訊，將新舊知識、新聞脈絡、產業趨勢與世界觀點整合成清晰、立體的理解。」</blockquote>
+
+                <p>我們以最客觀忠實的筆觸，將梳理後的真相與現況，呈獻給在數位網路中與我們相遇的每一位讀者。潅讀所提供的知識由淺入深，並且反應社會現況，在與時事結合的過程中，幫助讀者建立宏觀的視角。</p>
+              </div>
+            </section>
+
+            {/* Three Pillars */}
+            <section className="section">
+              <h2>潤讀的三大特色 Our Features</h2>
+              <div className="features-grid">
+                <div className="feature-card">
+                  <div className="feature-icon">✓</div>
+                  <h4>精選內容 Selection</h4>
+                  <p>潤讀專注於精選內容，以引領讀者的知識探索。我們致力於提供更精煉、有價值的知識，讓每篇文章都值得你的時間投入。</p>
+                </div>
+
+                <div className="feature-card">
+                  <div className="feature-icon">📚</div>
+                  <h4>由淺入深 Wide & Depth</h4>
+                  <p>關於知識，潤讀會從淺入深、從點到面，幫助讀者理解脈絡。既能滿足行家「溫故知新」的需求，也能讓新手建立完整的知識底座。</p>
+                </div>
+
+                <div className="feature-card">
+                  <div className="feature-icon">🌍</div>
+                  <h4>宏觀的視角 Optics</h4>
+                  <p>潤讀探索現實中的新聞與世界趨勢，結合新聞背景、產業動態與世界趨勢，提供讀者一個更完整、立體的視角。</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Community Section */}
+            <section className="section">
+              <h2>讀者與社群 Community</h2>
+              <div className="section-content">
+                <p>潤讀相信，知識的傳遞不是單向的。每一位讀者的關注、分享、思考與討論，都是讓潤讀持續前進的動力。</p>
+
+                <p>從好奇心出發，讀者可以在這裡找到探索世界的起點，也可以在這裡尋找靈感火花、建立知識脈絡，甚至與其他志同道合的人交流、分享觀點。</p>
+
+                <p>在此，潤讀不僅「以文會友」，更是一個 <strong>匯聚同好、共同探索知識的社群空間</strong>。</p>
+
+                <p>文章的每一次點擊、每一次分享，不僅是潤讀書寫旅程的標記，更是您知識之田被耕耘的證明。</p>
+
+                <ul>
+                  <li><strong>留言討論：</strong>在每篇文章下分享你的想法和見解</li>
+                  <li><strong>收藏書籤：</strong>保存對你有幫助的文章，隨時回顧</li>
+                  <li><strong>社交分享：</strong>將好文章分享給朋友和家人</li>
+                  <li><strong>訂閱電子報：</strong>每週收到精選知識，讓閱讀成為習慣</li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Values Section */}
+            <section className="section">
+              <h2>我們的價值觀 Values</h2>
+              <div className="section-content">
+                <h3>🎯 真實</h3>
+                <p>我們承諾提供經過驗證、真實可靠的資訊。在資訊爆炸的時代，我們用專業和誠實為你把關。</p>
+
+                <h3>🔍 深度</h3>
+                <p>我們不止於表面。每篇文章都經過深思熟慮，提供全面的背景、多角度的分析，幫助你真正理解議題的本質。</p>
+
+                <h3>💡 啟發</h3>
+                <p>知識應該啟發思想。我們希望每次閱讀都能打開新的視角，激發你對世界的好奇心和理解。</p>
+
+                <h3>🤝 社群</h3>
+                <p>知識在交流中增長。我們建立的不是單向的傳播，而是雙向的對話和互學。</p>
+              </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="cta-section">
+              <h3>加入我們，開始探索知識之旅</h3>
+              <p>無論你是新讀者還是常客，潅讀都歡迎你的加入。<br />讓我們一起在知識的海洋中，找到屬於自己的方向。</p>
+              <button className="btn-primary">開始閱讀</button>
+            </section>
+          </div>
+
+          {/* Footer */}
+          <footer>
+            <div className="footer-content">
+              <div className="footer-section">
+                <h4>潤讀 So We Read</h4>
+                <ul>
+                  <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                  <li><a href="Story Page - Direction 4.html">故事</a></li>
+                  <li><a href="#features">特色</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>內容</h4>
+                <ul>
+                  <li><a href="#blog">部落格</a></li>
+                  <li><a href="#categories">分類</a></li>
+                  <li><a href="#archive">文章存檔</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>社區</h4>
+                <ul>
+                  <li><a href="#discussions">討論區</a></li>
+                  <li><a href="#contact">聯絡我們</a></li>
+                  <li><a href="#subscribe">訂閱</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>法律</h4>
+                <ul>
+                  <li><a href="#privacy">隱私權聲明</a></li>
+                  <li><a href="#terms">使用條款</a></li>
+                  <li><a href="#cookies">Cookie 設定</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>© 2026 潤讀 So We Read. 版權所有。</p>
+            </div>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<StoryPage />);
+  </script>
+</body>
+</html>

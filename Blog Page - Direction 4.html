@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>部落格 - 潤讀 So We Read</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body, #root {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #faf8f5;
+      color: #3d3d3d;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    :root {
+      --primary: #6b5b4d;
+      --primary-light: #8b7d73;
+      --bg-light: #faf8f5;
+      --bg-medium: #f0ebe5;
+      --bg-dark: #e8dfd6;
+      --text-dark: #1a1a1a;
+      --text-medium: #3d3d3d;
+      --text-light: #666666;
+      --text-muted: #999999;
+      --white: #ffffff;
+    }
+
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    nav {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .btn-cta {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-cta:hover {
+      background: #5a4d42;
+      box-shadow: 0 4px 12px rgba(107, 91, 77, 0.25);
+    }
+
+    .page-hero {
+      background: linear-gradient(135deg, #f0ebe5 0%, #faf8f5 100%);
+      padding: 60px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--bg-dark);
+    }
+
+    .page-hero h1 {
+      font-size: 2.8rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .page-hero p {
+      font-size: 1.1rem;
+      color: var(--text-medium);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .blog-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 40px;
+    }
+
+    /* Blog Articles List */
+    .article-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .article-item {
+      background: var(--white);
+      padding: 32px;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      border-left: 4px solid transparent;
+    }
+
+    .article-item:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border-left-color: var(--primary);
+    }
+
+    .article-item h3 {
+      font-size: 1.4rem;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .article-item h3:hover {
+      color: var(--primary);
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .article-excerpt {
+      font-size: 1rem;
+      color: var(--text-medium);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .article-category {
+      display: inline-block;
+      background: var(--bg-medium);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    .read-more {
+      color: var(--primary);
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .read-more:hover {
+      gap: 12px;
+    }
+
+    /* Sorting */
+    .sorting-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .sort-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--bg-dark);
+      background: var(--white);
+      color: var(--text-medium);
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .sort-btn.active {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .sort-btn:hover {
+      border-color: var(--primary);
+    }
+
+    /* Sidebar */
+    .blog-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .sidebar-card {
+      background: var(--white);
+      padding: 24px;
+      border-radius: 6px;
+      border-top: 4px solid var(--primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .sidebar-card h4 {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-weight: 400;
+      border-bottom: 1px solid var(--bg-dark);
+      padding-bottom: 12px;
+    }
+
+    /* Categories */
+    .category-list {
+      list-style: none;
+    }
+
+    .category-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bg-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-item:last-child {
+      border-bottom: none;
+    }
+
+    .category-link {
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      flex: 1;
+    }
+
+    .category-link:hover {
+      color: var(--primary);
+    }
+
+    .category-count {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Tag Cloud */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--bg-light);
+      color: var(--text-medium);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+
+    .tag:hover {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* Featured Articles in Sidebar */
+    .featured-list {
+      list-style: none;
+    }
+
+    .featured-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--bg-light);
+      display: flex;
+      gap: 12px;
+    }
+
+    .featured-item:last-child {
+      border-bottom: none;
+    }
+
+    .featured-number {
+      color: var(--primary);
+      font-weight: 600;
+      min-width: 20px;
+    }
+
+    .featured-link {
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .featured-link:hover {
+      color: var(--primary);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .page-btn {
+      padding: 8px 12px;
+      border: 1px solid var(--bg-dark);
+      background: var(--white);
+      color: var(--text-medium);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Georgia', serif;
+    }
+
+    .page-btn.active {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    .page-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 60px 40px 30px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .footer-section li {
+      margin-bottom: 12px;
+    }
+
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .blog-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .page-hero h1 {
+        font-size: 2rem;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      .sorting-controls {
+        flex-direction: column;
+      }
+
+      .sort-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function BlogPage() {
+      const [sortBy, setSortBy] = React.useState('popular');
+      const [currentPage, setCurrentPage] = React.useState(1);
+
+      const articles = [
+        {
+          id: 1,
+          title: '食安真相：別被「賣相」騙了！',
+          category: '食品安全',
+          excerpt: '許多消費者購買食品時，往往被吸引人的外觀所迷惑。但食品安全專家提醒，商品的「顏值」並不能代表其營養價值和安全性。本文深入探討外觀與食品品質的關係...',
+          author: '潤讀編輯',
+          date: '2026年4月20日',
+          comments: 24,
+          views: 1250
+        },
+        {
+          id: 2,
+          title: '學會分辨飢餓信號',
+          category: '營養知識',
+          excerpt: '你是否經常吃但仍感到飢餓？這可能是因為你沒有正確識別身體的飢餓信號。營養師指出，真正的生理飢餓和情緒性進食是不同的。了解這些差異，可以幫助你建立更健康的飲食習慣...',
+          author: '潤讀編輯',
+          date: '2026年4月18日',
+          comments: 18,
+          views: 892
+        },
+        {
+          id: 3,
+          title: '外食族必看！破壞代謝力的陷阱',
+          category: '健康飲食',
+          excerpt: '現代人生活快節奏，外食成為常態。但許多外食選項暗含高熱量、高鈉的陷阱，對代謝造成無形的負擔。本文揭露外食業界的5大代謝破壞者，幫助你做出更明智的飲食選擇...',
+          author: '潤讀編輯',
+          date: '2026年4月15日',
+          comments: 32,
+          views: 1680
+        },
+        {
+          id: 4,
+          title: '台灣飲食文化現象',
+          category: '飲食文化',
+          excerpt: '從早餐文化到夜市美食，台灣飲食反映了這片土地的多元性和創意。這篇文章探討台灣飲食特色背後的歷史故事和文化意義，帶你重新認識身邊的食物...',
+          author: '潤讀編輯',
+          date: '2026年4月12日',
+          comments: 15,
+          views: 765
+        },
+        {
+          id: 5,
+          title: '有機食品真的更安全嗎？',
+          category: '食品安全',
+          excerpt: '有機食品的價格通常更高，但它是否真的比傳統食品更安全？科學研究顯示，答案比你想像的複雜。本文根據最新研究，客觀分析有機食品的優點和局限...',
+          author: '潤讀編輯',
+          date: '2026年4月10日',
+          comments: 28,
+          views: 1420
+        },
+        {
+          id: 6,
+          title: '營養標籤怎麼讀？',
+          category: '營養知識',
+          excerpt: '超市食品背面的營養標籤看起來複雜，但掌握幾個要點，你就能輕鬆解讀。本指南將複雜的營養信息變成簡單易懂的購物清單，讓你成為聰明的消費者...',
+          author: '潤讀編輯',
+          date: '2026年4月8日',
+          comments: 12,
+          views: 634
+        }
+      ];
+
+      let sortedArticles = [...articles];
+      if (sortBy === 'popular') {
+        sortedArticles.sort((a, b) => b.views - a.views);
+      } else if (sortBy === 'recent') {
+        sortedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (sortBy === 'comments') {
+        sortedArticles.sort((a, b) => b.comments - a.comments);
+      }
+
+      const articlesPerPage = 6;
+      const totalPages = Math.ceil(sortedArticles.length / articlesPerPage);
+      const startIdx = (currentPage - 1) * articlesPerPage;
+      const displayedArticles = sortedArticles.slice(startIdx, startIdx + articlesPerPage);
+
+      return (
+        <>
+          <header>
+            <nav>
+              <div className="logo" onClick={() => window.location.href = 'Homepage - Direction 4.html'}>潤讀 So We Read</div>
+              <ul className="nav-links">
+                <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                <li><a href="#blog">部落格</a></li>
+                <li><a href="Contact Page - Direction 4.html">聯絡</a></li>
+                <li><a href="Privacy Page - Direction 4.html">權利聲明</a></li>
+              </ul>
+              <button className="btn-cta">開始閱讀</button>
+            </nav>
+          </header>
+
+          <section className="page-hero">
+            <h1>部落格</h1>
+            <p>探索食品安全、營養知識和飲食文化的深度內容</p>
+          </section>
+
+          <div className="container">
+            <div className="blog-layout">
+              {/* Main Content */}
+              <div>
+                {/* Sorting Controls */}
+                <div className="sorting-controls">
+                  <button 
+                    className={`sort-btn ${sortBy === 'popular' ? 'active' : ''}`}
+                    onClick={() => setSortBy('popular')}
+                  >
+                    最受歡迎
+                  </button>
+                  <button 
+                    className={`sort-btn ${sortBy === 'recent' ? 'active' : ''}`}
+                    onClick={() => setSortBy('recent')}
+                  >
+                    最新發布
+                  </button>
+                  <button 
+                    className={`sort-btn ${sortBy === 'comments' ? 'active' : ''}`}
+                    onClick={() => setSortBy('comments')}
+                  >
+                    評論最多
+                  </button>
+                </div>
+
+                {/* Articles List */}
+                <div className="article-list">
+                  {displayedArticles.map((article) => (
+                    <div key={article.id} className="article-item">
+                      <span className="article-category">{article.category}</span>
+                      <h3><a href="Article Page - Direction 4.html">{article.title}</a></h3>
+                      <div className="article-meta">
+                        <span className="meta-item">✍️ {article.author}</span>
+                        <span className="meta-item">📅 {article.date}</span>
+                        <span className="meta-item">👁️ {article.views} 次瀏覽</span>
+                        <span className="meta-item">💬 {article.comments} 條評論</span>
+                      </div>
+                      <p className="article-excerpt">{article.excerpt}</p>
+                      <a href="Article Page - Direction 4.html" className="read-more">繼續閱讀 →</a>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                <div className="pagination">
+                  <button 
+                    className="page-btn" 
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >
+                    ← 上一頁
+                  </button>
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i + 1}
+                      className={`page-btn ${currentPage === i + 1 ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(i + 1)}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                  <button 
+                    className="page-btn"
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >
+                    下一頁 →
+                  </button>
+                </div>
+              </div>
+
+              {/* Sidebar */}
+              <aside className="blog-sidebar">
+                {/* Featured Articles */}
+                <div className="sidebar-card">
+                  <h4>⭐ 精選文章</h4>
+                  <ul className="featured-list">
+                    <li className="featured-item">
+                      <span className="featured-number">1</span>
+                      <a href="Article Page - Direction 4.html" className="featured-link">外食族必看！破壞代謝力的陷阱</a>
+                    </li>
+                    <li className="featured-item">
+                      <span className="featured-number">2</span>
+                      <a href="Article Page - Direction 4.html" className="featured-link">有機食品真的更安全嗎？</a>
+                    </li>
+                    <li className="featured-item">
+                      <span className="featured-number">3</span>
+                      <a href="Article Page - Direction 4.html" className="featured-link">食安真相：別被「賣相」騙了！</a>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Categories */}
+                <div className="sidebar-card">
+                  <h4>📂 分類</h4>
+                  <ul className="category-list">
+                    <li className="category-item">
+                      <a href="#" className="category-link">食品安全</a>
+                      <span className="category-count">12</span>
+                    </li>
+                    <li className="category-item">
+                      <a href="#" className="category-link">營養知識</a>
+                      <span className="category-count">18</span>
+                    </li>
+                    <li className="category-item">
+                      <a href="#" className="category-link">飲食文化</a>
+                      <span className="category-count">9</span>
+                    </li>
+                    <li className="category-item">
+                      <a href="#" className="category-link">健康飲食</a>
+                      <span className="category-count">15</span>
+                    </li>
+                    <li className="category-item">
+                      <a href="#" className="category-link">趨勢分析</a>
+                      <span className="category-count">7</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Tag Cloud */}
+                <div className="sidebar-card">
+                  <h4>🏷️ 標籤</h4>
+                  <div className="tag-cloud">
+                    <a href="#" className="tag">食安</a>
+                    <a href="#" className="tag">健康</a>
+                    <a href="#" className="tag">營養</a>
+                    <a href="#" className="tag">飲食</a>
+                    <a href="#" className="tag">外食</a>
+                    <a href="#" className="tag">文化</a>
+                    <a href="#" className="tag">趨勢</a>
+                    <a href="#" className="tag">烹飪</a>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <footer>
+            <div className="footer-content">
+              <div className="footer-section">
+                <h4>潤讀 So We Read</h4>
+                <ul>
+                  <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                  <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                  <li><a href="Contact Page - Direction 4.html">聯絡</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>內容</h4>
+                <ul>
+                  <li><a href="#blog">部落格</a></li>
+                  <li><a href="#categories">分類</a></li>
+                  <li><a href="#archive">文章存檔</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>社區</h4>
+                <ul>
+                  <li><a href="#discussions">討論區</a></li>
+                  <li><a href="#contact">聯絡我們</a></li>
+                  <li><a href="#subscribe">訂閱</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>法律</h4>
+                <ul>
+                  <li><a href="Privacy Page - Direction 4.html">權利聲明</a></li>
+                  <li><a href="#terms">使用條款</a></li>
+                  <li><a href="#cookies">Cookie 設定</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>© 2026 潤讀 So We Read. 版權所有。</p>
+            </div>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<BlogPage />);
+  </script>
+</body>
+</html>

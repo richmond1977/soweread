@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>「基改食物」哪些被你吃下肚？ - 潤讀 So We Read</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body, #root {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #faf8f5;
+      color: #3d3d3d;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Color Palette - Direction 4 */
+    :root {
+      --primary: #6b5b4d;
+      --primary-light: #8b7d73;
+      --bg-light: #faf8f5;
+      --bg-medium: #f0ebe5;
+      --bg-dark: #e8dfd6;
+      --text-dark: #1a1a1a;
+      --text-medium: #3d3d3d;
+      --text-light: #666666;
+      --text-muted: #999999;
+      --accent-green: #7fb069;
+      --accent-red: #c97c7c;
+      --white: #ffffff;
+    }
+
+    /* Header */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .btn-cta {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-cta:hover {
+      background: #5a4d42;
+      box-shadow: 0 4px 12px rgba(107, 91, 77, 0.25);
+    }
+
+    /* Article Layout */
+    .article-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .article-main {
+      background: var(--white);
+      padding: 60px;
+      border-radius: 6px;
+    }
+
+    .article-header {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 2px solid var(--bg-dark);
+    }
+
+    .article-category {
+      display: inline-block;
+      background: var(--bg-medium);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .article-title {
+      font-size: 2.8rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      margin-bottom: 20px;
+      line-height: 1.35;
+      letter-spacing: -0.01em;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .article-meta-left {
+      display: flex;
+      gap: 24px;
+    }
+
+    .article-meta-right {
+      display: flex;
+      gap: 16px;
+    }
+
+    .article-share-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .article-share-btn:hover {
+      color: var(--primary);
+    }
+
+    .article-share-btn.saved {
+      color: var(--accent-red);
+    }
+
+    /* Article Content */
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-medium);
+    }
+
+    .article-body p {
+      margin-bottom: 24px;
+    }
+
+    .article-body h3 {
+      font-size: 1.6rem;
+      color: var(--text-dark);
+      margin: 40px 0 20px;
+      font-weight: 400;
+    }
+
+    .article-body blockquote {
+      border-left: 4px solid var(--primary);
+      padding-left: 24px;
+      margin: 30px 0;
+      font-style: italic;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .article-body ul, .article-body ol {
+      margin-left: 30px;
+      margin-bottom: 24px;
+    }
+
+    .article-body li {
+      margin-bottom: 12px;
+    }
+
+    .article-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin: 30px 0;
+      background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+      padding: 40px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* Share Buttons */
+    .share-buttons {
+      display: flex;
+      gap: 12px;
+      margin: 40px 0;
+      padding: 24px;
+      background: var(--bg-light);
+      border-radius: 6px;
+    }
+
+    .share-btn {
+      flex: 1;
+      padding: 12px;
+      background: var(--white);
+      border: 1px solid var(--bg-dark);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .share-btn:hover {
+      background: var(--primary);
+      color: var(--white);
+      border-color: var(--primary);
+    }
+
+    /* CTA Section */
+    .article-cta {
+      background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+      padding: 40px;
+      border-radius: 6px;
+      text-align: center;
+      margin: 50px 0;
+      border-left: 4px solid var(--primary);
+    }
+
+    .article-cta h3 {
+      font-size: 1.4rem;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .article-cta p {
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      padding: 14px 32px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-primary:hover {
+      background: #5a4d42;
+      box-shadow: 0 6px 20px rgba(107, 91, 77, 0.3);
+    }
+
+    /* Related Articles */
+    .related-section {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 2px solid var(--bg-dark);
+    }
+
+    .related-title {
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .related-card {
+      background: var(--bg-light);
+      padding: 24px;
+      border-radius: 6px;
+      border-left: 4px solid var(--primary);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .related-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transform: translateX(4px);
+    }
+
+    .related-card-title {
+      font-size: 1rem;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .related-card-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Comments Section */
+    .comments-section {
+      margin-top: 50px;
+      padding-top: 40px;
+      border-top: 2px solid var(--bg-dark);
+    }
+
+    .comments-title {
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      margin-bottom: 30px;
+      font-weight: 400;
+    }
+
+    .comment-form {
+      background: var(--bg-light);
+      padding: 30px;
+      border-radius: 6px;
+      margin-bottom: 40px;
+    }
+
+    .comment-form-title {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      color: var(--text-medium);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--bg-dark);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-medium);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(107, 91, 77, 0.1);
+    }
+
+    .submit-btn {
+      background: var(--primary);
+      color: var(--white);
+      padding: 12px 30px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .submit-btn:hover {
+      background: #5a4d42;
+    }
+
+    .comment {
+      background: var(--white);
+      padding: 24px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 3px solid var(--bg-dark);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .comment-date {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .comment-text {
+      color: var(--text-medium);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85rem;
+    }
+
+    .comment-action {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .comment-action:hover {
+      color: var(--primary);
+    }
+
+    /* Sidebar */
+    .article-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .sidebar-card {
+      background: var(--white);
+      padding: 24px;
+      border-radius: 6px;
+      border-top: 4px solid var(--primary);
+    }
+
+    .sidebar-card h4 {
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .sidebar-list {
+      list-style: none;
+    }
+
+    .sidebar-list li {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--bg-light);
+    }
+
+    .sidebar-list li:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .sidebar-link {
+      color: var(--primary);
+      transition: color 0.3s ease;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .sidebar-link:hover {
+      color: #5a4d42;
+    }
+
+    /* Author Box */
+    .author-box {
+      background: var(--bg-medium);
+      padding: 24px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .author-avatar {
+      width: 60px;
+      height: 60px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 1.5rem;
+    }
+
+    .author-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .author-bio {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 60px 40px 30px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: 12px;
+    }
+
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .article-sidebar {
+        flex-direction: row;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .article-main {
+        padding: 30px 20px;
+      }
+
+      .article-title {
+        font-size: 1.8rem;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function ArticlePage() {
+      const [saved, setSaved] = React.useState(false);
+      const [comments, setComments] = React.useState([
+        {
+          id: 1,
+          author: '讀者 A',
+          date: '2 天前',
+          text: '這篇文章提供了很多實用的資訊，特別是進口原物料的部分，讓我更了解食材的來源。'
+        },
+        {
+          id: 2,
+          author: '讀者 B',
+          date: '1 天前',
+          text: '感謝潤讀團隊的詳細整理！對基因編輯有了更深入的認識。'
+        }
+      ]);
+      const [newComment, setNewComment] = React.useState({ name: '', email: '', text: '' });
+
+      const handleAddComment = (e) => {
+        e.preventDefault();
+        if (newComment.text.trim()) {
+          setComments([...comments, {
+            id: comments.length + 1,
+            author: newComment.name || '匿名讀者',
+            date: '現在',
+            text: newComment.text
+          }]);
+          setNewComment({ name: '', email: '', text: '' });
+          alert('留言已提交，感謝分享！');
+        }
+      };
+
+      const relatedArticles = [
+        { title: '食安真相：別被「賣相」騙了！' },
+        { title: '學會分辨飢餓信號' },
+        { title: '外食族必看！破壞代謝力的陷阱' }
+      ];
+
+      return (
+        <>
+          {/* Header */}
+          <header>
+            <nav>
+              <div className="logo" onClick={() => window.location.href = 'Homepage - Direction 4.html'}>潤讀 So We Read</div>
+              <ul className="nav-links">
+                <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                <li><a href="#blog">部落格</a></li>
+                <li><a href="#contact">聯絡</a></li>
+                <li><a href="Privacy Page - Direction 4.html">權利聲明</a></li>
+              </ul>
+              <button className="btn-cta">開始閱讀</button>
+            </nav>
+          </header>
+
+          {/* Article Layout */}
+          <div className="article-layout">
+            {/* Main Content */}
+            <article className="article-main">
+              {/* Header */}
+              <div className="article-header">
+                <span className="article-category">食品與健康</span>
+                <h1 className="article-title">「基改食物」哪些被你吃下肚？台灣大宗進口原物料黃豆、玉米、小麥進口實況與選購指南</h1>
+                <div className="article-meta">
+                  <div className="article-meta-left">
+                    <span>2026年4月20日</span>
+                    <span>8分鐘閱讀時間</span>
+                    <span>潤讀編輯</span>
+                  </div>
+                  <div className="article-meta-right">
+                    <button className="article-share-btn" title="分享">📤 分享</button>
+                    <button 
+                      className={`article-share-btn ${saved ? 'saved' : ''}`}
+                      onClick={() => setSaved(!saved)}
+                      title={saved ? '已收藏' : '收藏文章'}
+                    >
+                      {saved ? '♥' : '♡'} 收藏
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Body Content */}
+              <div className="article-body">
+                <h3>前言：餐桌上的隱形革命</h3>
+                <p>曾幾何時，「基因改造食品」這個詞還帶有些許神祕色彩，但如今，它已悄悄佔據了我們餐桌的一角。從早餐的玉米片、中午的豆漿，到晚餐的食用油——基改食品早已成為現代飲食不可避免的一部分。</p>
+                
+                <p>臺灣作為農業大國，卻同時也是全球主要的基改食品進口國。根據統計，臺灣每年進口超過200萬公噸的黃豆、玉米和小麥，其中絕大多數都是經過基因改造的。這些數據背後，隱含著什麼樣的故事？</p>
+
+                <h3>臺灣的糧食進口現況</h3>
+                <p>臺灣的地理位置和氣候條件限制了本地農業的發展，導致我們對進口糧食的依賴度極高。以黃豆為例，臺灣每年進口約150萬公噸，其中超過99%來自基因改造的黃豆。</p>
+
+                <blockquote>「我們吃進去的食物，很可能來自千里之外的基改作物。」</blockquote>
+
+                <p>玉米的情況也類似。臺灣年進口玉米約250萬公噸，幾乎全部用於動物飼料和食品加工。這些玉米不僅進入了我們的食品供應鏈，也間接影響了我們食用的肉類、乳製品和加工食品。</p>
+
+                <div className="article-image">
+                  📊 [臺灣主要進口糧食統計圖表]
+                </div>
+
+                <h3>基因改造與食品安全</h3>
+                <p>關於基改食品的安全性，科學界已有共識：經過嚴格審查和檢測的基改食品，與傳統食品的安全性並無顯著差異。但這並不代表沒有風險。</p>
+
+                <ul>
+                  <li>農藥殘留：大多數基改作物被設計為耐除草劑，導致農藥使用量增加</li>
+                  <li>營養成分變化：某些基改作物的營養組成與原始種類有所差異</li>
+                  <li>生態影響：基改作物可能對本地生態系統產生長期影響</li>
+                </ul>
+
+                <p>對消費者而言，最實際的問題是：我們有權利知道自己吃的是什麼。</p>
+
+                <h3>選購指南：如何做出明智選擇</h3>
+                <p>雖然無法完全避免基改食品，但消費者仍有方法做出更有意識的選擇：</p>
+
+                <ul>
+                  <li><strong>檢查標籤：</strong> 臺灣規定含基改成分超過3%的食品必須標示。閱讀包裝上的「基因改造」標籤</li>
+                  <li><strong>選擇有機食品：</strong> 有機認證的產品禁止使用基改成分</li>
+                  <li><strong>支持在地農業：</strong> 購買本地農產品，減少對進口基改食品的依賴</li>
+                  <li><strong>多樣化飲食：</strong> 不要過度依賴單一食品來源</li>
+                </ul>
+
+                <div className="article-image">
+                  🛒 [選購指南信息圖]
+                </div>
+
+                <h3>未來展望</h3>
+                <p>基因改造技術本身並無好壞之分，關鍵在於如何使用。隨著基因編輯技術（如CRISPR）的發展，未來我們可能看到更多創新的農業解決方案。</p>
+
+                <p>作為消費者，我們的責任是保持知情，做出有意識的選擇，並支持更透明、更負責任的食品供應鏈。</p>
+
+                {/* Share Buttons */}
+                <div className="share-buttons">
+                  <button className="share-btn">👍 Facebook</button>
+                  <button className="share-btn">💬 Line</button>
+                  <button className="share-btn">𝕏 Twitter</button>
+                  <button className="share-btn">🔗 複製連結</button>
+                </div>
+
+                {/* CTA Section */}
+                <div className="article-cta">
+                  <h3>想要更深入地了解食品安全？</h3>
+                  <p>訂閱潤讀的週刊，每週收到精選知識文章</p>
+                  <button className="btn-primary">立即訂閱</button>
+                </div>
+
+                {/* Related Articles */}
+                <section className="related-section">
+                  <h2 className="related-title">📖 相關閱讀</h2>
+                  <div className="related-grid">
+                    {relatedArticles.map((article, i) => (
+                      <div key={i} className="related-card">
+                        <div className="related-card-title">{article.title}</div>
+                        <div className="related-card-meta">點擊閱讀 →</div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Comments Section */}
+                <section className="comments-section">
+                  <h2 className="comments-title">💬 讀者評論</h2>
+
+                  {/* Comment Form */}
+                  <form className="comment-form" onSubmit={handleAddComment}>
+                    <h3 className="comment-form-title">分享你的想法</h3>
+                    <div className="form-group">
+                      <label>姓名</label>
+                      <input 
+                        type="text" 
+                        value={newComment.name}
+                        onChange={(e) => setNewComment({...newComment, name: e.target.value})}
+                        placeholder="你的名字（可選）"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>電子郵件</label>
+                      <input 
+                        type="email" 
+                        value={newComment.email}
+                        onChange={(e) => setNewComment({...newComment, email: e.target.value})}
+                        placeholder="你的電子郵件（不會公開）"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>評論</label>
+                      <textarea 
+                        value={newComment.text}
+                        onChange={(e) => setNewComment({...newComment, text: e.target.value})}
+                        placeholder="分享你的想法和見解..."
+                      />
+                    </div>
+                    <button type="submit" className="submit-btn">發佈評論</button>
+                  </form>
+
+                  {/* Comments List */}
+                  <div>
+                    {comments.map(comment => (
+                      <div key={comment.id} className="comment">
+                        <div className="comment-header">
+                          <span className="comment-author">{comment.author}</span>
+                          <span className="comment-date">{comment.date}</span>
+                        </div>
+                        <p className="comment-text">{comment.text}</p>
+                        <div className="comment-actions">
+                          <button className="comment-action">👍 有幫助</button>
+                          <button className="comment-action">💬 回覆</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </div>
+            </article>
+
+            {/* Sidebar */}
+            <aside className="article-sidebar">
+              {/* About Author */}
+              <div className="author-box">
+                <div className="author-avatar">📝</div>
+                <div className="author-name">潤讀編輯</div>
+                <div className="author-bio">致力於食品安全與營養知識的傳播，幫助讀者做出更明智的飲食選擇。</div>
+              </div>
+
+              {/* Featured Articles */}
+              <div className="sidebar-card">
+                <h4>🏷️ 標籤分類</h4>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>食品安全</a>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>營養知識</a>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>飲食文化</a>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>健康飲食</a>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>趨勢分析</a>
+                  <a href="#" style={{ display: 'inline-block', background: '#f0ebe5', color: '#6b5b4d', padding: '6px 12px', borderRadius: '4px', fontSize: '0.85rem', transition: 'all 0.3s ease' }} onMouseEnter={(e) => { e.target.style.background = '#6b5b4d'; e.target.style.color = '#fff'; }} onMouseLeave={(e) => { e.target.style.background = '#f0ebe5'; e.target.style.color = '#6b5b4d'; }}>外食指南</a>
+                </div>
+              </div>
+
+              {/* Featured Articles */}
+              <div className="sidebar-card">
+                <h4>⭐ 熱門文章</h4>
+                <ul className="sidebar-list">
+                  <li><a href="#" className="sidebar-link">食安真相：別被「賣相」騙了！</a></li>
+                  <li><a href="#" className="sidebar-link">學會分辨飢餓信號</a></li>
+                  <li><a href="#" className="sidebar-link">外食族必看！破壞代謝力的陷阱</a></li>
+                  <li><a href="#" className="sidebar-link">台灣飲食文化現象</a></li>
+                </ul>
+              </div>
+
+              {/* Newsletter */}
+              <div className="sidebar-card" style={{ background: 'linear-gradient(135deg, #f0ebe5 0%, #e8dfd6 100%)', borderTopColor: '#6b5b4d' }}>
+                <h4>📬 訂閱電子報</h4>
+                <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '16px' }}>每週收到精選知識文章</p>
+                <input 
+                  type="email" 
+                  placeholder="你的電子郵件" 
+                  style={{ 
+                    width: '100%', 
+                    padding: '10px', 
+                    border: '1px solid #ddd', 
+                    borderRadius: '4px',
+                    marginBottom: '12px',
+                    fontSize: '0.9rem'
+                  }}
+                />
+                <button className="btn-primary" style={{ width: '100%' }}>訂閱</button>
+              </div>
+            </aside>
+          </div>
+
+          {/* Footer */}
+          <footer>
+            <div className="footer-content">
+              <div className="footer-section">
+                <h4>潤讀 So We Read</h4>
+                <ul>
+                  <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                  <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                  <li><a href="#blog">部落格</a></li>
+                  <li><a href="Contact Page - Direction 4.html">聯絡</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>內容</h4>
+                <ul>
+                  <li><a href="#blog">部落格</a></li>
+                  <li><a href="#categories">分類</a></li>
+                  <li><a href="#archive">文章存檔</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>社區</h4>
+                <ul>
+                  <li><a href="#discussions">討論區</a></li>
+                  <li><a href="#contact">聯絡我們</a></li>
+                  <li><a href="#subscribe">訂閱</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>法律</h4>
+                <ul>
+                  <li><a href="#privacy">隱私權聲明</a></li>
+                  <li><a href="#terms">使用條款</a></li>
+                  <li><a href="#cookies">Cookie 設定</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>© 2026 潤讀 So We Read. 版權所有。</p>
+            </div>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<ArticlePage />);
+  </script>
+</body>
+</html>

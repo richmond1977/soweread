@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>潤讀設計系統 | So We Read Design System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #f9f7f4;
+      color: #2c2c2c;
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      margin: 60px 0 30px;
+      color: #1a1a1a;
+      font-weight: 400;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin: 30px 0 20px;
+      color: #3d3d3d;
+      font-weight: 600;
+    }
+
+    p {
+      margin-bottom: 15px;
+      font-size: 1.05rem;
+      color: #555;
+    }
+
+    /* Design System Sections */
+    .system-section {
+      margin-bottom: 80px;
+      padding-bottom: 60px;
+      border-bottom: 2px solid #e8e0d8;
+    }
+
+    .system-section:last-child {
+      border-bottom: none;
+    }
+
+    /* Color Palette */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .color-swatch {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+
+    .color-swatch:hover {
+      transform: translateY(-4px);
+    }
+
+    .color-sample {
+      height: 120px;
+      width: 100%;
+    }
+
+    .color-info {
+      padding: 16px;
+      background: white;
+    }
+
+    .color-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+
+    .color-value {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: #888;
+    }
+
+    /* Typography */
+    .typography-demo {
+      margin: 20px 0;
+      padding: 24px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #8b7355;
+    }
+
+    .typography-demo.serif {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+    }
+
+    .typography-demo.sans {
+      font-family: 'Helvetica Neue', 'PingFang TC', sans-serif;
+    }
+
+    .typography-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    /* Component Grid */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin: 30px 0;
+    }
+
+    .component-card {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .component-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: #1a1a1a;
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #8b7355;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #6f5a48;
+      box-shadow: 0 4px 12px rgba(139, 115, 85, 0.25);
+    }
+
+    .btn-secondary {
+      background: #f0ebe5;
+      color: #3d3d3d;
+      border: 1px solid #e8dfd6;
+    }
+
+    .btn-secondary:hover {
+      background: #e8dfd6;
+    }
+
+    .btn-tertiary {
+      background: transparent;
+      color: #8b7355;
+      border: 1px solid #8b7355;
+    }
+
+    .btn-tertiary:hover {
+      background: #8b735508;
+    }
+
+    /* Design Direction Preview */
+    .direction-preview {
+      margin: 40px 0;
+      padding: 30px;
+      background: linear-gradient(135deg, #f9f7f4 0%, #faf8f5 100%);
+      border-radius: 8px;
+      border-left: 5px solid #8b7355;
+    }
+
+    .direction-label {
+      display: inline-block;
+      background: #8b7355;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* 4 Design Directions Color Previews */
+    .directions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 40px 0;
+    }
+
+    .direction-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .direction-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .direction-header {
+      padding: 40px 30px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 180px;
+    }
+
+    .direction-name {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    .direction-desc {
+      font-size: 0.9rem;
+      opacity: 0.95;
+      line-height: 1.5;
+    }
+
+    .direction-swatches {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .swatch-small {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .swatch-small:hover {
+      transform: scale(1.05);
+    }
+
+    /* Spacing Guide */
+    .spacing-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .spacing-unit {
+      text-align: center;
+    }
+
+    .spacing-box {
+      background: #8b7355;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      opacity: 0.8;
+    }
+
+    .spacing-label {
+      font-size: 0.85rem;
+      color: #666;
+      font-family: monospace;
+    }
+
+    /* Feature Highlight */
+    .feature-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    .feature-list li {
+      padding: 12px 0;
+      padding-left: 28px;
+      position: relative;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .feature-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #8b7355;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .toc {
+      background: #f0ebe5;
+      padding: 30px;
+      border-radius: 8px;
+      margin: 30px 0;
+    }
+
+    .toc h3 {
+      margin-top: 0;
+    }
+
+    .toc ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .toc li {
+      margin: 10px 0;
+    }
+
+    .toc a {
+      color: #8b7355;
+      text-decoration: none;
+      border-bottom: 1px solid #e8ddf0;
+      transition: color 0.2s ease;
+    }
+
+    .toc a:hover {
+      color: #6f5a48;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>潤讀 So We Read</h1>
+    <p style="font-size: 1.2rem; color: #777; margin-bottom: 40px;">完整設計系統 & 4 個重設計方向</p>
+
+    <!-- Table of Contents -->
+    <div class="toc">
+      <h3>目錄</h3>
+      <ul>
+        <li><a href="#overview">📊 設計概述</a></li>
+        <li><a href="#design-directions">🎨 4 個設計方向</a></li>
+        <li><a href="#core-palette">🎭 核心色彩系統</a></li>
+        <li><a href="#typography">✍️ 排版系統</a></li>
+        <li><a href="#components">🧩 組件庫</a></li>
+        <li><a href="#spacing">📐 間距與佈局</a></li>
+        <li><a href="#features">⭐ 新功能集成</a></li>
+      </ul>
+    </div>
+
+    <!-- Overview Section -->
+    <div class="system-section" id="overview">
+      <h2>📊 設計概述</h2>
+      <p><strong>目標：</strong>提升流量和曝光、優化首次訪客體驗、提高訂閱轉換率</p>
+      <p><strong>風格定位：</strong>知識典雅（Editorial & Sophisticated）</p>
+      <p><strong>核心特質：</strong>沉靜、知識感、信任感、高可讀性、精選內容感</p>
+      
+      <ul class="feature-list">
+        <li>精緻的排版和視覺層級</li>
+        <li>溫暖但莊重的色彩系統</li>
+        <li>優雅的留白和呼吸感</li>
+        <li>專業感與親近感的平衡</li>
+        <li>增強的內容發現機制（相關文章、推薦等）</li>
+        <li>社區參與工具（評論、收藏、分享）</li>
+      </ul>
+    </div>
+
+    <!-- 4 Design Directions -->
+    <div class="system-section" id="design-directions">
+      <h2>🎨 4 個設計方向（對比選擇）</h2>
+      <p>每個方向都保持「知識典雅」的核心風格，但在色彩、排版、視覺重點上有所不同，以便你對比選擇最符合品牌氣質的方向。</p>
+
+      <div class="directions-grid">
+        <!-- Direction 1: Warm Serif -->
+        <div class="direction-card">
+          <div class="direction-header" style="background: linear-gradient(135deg, #8b7355 0%, #a0845f 100%);">
+            <div class="direction-name">方向一</div>
+            <div class="direction-name" style="font-size: 1.2rem;">暖棕·古典</div>
+            <div class="direction-desc">溫暖棕色 + Georgia 襯線字體 + 經典古書感</div>
+          </div>
+          <div class="direction-swatches">
+            <div class="swatch-small" style="background: #8b7355;"></div>
+            <div class="swatch-small" style="background: #a0845f;"></div>
+            <div class="swatch-small" style="background: #d4c5b5;"></div>
+            <div class="swatch-small" style="background: #f9f7f4;"></div>
+          </div>
+        </div>
+
+        <!-- Direction 2: Cool Slate -->
+        <div class="direction-card">
+          <div class="direction-header" style="background: linear-gradient(135deg, #4a5568 0%, #5a6b7d 100%);">
+            <div class="direction-name">方向二</div>
+            <div class="direction-name" style="font-size: 1.2rem;">深灰·現代</div>
+            <div class="direction-desc">深灰藍色 + 無襯線字體 + 當代知識感</div>
+          </div>
+          <div class="direction-swatches">
+            <div class="swatch-small" style="background: #4a5568;"></div>
+            <div class="swatch-small" style="background: #6b7f99;"></div>
+            <div class="swatch-small" style="background: #c5d0dd;"></div>
+            <div class="swatch-small" style="background: #f8f9fb;"></div>
+          </div>
+        </div>
+
+        <!-- Direction 3: Sophisticated Black -->
+        <div class="direction-card">
+          <div class="direction-header" style="background: linear-gradient(135deg, #1a1a1a 0%, #3d3d3d 100%);">
+            <div class="direction-name">方向三</div>
+            <div class="direction-name" style="font-size: 1.2rem;">純黑·精英</div>
+            <div class="direction-desc">深黑色 + 混合排版 + 高端雜誌感</div>
+          </div>
+          <div class="direction-swatches">
+            <div class="swatch-small" style="background: #1a1a1a;"></div>
+            <div class="swatch-small" style="background: #3d3d3d;"></div>
+            <div class="swatch-small" style="background: #d4d4d4;"></div>
+            <div class="swatch-small" style="background: #ffffff;"></div>
+          </div>
+        </div>
+
+        <!-- Direction 4: Earthy Natural -->
+        <div class="direction-card">
+          <div class="direction-header" style="background: linear-gradient(135deg, #6b5b4d 0%, #8b7d73 100%);">
+            <div class="direction-name">方向四</div>
+            <div class="direction-name" style="font-size: 1.2rem;">土棕·親近</div>
+            <div class="direction-desc">大地色系 + 友善排版 + 學院社群感</div>
+          </div>
+          <div class="direction-swatches">
+            <div class="swatch-small" style="background: #6b5b4d;"></div>
+            <div class="swatch-small" style="background: #8b7d73;"></div>
+            <div class="swatch-small" style="background: #d9ccc1;"></div>
+            <div class="swatch-small" style="background: #faf8f5;"></div>
+          </div>
+        </div>
+      </div>
+
+      <p style="margin-top: 40px; padding: 20px; background: #f0ebe5; border-left: 4px solid #8b7355; border-radius: 4px;">
+        <strong>建議：</strong>方向一（暖棕·古典）最符合你「知識典雅」和「由淺入深」的品牌氣質，同時保持溫暖的親近感。但其他三個方向也值得對比。我會基於你的選擇，為首頁和內容頁設計完整原型。
+      </p>
+    </div>
+
+    <!-- Core Palette -->
+    <div class="system-section" id="core-palette">
+      <h2>🎭 核心色彩系統（推薦方向一）</h2>
+      
+      <h3>主色彩</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #8b7355;"></div>
+          <div class="color-info">
+            <div class="color-name">Primary Brown</div>
+            <div class="color-value">#8b7355</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #a0845f;"></div>
+          <div class="color-info">
+            <div class="color-name">Secondary Brown</div>
+            <div class="color-value">#a0845f</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #1a1a1a;"></div>
+          <div class="color-info">
+            <div class="color-name">Deep Black</div>
+            <div class="color-value">#1a1a1a</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>背景與中立色</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #ffffff; border: 1px solid #e8e0d8;"></div>
+          <div class="color-info">
+            <div class="color-name">Pure White</div>
+            <div class="color-value">#ffffff</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #f9f7f4;"></div>
+          <div class="color-info">
+            <div class="color-name">Warm White</div>
+            <div class="color-value">#f9f7f4</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #f0ebe5;"></div>
+          <div class="color-info">
+            <div class="color-name">Light Beige</div>
+            <div class="color-value">#f0ebe5</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #e8dfd6;"></div>
+          <div class="color-info">
+            <div class="color-name">Soft Taupe</div>
+            <div class="color-value">#e8dfd6</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>輔助色與強調</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #d4c5b5;"></div>
+          <div class="color-info">
+            <div class="color-name">Accent Tan</div>
+            <div class="color-value">#d4c5b5</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #7fb069;"></div>
+          <div class="color-info">
+            <div class="color-name">Success Green</div>
+            <div class="color-value">#7fb069</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #c97c7c;"></div>
+          <div class="color-info">
+            <div class="color-name">Alert Red</div>
+            <div class="color-value">#c97c7c</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #8b9bb4;"></div>
+          <div class="color-info">
+            <div class="color-name">Info Blue</div>
+            <div class="color-value">#8b9bb4</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>文字色彩</h3>
+      <div class="color-grid">
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #1a1a1a;"></div>
+          <div class="color-info">
+            <div class="color-name">Heading Black</div>
+            <div class="color-value">#1a1a1a</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #3d3d3d;"></div>
+          <div class="color-info">
+            <div class="color-name">Body Dark</div>
+            <div class="color-value">#3d3d3d</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #666666;"></div>
+          <div class="color-info">
+            <div class="color-name">Body Medium</div>
+            <div class="color-value">#666666</div>
+          </div>
+        </div>
+        <div class="color-swatch">
+          <div class="color-sample" style="background: #999999;"></div>
+          <div class="color-info">
+            <div class="color-name">Secondary Text</div>
+            <div class="color-value">#999999</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Typography System -->
+    <div class="system-section" id="typography">
+      <h2>✍️ 排版系統</h2>
+      
+      <h3>字體選擇</h3>
+      <ul class="feature-list">
+        <li><strong>標題 (Headings)：</strong> Georgia 或 Noto Serif TC（襯線，古典知識感）</li>
+        <li><strong>正文 (Body)：</strong> Georgia / 'Noto Serif TC' 或 Helvetica Neue / PingFang TC（易讀性）</li>
+        <li><strong>UI / 按鈕：</strong> Helvetica Neue 或 PingFang TC（現代感）</li>
+        <li><strong>代碼 (Code)：</strong> 'Courier New' / Menlo（等寬）</li>
+      </ul>
+
+      <h3>排版層級</h3>
+      
+      <div class="typography-demo serif">
+        <div class="typography-label">H1 - 頁面主標題</div>
+        <h1 style="font-size: 3.5rem; margin: 0; color: #1a1a1a;">探索閱讀的無限可能</h1>
+      </div>
+
+      <div class="typography-demo serif">
+        <div class="typography-label">H2 - 分章標題</div>
+        <h2 style="font-size: 2.2rem; margin: 0; color: #1a1a1a;">精選內容 Selection</h2>
+      </div>
+
+      <div class="typography-demo serif">
+        <div class="typography-label">H3 - 小節標題</div>
+        <h3 style="font-size: 1.3rem; margin: 0; color: #3d3d3d; font-weight: 600;">成立初衷 Origin</h3>
+      </div>
+
+      <div class="typography-demo serif">
+        <div class="typography-label">Body Text - 16px / 28px line-height</div>
+        <p style="margin: 0; font-size: 1rem;">潤讀於 2026 年一月中創立，因緣際會之下，有幸能另闢蹊徑，以文字結交志同道合的朋友。承蒙各界賢達賞光，抽空於百忙之中、在相同或者不同的時間來到此網域相會，一探耕讀究竟。</p>
+      </div>
+
+      <div class="typography-demo serif">
+        <div class="typography-label">Small / Meta Text - 14px</div>
+        <p style="margin: 0; font-size: 0.875rem; color: #888;">發佈日期：2026 年 4 月 25 日 | 作者：潤讀編輯 | 分類：食品與健康</p>
+      </div>
+
+      <div class="typography-demo sans">
+        <div class="typography-label">Button Text - Helvetica Neue, 14px, 600 weight</div>
+        <p style="margin: 0; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.05em;">開始閱讀 →</p>
+      </div>
+
+      <h3>排版特性</h3>
+      <ul class="feature-list">
+        <li>Line-height: 1.7 for body text (excellent readability for long-form)</li>
+        <li>Letter-spacing: -0.02em for headings (tighter, more elegant)</li>
+        <li>Font-weight: 400 for body, 600 for emphasis, 700 for strong</li>
+        <li>Max line-length: 700px (ideal for reading comprehension)</li>
+        <li>Paragraph spacing: 1.5rem between paragraphs</li>
+      </ul>
+    </div>
+
+    <!-- Components -->
+    <div class="system-section" id="components">
+      <h2>🧩 組件庫</h2>
+
+      <h3>按鈕組件</h3>
+      <div class="component-grid">
+        <div class="component-card">
+          <h4>Primary Button</h4>
+          <div class="btn-group">
+            <button class="btn btn-primary">開始閱讀</button>
+            <button class="btn btn-primary" style="opacity: 0.7;">Disabled</button>
+          </div>
+          <p style="font-size: 0.85rem; color: #999;">用途：主要 CTA（首頁、文章頁結束）</p>
+        </div>
+
+        <div class="component-card">
+          <h4>Secondary Button</h4>
+          <div class="btn-group">
+            <button class="btn btn-secondary">了解更多</button>
+            <button class="btn btn-secondary">分享文章</button>
+          </div>
+          <p style="font-size: 0.85rem; color: #999;">用途：次要操作</p>
+        </div>
+
+        <div class="component-card">
+          <h4>Tertiary Button</h4>
+          <div class="btn-group">
+            <button class="btn btn-tertiary">← 返回</button>
+            <button class="btn btn-tertiary">更多選項 →</button>
+          </div>
+          <p style="font-size: 0.85rem; color: #999;">用途：輕量級操作</p>
+        </div>
+      </div>
+
+      <h3>卡片組件</h3>
+      <div class="component-grid">
+        <div class="component-card" style="border-top: 4px solid #8b7355; padding: 0;">
+          <div style="height: 180px; background: linear-gradient(135deg, #f0ebe5 0%, #e8dfd6 100%);"></div>
+          <div style="padding: 24px;">
+            <div style="background: #f0ebe5; padding: 6px 12px; border-radius: 4px; display: inline-block; font-size: 0.75rem; font-weight: 600; color: #666; margin-bottom: 12px;">食品與健康</div>
+            <h4 style="font-size: 1.1rem; color: #1a1a1a; margin-bottom: 12px;">「基改食物」哪些被你吃下肚？</h4>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 12px;">台灣糧食危機的救星？基因改造食品的進口現況...</p>
+            <div style="font-size: 0.85rem; color: #999;">4 月 20 日 • 潤讀編輯</div>
+          </div>
+        </div>
+
+        <div class="component-card" style="border-left: 4px solid #8b7355;">
+          <div style="font-weight: 600; color: #8b7355; margin-bottom: 8px;">✓ 相關閱讀</div>
+          <ul style="list-style: none; padding: 0;">
+            <li style="padding: 8px 0; border-bottom: 1px solid #f0ebe5;">
+              <a href="#" style="color: #3d3d3d; text-decoration: none; font-size: 0.95rem;">食安真相：別被「賣相」騙了！</a>
+            </li>
+            <li style="padding: 8px 0; border-bottom: 1px solid #f0ebe5;">
+              <a href="#" style="color: #3d3d3d; text-decoration: none; font-size: 0.95rem;">外食族的營養陷阱</a>
+            </li>
+            <li style="padding: 8px 0;">
+              <a href="#" style="color: #3d3d3d; text-decoration: none; font-size: 0.95rem;">台灣飲食文化現象</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="component-card">
+          <div style="font-weight: 600; color: #8b7355; margin-bottom: 12px;">💬 評論區</div>
+          <div style="background: #f9f7f4; padding: 16px; border-radius: 4px; margin-bottom: 12px;">
+            <div style="font-weight: 600; font-size: 0.9rem; color: #3d3d3d; margin-bottom: 6px;">讀者A</div>
+            <p style="font-size: 0.9rem; color: #666; margin: 0;">這篇文章提供了很多實用的資訊，感謝分享！</p>
+            <div style="font-size: 0.8rem; color: #999; margin-top: 8px;">3 天前</div>
+          </div>
+          <button class="btn btn-secondary" style="width: 100%;">新增留言</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacing & Layout -->
+    <div class="system-section" id="spacing">
+      <h2>📐 間距與佈局系統</h2>
+      
+      <h3>基本間距單位（8px Grid）</h3>
+      <div class="spacing-demo">
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 8px;"></div>
+          <div class="spacing-label">XS: 8px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 12px;"></div>
+          <div class="spacing-label">SM: 12px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 16px;"></div>
+          <div class="spacing-label">MD: 16px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 24px;"></div>
+          <div class="spacing-label">LG: 24px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 32px;"></div>
+          <div class="spacing-label">XL: 32px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 48px;"></div>
+          <div class="spacing-label">2XL: 48px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 64px;"></div>
+          <div class="spacing-label">3XL: 64px</div>
+        </div>
+        <div class="spacing-unit">
+          <div class="spacing-box" style="height: 80px;"></div>
+          <div class="spacing-label">4XL: 80px</div>
+        </div>
+      </div>
+
+      <h3>佈局原則</h3>
+      <ul class="feature-list">
+        <li>最大內容寬度：1200px（優化可讀性）</li>
+        <li>邊距：40px 桌面 / 20px 平板 / 16px 手機</li>
+        <li>卡片邊距：24px 內側</li>
+        <li>行高比例：1.7（長文本閱讀）</li>
+        <li>Grid系統：12 列 CSS Grid</li>
+        <li>分章間距：60px（視覺分隔）</li>
+      </ul>
+
+      <h3>響應式斷點</h3>
+      <ul class="feature-list">
+        <li>行動：< 768px</li>
+        <li>平板：768px - 1024px</li>
+        <li>桌面：1024px - 1920px</li>
+        <li>超寬：> 1920px</li>
+      </ul>
+    </div>
+
+    <!-- Features Integration -->
+    <div class="system-section" id="features">
+      <h2>⭐ 新功能集成</h2>
+
+      <h3>1. 相關文章推薦</h3>
+      <div class="direction-preview">
+        <p><strong>位置：</strong>文章結尾（Before CTA）</p>
+        <p><strong>展示：</strong>3 篇網格卡片或側邊欄列表</p>
+        <p><strong>邏輯：</strong>相同分類 + 相似標籤 + 編輯精選</p>
+        <p><strong>好處：</strong>增加頁面停留時間、降低跳出率、提升內部導航</p>
+      </div>
+
+      <h3>2. 評論與討論區</h3>
+      <div class="direction-preview">
+        <p><strong>位置：</strong>文章結尾（After CTA）</p>
+        <p><strong>功能：</strong>讀者評論、thread 回覆、點讚、審核</p>
+        <p><strong>整合：</strong>Disqus 或自開發評論系統</p>
+        <p><strong>好處：</strong>提升社區參與、 UGC 內容、SEO 加分</p>
+      </div>
+
+      <h3>3. 文章收藏 / 書籤</h3>
+      <div class="direction-preview">
+        <p><strong>位置：</strong>文章標題旁邊（♡ 按鈕）</p>
+        <p><strong>功能：</strong>登入用戶可保存、個人化書籤列表</p>
+        <p><strong>整合：</strong>用戶帳號系統</p>
+        <p><strong>好處：</strong>提高用戶粘性、建立回訪習慣</p>
+      </div>
+
+      <h3>4. 社交分享</h3>
+      <div class="direction-preview">
+        <p><strong>位置：</strong>文章開頭 + 結尾</p>
+        <p><strong>平台：</strong>Facebook、Line、Twitter/X、LinkedIn、複製連結</p>
+        <p><strong>好處：</strong>提升內容觸及率、自然流量增長</p>
+      </div>
+
+      <h3>5. 視覺化信息圖表</h3>
+      <div class="direction-preview">
+        <p><strong>內容類型：</strong>統計圖表、食物對比、流程圖、數據可視化</p>
+        <p><strong>工具：</strong>Infogram、Flourish、自製 SVG</p>
+        <p><strong>位置：</strong>文章正文中間，強調關鍵數據</p>
+        <p><strong>好處：</strong>提升內容吸引力、提高分享率、更專業感</p>
+      </div>
+
+      <h3>6. 訂閱 / 會員轉換優化</h3>
+      <div class="direction-preview">
+        <p><strong>策略：</strong></p>
+        <ul style="margin-left: 20px;">
+          <li>首頁：上方顯著 Newsletter 訂閱</li>
+          <li>文章頁：結尾強化 CTA（2-3 個按鈕）</li>
+          <li>側邊欄：「熱門文章」+ 訂閱卡</li>
+          <li>彈窗：50% scroll 時輕量級訂閱邀請</li>
+          <li>頁底：隱藏訂閱連結（不侵擾）</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Summary & Next Steps -->
+    <div class="system-section" style="border: none;">
+      <h2>📋 後續步驟</h2>
+      <ol style="margin-left: 20px; line-height: 2;">
+        <li><strong>選擇設計方向：</strong>從 4 個方向中選 1 個（或混合元素）</li>
+        <li><strong>首頁原型設計：</strong>基於選定方向的完整首頁設計</li>
+        <li><strong>內容頁設計：</strong>單篇文章頁面設計（含新功能）</li>
+        <li><strong>互動原型：</strong>可點擊的高保真原型（React）</li>
+        <li><strong>風格指南：</strong>完整的設計系統文檔</li>
+        <li><strong>開發交付：</strong>HTML / CSS / 組件代碼</li>
+      </ol>
+
+      <p style="margin-top: 40px; padding: 20px; background: #f0ebe5; border-radius: 4px;">
+        <strong>👉 下一步：</strong>請告訴我你最喜歡的設計方向（方向一 ~ 四），或者你想混合哪些元素。我會為你設計完整的首頁和內容頁原型，並提供所有互動細節和視覺規範。
+      </p>
+    </div>
+  </div>
+</body>
+</html>

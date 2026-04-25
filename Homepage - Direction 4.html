@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>潤讀 So We Read - 知識平台首頁</title>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body, #root {
+      width: 100%;
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Georgia', 'Noto Serif TC', serif;
+      background: #faf8f5;
+      color: #3d3d3d;
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Color Palette - Direction 4 */
+    :root {
+      --primary: #6b5b4d;
+      --primary-light: #8b7d73;
+      --bg-light: #faf8f5;
+      --bg-medium: #f0ebe5;
+      --bg-dark: #e8dfd6;
+      --text-dark: #1a1a1a;
+      --text-medium: #3d3d3d;
+      --text-light: #666666;
+      --text-muted: #999999;
+      --accent-green: #7fb069;
+      --accent-red: #c97c7c;
+      --white: #ffffff;
+    }
+
+    /* Header / Navigation */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--bg-dark);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      color: var(--text-medium);
+      transition: color 0.3s ease;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .btn-cta {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .btn-cta:hover {
+      background: #5a4d42;
+      box-shadow: 0 4px 12px rgba(107, 91, 77, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #f0ebe5 0%, #faf8f5 100%);
+      padding: 80px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--bg-dark);
+    }
+
+    .hero-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 3.2rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-bottom: 40px;
+      line-height: 1.8;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      padding: 14px 32px;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: #5a4d42;
+      box-shadow: 0 6px 20px rgba(107, 91, 77, 0.3);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      padding: 14px 32px;
+      border: 2px solid var(--primary);
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Helvetica Neue', sans-serif;
+      font-weight: 500;
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    /* Newsletter Signup */
+    .newsletter-bar {
+      background: var(--primary);
+      color: var(--white);
+      padding: 32px 40px;
+      text-align: center;
+    }
+
+    .newsletter-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .newsletter-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+
+    .newsletter-content p {
+      font-size: 0.95rem;
+      opacity: 0.95;
+      margin-bottom: 20px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: 'Helvetica Neue', sans-serif;
+    }
+
+    .newsletter-form button {
+      padding: 12px 24px;
+      background: var(--primary-light);
+      color: var(--white);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .newsletter-form button:hover {
+      background: #7a6b5f;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    /* Category Section */
+    .category-section {
+      margin-bottom: 80px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      border-bottom: 2px solid var(--bg-dark);
+      padding-bottom: 20px;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+      color: var(--text-dark);
+      font-weight: 400;
+    }
+
+    .view-all {
+      color: var(--primary);
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .view-all:hover {
+      gap: 12px;
+    }
+
+    /* Article Grid */
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+    }
+
+    .article-card {
+      background: var(--white);
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
+    }
+
+    .article-image {
+      height: 200px;
+      background: linear-gradient(135deg, var(--bg-medium) 0%, var(--bg-dark) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--bg-dark);
+    }
+
+    .article-content {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-category {
+      display: inline-block;
+      background: var(--bg-medium);
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .article-title {
+      font-size: 1.2rem;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.5;
+      font-weight: 400;
+      flex: 1;
+    }
+
+    .article-excerpt {
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-bottom: 16px;
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--bg-light);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .article-meta-right {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-read {
+      color: var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-read:hover {
+      color: #5a4d42;
+    }
+
+    .btn-bookmark {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-bookmark:hover,
+    .btn-bookmark.saved {
+      color: var(--accent-red);
+    }
+
+    /* About Section */
+    .about-section {
+      background: var(--bg-medium);
+      padding: 60px 40px;
+      margin: 60px 0;
+      border-radius: 8px;
+    }
+
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .about-content h3 {
+      font-size: 1.8rem;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+
+    .about-content p {
+      font-size: 1rem;
+      color: var(--text-medium);
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .about-content blockquote {
+      font-size: 1.3rem;
+      color: var(--primary);
+      font-style: italic;
+      margin: 30px 0;
+      padding: 20px 0;
+      border-top: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--text-dark);
+      color: var(--white);
+      padding: 60px 40px 30px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-section h4 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: 12px;
+    }
+
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        gap: 16px;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+
+      .article-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function App() {
+      const [bookmarked, setBookmarked] = React.useState({});
+
+      const toggleBookmark = (id) => {
+        setBookmarked(prev => ({
+          ...prev,
+          [id]: !prev[id]
+        }));
+      };
+
+      const articles = [
+        {
+          id: 1,
+          title: "「基改食物」哪些被你吃下肚？台灣大宗進口原物料黃豆、玉米、小麥進口實況與選購指南",
+          excerpt: "台灣糧食危機的救星？基因改造食品的進口現況與爭議探討...",
+          category: "食品與健康",
+          date: "4月20日",
+          author: "潤讀編輯",
+          readTime: "8分鐘"
+        },
+        {
+          id: 2,
+          title: "食安真相：別被「賣相」騙了！「高顏質」食物其實暗藏食安危機",
+          excerpt: "餐桌上的化學課：了解食材的來歷，吃出真健康...",
+          category: "食品與健康",
+          date: "4月18日",
+          author: "潤讀編輯",
+          readTime: "6分鐘"
+        },
+        {
+          id: 3,
+          title: "學會分辨飢餓信號：識破「假性飢餓」，才是遠離慢性病的關鍵",
+          excerpt: "「飲食」是一門覺察的學問。現代人的飲食習慣往往被外在環境左右...",
+          category: "食品與健康",
+          date: "4月15日",
+          author: "潤讀編輯",
+          readTime: "7分鐘"
+        },
+        {
+          id: 4,
+          title: "別讓孩子吃「鹹」了未來：揭秘國高中生外食營養黑洞",
+          excerpt: "慢性病年輕化，外食族的國高中生也要當心。如何達成營養均衡...",
+          category: "食品與健康",
+          date: "4月12日",
+          author: "潤讀編輯",
+          readTime: "9分鐘"
+        },
+        {
+          id: 5,
+          title: "外食族必看！除了澱粉，這 3 個「飲食陷阱」正在破壞你的代謝力",
+          excerpt: "在飲食便利的社會環境以及餐飲業蓬勃發展的現代，外食已成為多數人...",
+          category: "食品與健康",
+          date: "4月10日",
+          author: "潤讀編輯",
+          readTime: "8分鐘"
+        },
+        {
+          id: 6,
+          title: "外食族的營養陷阱：如何達成「我的營養餐盤」的均衡飲食？",
+          excerpt: "外食頻率愈高者，愈要重視飲食品質。透過「我的營養餐盤」的指引...",
+          category: "食品與健康",
+          date: "4月8日",
+          author: "潤讀編輯",
+          readTime: "6分鐘"
+        }
+      ];
+
+      return (
+        <>
+          {/* Header */}
+          <header>
+            <nav>
+              <div className="logo">潤讀 So We Read</div>
+              <ul className="nav-links">
+                <li><a href="Homepage - Direction 4.html">首頁</a></li>
+                <li><a href="Story Page - Direction 4.html">潤讀故事</a></li>
+                <li><a href="#blog">部落格</a></li>
+                <li><a href="#contact">聯絡</a></li>
+                <li><a href="Privacy Page - Direction 4.html">權利聲明</a></li>
+              </ul>
+              <button className="btn-cta">開始閱讀</button>
+            </nav>
+          </header>
+
+          {/* Hero Section */}
+          <section className="hero">
+            <div className="hero-content">
+              <img 
+                src="uploads/So-We-Read-潤讀-logo-關於-1.png" 
+                alt="潤讀 So We Read Logo" 
+                style={{
+                  maxWidth: '350px',
+                  height: 'auto',
+                  marginBottom: '40px'
+                }}
+              />
+              <h1>探索閱讀的無限可能</h1>
+              <p className="hero-subtitle">
+                在知識的洪流中，潤讀幫助你緩下腳步、沉澱思緒。精選內容、由淺入深、宏觀視角——讓每次閱讀都變得更有價值。
+              </p>
+              <div className="hero-cta">
+                <button className="btn-primary" onClick={() => window.location.href = '#blog'}>開始閱讀</button>
+                <button className="btn-secondary" onClick={() => window.location.href = 'Story Page - Direction 4.html'}>了解更多</button>
+              </div>
+            </div>
+          </section>
+
+
+
+          {/* Main Content */}
+          <div className="container">
+            {/* Category Section */}
+            <section className="category-section">
+              <div className="section-header">
+                <h2>食品與健康</h2>
+                <a href="#" className="view-all">查看全部 →</a>
+              </div>
+              <div className="article-grid">
+                {articles.map(article => (
+                  <article key={article.id} className="article-card">
+                    <div className="article-image">
+                      📰 {article.category}
+                    </div>
+                    <div className="article-content">
+                      <span className="article-category">{article.category}</span>
+                      <h3 className="article-title">{article.title}</h3>
+                      <p className="article-excerpt">{article.excerpt}</p>
+                      <div className="article-meta">
+                        <div>
+                          <span>{article.date}</span>
+                          <span> • {article.readTime}</span>
+                        </div>
+                        <div className="article-meta-right">
+                          <button className="btn-read">閱讀 →</button>
+                          <button 
+                            className={`btn-bookmark ${bookmarked[article.id] ? 'saved' : ''}`}
+                            onClick={() => toggleBookmark(article.id)}
+                            title={bookmarked[article.id] ? '已收藏' : '收藏文章'}
+                          >
+                            {bookmarked[article.id] ? '♥' : '♡'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+
+            {/* About Section */}
+            <section className="about-section">
+              <div className="about-content">
+                <h3>關於潤讀</h3>
+                <p>潤讀於 2026 年一月中創立，因緣際會之下，有幸能另闢蹊徑，以文字結交志同道合的朋友。</p>
+                <blockquote>「讓知識沉潛，讓閱讀潤心」</blockquote>
+                <p>我們相信知識的傳遞不是單向的。每一位讀者的關注、分享、思考與討論，都是讓潤讀持續前進的動力。</p>
+                <button className="btn-primary" style={{ marginTop: '20px' }} onClick={() => window.location.href = 'Story Page - Direction 4.html'}>了解我們的故事</button>
+              </div>
+
+              {/* Newsletter inside About Section */}
+              <div style={{ marginTop: '60px', padding: '60px 40px', background: '#3d3d3d', borderRadius: '8px', marginBottom: '40px' }}>
+                <div className="newsletter-content" style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+                  <h3 style={{ fontSize: '1.5rem', color: '#ffffff', marginBottom: '12px', fontWeight: '400' }}>訂閱潤讀</h3>
+                  <p style={{ fontSize: '1rem', color: '#e8dfd6', marginBottom: '20px' }}>每週收到精選知識，讓閱讀成為你生活的一部分</p>
+                  <form className="newsletter-form" onSubmit={(e) => { e.preventDefault(); alert('謝謝訂閱！'); }} style={{ background: 'none', padding: '0', display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                    <input type="email" placeholder="輸入你的電子郵件" required style={{ flex: 1, padding: '12px 16px', border: '1px solid #555', background: '#2a2a2a', color: '#ffffff', borderRadius: '4px', fontSize: '0.95rem', maxWidth: '400px' }} />
+                    <button type="submit" style={{ padding: '12px 24px', background: '#6b5b4d', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '500' }}>訂閱</button>
+                  </form>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          {/* Footer */}
+          <footer>
+            <div className="footer-content">
+              <div className="footer-section">
+                <h4>潤讀 So We Read</h4>
+                <ul>
+                  <li><a href="#home">首頁</a></li>
+                  <li><a href="#about">關於</a></li>
+                  <li><a href="#features">特色</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>內容</h4>
+                <ul>
+                  <li><a href="#blog">部落格</a></li>
+                  <li><a href="#categories">分類</a></li>
+                  <li><a href="#archive">文章存檔</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>社區</h4>
+                <ul>
+                  <li><a href="#discussions">討論區</a></li>
+                  <li><a href="#contact">聯絡我們</a></li>
+                  <li><a href="#subscribe">訂閱</a></li>
+                </ul>
+              </div>
+              <div className="footer-section">
+                <h4>法律</h4>
+                <ul>
+                  <li><a href="#privacy">隱私權聲明</a></li>
+                  <li><a href="#terms">使用條款</a></li>
+                  <li><a href="#cookies">Cookie 設定</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>© 2026 潤讀 So We Read. 版權所有。</p>
+            </div>
+          </footer>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
