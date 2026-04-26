@@ -149,6 +149,200 @@ select {
   margin: 0;
 }
 
+/* ── Story Page ─────────────────────────────────── */
+.story-hero {
+  background: linear-gradient(150deg, #2c2417 0%, #4a3728 60%, #6b4c37 100%);
+  padding: 80px 40px;
+}
+
+.story-hero-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.story-label {
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  margin: 0 0 16px;
+}
+
+.story-hero h1 {
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 300;
+  margin: 0 0 20px;
+}
+
+.story-hero-desc {
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.9;
+  margin: 0;
+}
+
+/* 起點 */
+.story-origin {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 60px;
+  align-items: center;
+  padding: 60px 0;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+.story-origin-text h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin: 0 0 24px;
+}
+
+.story-lead {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  line-height: 1.85;
+  margin: 0 0 20px;
+}
+
+.story-origin-text p {
+  color: var(--text-medium);
+  line-height: 1.85;
+  margin: 0 0 16px;
+}
+
+.story-origin-quote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-origin-quote blockquote {
+  margin: 0;
+  padding: 32px 28px;
+  background: linear-gradient(150deg, #2c2417, #4a3728);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 2;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* 三大特色 */
+.story-pillars {
+  padding: 60px 0;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+.story-section-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.story-section-header h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin: 0 0 12px;
+}
+
+.story-section-header p {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.story-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.story-pillar-card {
+  background: var(--white);
+  border: 1px solid var(--bg-dark);
+  border-radius: 8px;
+  padding: 36px 28px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.story-pillar-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
+}
+
+.pillar-icon {
+  font-size: 1.8rem;
+  color: #4a3728;
+  margin-bottom: 12px;
+}
+
+.pillar-en {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.pillar-zh {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin: 0 0 16px;
+}
+
+.pillar-desc {
+  font-size: 0.95rem;
+  color: var(--text-medium);
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* 主張 */
+.story-manifesto {
+  padding: 60px 0;
+  max-width: 720px;
+}
+
+.story-manifesto h2 {
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-dark);
+  margin: 0 0 28px;
+}
+
+.story-manifesto p {
+  color: var(--text-medium);
+  line-height: 1.9;
+  margin: 0 0 20px;
+  font-size: 1rem;
+}
+
+.story-copyright {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--bg-dark);
+  font-size: 0.85rem !important;
+  color: var(--text-muted) !important;
+}
+
+@media (max-width: 900px) {
+  .story-origin {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .story-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .story-hero h1 { font-size: 2.2rem; }
+}
+/* ─────────────────────────────────────────────── */
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
