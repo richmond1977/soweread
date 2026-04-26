@@ -26,20 +26,25 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   return {
     title: post.seoTitle,
     description: post.seoDescription,
+    keywords: post.tags,
+    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
     openGraph: {
       title: post.seoTitle,
       description: post.seoDescription,
       url: `${SITE_URL}/blog/${slug}`,
       siteName: "潤讀 So We Read",
-      images: ogImage,
+      images: ogImage.length
+        ? ogImage
+        : [{ url: "/assets/soweread-logo.png", width: 1200, height: 630, alt: post.title }],
       type: "article",
       publishedTime: post.publishedAt,
+      authors: ["潤讀編輯部"],
     },
     twitter: {
-      card: ogImage.length ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title: post.seoTitle,
       description: post.seoDescription,
-      images: ogImage.map((img) => img.url),
+      images: ogImage.length ? ogImage.map((img) => img.url) : ["/assets/soweread-logo.png"],
     },
   };
 }
