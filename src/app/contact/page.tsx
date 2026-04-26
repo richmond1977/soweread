@@ -1,8 +1,10 @@
+import { ContactPageJsonLd } from "@/components/json-ld";
 import { PublicShell } from "@/components/public-shell";
 
 export default function ContactPage() {
   return (
     <PublicShell>
+      <ContactPageJsonLd />
       <section className="page-hero">
         <h1>聯絡</h1>
         <p>有合作、投稿或訂閱需求，歡迎留下訊息。</p>

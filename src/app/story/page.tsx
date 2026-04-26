@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AboutPageJsonLd } from "@/components/json-ld";
 import { PublicShell } from "@/components/public-shell";
 
 export const metadata = {
@@ -30,6 +31,7 @@ const PILLARS = [
 export default function StoryPage() {
   return (
     <PublicShell>
+      <AboutPageJsonLd />
       <section className="page-hero story-hero">
         <div className="story-hero-inner">
           <p className="story-label">Our Story</p>

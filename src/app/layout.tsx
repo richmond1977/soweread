@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { WebSiteJsonLd } from "@/components/json-ld";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
@@ -43,7 +44,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-Hant">
-      <body>{children}</body>
+      <body>
+        <WebSiteJsonLd />
+        {children}
+      </body>
     </html>
   );
 }
