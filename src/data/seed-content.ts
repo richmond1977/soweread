@@ -54,6 +54,7 @@ export const seedContent: CmsContent = {
       tags: ["基改食品", "食品標示", "黃豆", "玉米", "食安"],
       seoTitle: "基改食物選購指南｜潤讀 So We Read",
       seoDescription: "理解台灣進口黃豆、玉米、小麥與基改食品標示，做出更明智的飲食選擇。",
+      faq: [],
       content: `
 ### 前言：餐桌上的隱形革命
 
@@ -113,6 +114,7 @@ export const seedContent: CmsContent = {
       content: "### 食安真相\n\n外觀漂亮不等於品質安全。購買食品時，應該把成分、保存方式、來源與標示一起納入判斷。",
       seoTitle: "食安真相：別被賣相騙了",
       seoDescription: "從食品外觀、標示與來源理解真正的食品品質。",
+      faq: [],
     },
     {
       id: "post-hunger-signals",
@@ -132,6 +134,7 @@ export const seedContent: CmsContent = {
       content: "### 身體訊號\n\n飢餓不只是胃空了，也可能與睡眠、壓力、情緒和飲食組成有關。",
       seoTitle: "學會分辨飢餓信號",
       seoDescription: "理解生理飢餓與情緒性進食的差異。",
+      faq: [],
     },
     {
       id: "post-metabolism-traps",
@@ -151,6 +154,7 @@ export const seedContent: CmsContent = {
       content: "### 外食與代謝\n\n外食不必然不健康，關鍵在於辨識高鈉、高糖、高油與份量失衡的組合。",
       seoTitle: "外食族必看：破壞代謝力的陷阱",
       seoDescription: "辨識外食中的高熱量與高鈉陷阱。",
+      faq: [],
     },
     {
       id: "post-taiwan-food-culture",
@@ -170,6 +174,7 @@ export const seedContent: CmsContent = {
       content: "### 台灣餐桌\n\n飲食文化不只關於味道，也包含移民、城市節奏、家庭記憶與地方產業。",
       seoTitle: "台灣飲食文化現象",
       seoDescription: "從早餐與夜市理解台灣飲食文化。",
+      faq: [],
     },
     {
       id: "post-organic-food",
@@ -189,6 +194,7 @@ export const seedContent: CmsContent = {
       content: "### 有機與安全\n\n有機食品提供一種生產方式的承諾，但安全性仍需回到來源、保存、標示與風險管理。",
       seoTitle: "有機食品真的更安全嗎？",
       seoDescription: "客觀理解有機食品的優點與限制。",
+      faq: [],
     },
     {
       id: "post-nutrition-label",
@@ -208,6 +214,7 @@ export const seedContent: CmsContent = {
       content: "### 營養標籤\n\n先看份量，再看熱量、糖、鈉與脂肪，最後比對成分表，能避免被單一宣稱帶著走。",
       seoTitle: "營養標籤怎麼讀？",
       seoDescription: "掌握營養標籤判讀方式，做出聰明購物選擇。",
+      faq: [],
     },
   ],
 };

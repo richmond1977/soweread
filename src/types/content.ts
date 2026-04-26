@@ -1,5 +1,10 @@
 export type PostStatus = "draft" | "scheduled" | "published" | "archived";
 
+export type FaqItem = {
+  question: string;
+  answer: string;
+};
+
 export type Author = {
   id: string;
   name: string;
@@ -30,6 +35,7 @@ export type Post = {
   comments: number;
   featured: boolean;
   tags: string[];
+  faq?: FaqItem[];
   content: string;
   seoTitle: string;
   seoDescription: string;

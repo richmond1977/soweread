@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogSidebar } from "@/components/blog-sidebar";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { ArticleJsonLd } from "@/components/json-ld";
+import { ArticleJsonLd, FaqPageJsonLd } from "@/components/json-ld";
 import { PublicShell } from "@/components/public-shell";
 import { ShareButtons } from "@/components/share-buttons";
 import { categoryFor, getContent, getPostBySlug, getPublishedPosts } from "@/lib/content";
@@ -74,6 +74,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         coverImage={post.coverImage}
         categoryName={category.name}
       />
+      <FaqPageJsonLd items={post.faq ?? []} />
       <main className="container">
         <div className="article-layout">
           <article className="article-main">

@@ -2,7 +2,7 @@ import "server-only";
 
 import { seedContent } from "@/data/seed-content";
 import { getPrisma } from "@/lib/prisma";
-import type { Category, CmsContent, Post, PostStatus } from "@/types/content";
+import type { Category, CmsContent, FaqItem, Post, PostStatus } from "@/types/content";
 
 export async function getContent(): Promise<CmsContent> {
   try {
@@ -46,6 +46,7 @@ export async function getContent(): Promise<CmsContent> {
         comments: post.comments,
         featured: post.featured,
         tags: parseTags(post.tagsJson),
+        faq: parseFaq(post.faqJson),
         content: post.content,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
@@ -77,6 +78,25 @@ function parseTags(tagsJson: string) {
     const parsed = JSON.parse(tagsJson) as unknown;
     if (Array.isArray(parsed)) {
       return parsed.filter((item): item is string => typeof item === "string");
+    }
+  } catch {
+    return [];
+  }
+
+  return [];
+}
+
+function parseFaq(faqJson: string): FaqItem[] {
+  try {
+    const parsed = JSON.parse(faqJson) as unknown;
+    if (Array.isArray(parsed)) {
+      return parsed.filter(
+        (item): item is FaqItem =>
+          typeof item === "object" &&
+          item !== null &&
+          typeof (item as Record<string, unknown>).question === "string" &&
+          typeof (item as Record<string, unknown>).answer === "string"
+      );
     }
   } catch {
     return [];

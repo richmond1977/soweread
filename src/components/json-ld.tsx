@@ -135,6 +135,32 @@ export function AboutPageJsonLd() {
   );
 }
 
+type FaqItem = { question: string; answer: string };
+
+export function FaqPageJsonLd({ items = [] }: { items?: FaqItem[] }) {
+  if (!items.length) return null;
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 export function ContactPageJsonLd() {
   const url = `${SITE_URL}/contact`;
   const schema = {

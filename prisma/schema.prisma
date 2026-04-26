@@ -44,6 +44,7 @@ model Post {
   comments       Int      @default(0)
   featured       Boolean  @default(false)
   tagsJson       String   @default("[]")
+  faqJson        String   @default("[]")
   seoTitle       String
   seoDescription String
   createdAt      DateTime @default(now())
