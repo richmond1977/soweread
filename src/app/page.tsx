@@ -14,7 +14,7 @@ export default async function HomePage() {
         <div className="hero-content">
           <Image
             className="hero-logo"
-            src="/uploads/soweread-logo.png"
+            src="/assets/soweread-logo.png"
             alt="潤讀 So We Read Logo"
             width={350}
             height={233}

@@ -9,6 +9,28 @@ type HomeArticleGridProps = {
   categories: Category[];
 };
 
+const CATEGORY_GRADIENTS: Record<string, string> = {
+  "food-safety":    "linear-gradient(135deg, #c0392b 0%, #e74c3c 40%, #f39c12 100%)",
+  "nutrition":      "linear-gradient(135deg, #27ae60 0%, #2ecc71 50%, #a8e063 100%)",
+  "healthy-eating": "linear-gradient(135deg, #16a085 0%, #1abc9c 50%, #48c9b0 100%)",
+  "food-culture":   "linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #d7bde2 100%)",
+};
+
+const DEFAULT_GRADIENT = "linear-gradient(135deg, #7f8c8d 0%, #95a5a6 50%, #bdc3c7 100%)";
+
+function getCoverStyle(post: Post, categorySlug: string): React.CSSProperties {
+  if (post.coverImage) {
+    return {
+      backgroundImage: `linear-gradient(rgba(250,248,245,0.15), rgba(240,235,229,0.5)), url(${post.coverImage})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    };
+  }
+  return {
+    background: CATEGORY_GRADIENTS[categorySlug] ?? DEFAULT_GRADIENT,
+  };
+}
+
 export function HomeArticleGrid({ posts, categories }: HomeArticleGridProps) {
   const [bookmarked, setBookmarked] = useState<Record<string, boolean>>({});
 
@@ -22,17 +44,11 @@ export function HomeArticleGrid({ posts, categories }: HomeArticleGridProps) {
             <Link
               className="article-image"
               href={`/blog/${post.slug}`}
-              style={
-                post.coverImage
-                  ? {
-                      backgroundImage: `linear-gradient(rgba(250, 248, 245, 0.2), rgba(240, 235, 229, 0.55)), url(${post.coverImage})`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }
-                  : undefined
-              }
+              style={getCoverStyle(post, category.slug)}
             >
-              {!post.coverImage && <span>📰 {category.name}</span>}
+              {!post.coverImage && (
+                <span className="article-image-label">{category.name}</span>
+              )}
             </Link>
             <div className="article-content">
               <span className="article-category">{category.name}</span>
