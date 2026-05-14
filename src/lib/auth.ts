@@ -42,7 +42,7 @@ function verifyToken(token: string): boolean {
 export async function verifyCredentials(email: string, password: string): Promise<boolean> {
   const adminEmail = process.env.ADMIN_EMAIL ?? "";
   const adminPassword = process.env.ADMIN_PASSWORD ?? "";
-  return email === adminEmail && password === adminPassword;
+  return email.trim().toLowerCase() === adminEmail.trim().toLowerCase() && password === adminPassword;
 }
 
 export async function createSession(): Promise<void> {

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { createSession, verifyCredentials } from "@/lib/auth";
 
 export async function loginAction(_prevState: string | null, formData: FormData): Promise<string | null> {
-  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const email = String(formData.get("email") || "").trim();
   const password = String(formData.get("password") || "");
 
   const valid = await verifyCredentials(email, password);

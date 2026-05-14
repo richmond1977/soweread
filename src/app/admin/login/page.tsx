@@ -22,11 +22,11 @@ export default function AdminLoginPage() {
 
         <label>
           帳號
-          <input type="text" name="email" required autoComplete="username" placeholder="Winslet872" />
+          <input type="text" name="email" required autoComplete="username" />
         </label>
         <label>
           密碼
-          <input type="password" name="password" required autoComplete="current-password" placeholder="••••••••" />
+          <input type="password" name="password" required autoComplete="current-password" />
         </label>
 
         <button className="admin-button" type="submit" disabled={isPending}>
