@@ -10,6 +10,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "未授權" }, { status: 401 });
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json({ error: "尚未設定 Vercel Blob 上傳權杖，請先設定 BLOB_READ_WRITE_TOKEN。" }, { status: 500 });
+  }
+
   try {
     const formData = await request.formData();
     const file = formData.get("file");

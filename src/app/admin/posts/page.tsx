@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { getContent } from "@/lib/content";
+import { getContent, isPostPublic } from "@/lib/content";
 import { PostFilters } from "./components/post-filters";
 
 type SearchParams = Promise<{ q?: string; status?: string; category?: string }>;
@@ -85,9 +85,12 @@ export default async function AdminPostsPage({ searchParams }: { searchParams: S
                     <td>{post.views.toLocaleString()}</td>
                     <td style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
                       <Link href={`/admin/posts/${post.id}/edit`}>編輯</Link>
-                      {post.status === "published" && (
+                      <Link href={`/admin/posts/${post.id}/preview`} style={{ color: "var(--text-light)" }}>
+                        預覽
+                      </Link>
+                      {isPostPublic(post) && (
                         <Link href={`/blog/${post.slug}`} target="_blank" style={{ color: "var(--text-light)" }}>
-                          預覽
+                          公開頁
                         </Link>
                       )}
                     </td>

@@ -18,15 +18,26 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
   const { categories, authors } = await getDefaultContent();
   const prisma = getPrisma();
   const id = String(formData.get("id") || `post-${Date.now()}`);
+  const intent = String(formData.get("submitIntent") || "");
   const title = String(formData.get("title") || "").trim();
   const slug = String(formData.get("slug") || "")
     .trim()
     .toLowerCase()
     .replace(/[^a-z0-9-]+/g, "-")
     .replace(/(^-|-$)/g, "");
+  const selectedStatus = String(formData.get("status") || "draft") as PostStatus;
+  const status = intent === "draft" || intent === "published" ? (intent as PostStatus) : selectedStatus;
 
   if (!title || !slug) {
     return "文章標題與 slug 為必填欄位。";
+  }
+
+  const duplicateSlug = await prisma.post.findFirst({
+    where: { slug, NOT: { id } },
+    select: { id: true },
+  });
+  if (duplicateSlug) {
+    return "這個 slug 已被其他文章使用，請換一個網址代稱。";
   }
 
   const existing = await prisma.post.findUnique({ where: { id } });
@@ -38,7 +49,7 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
     coverImage: String(formData.get("coverImage") || "").trim() || undefined,
     categoryId: String(formData.get("categoryId") || categories[0]?.id),
     authorId: String(formData.get("authorId") || authors[0]?.id),
-    status: String(formData.get("status") || "draft") as PostStatus,
+    status,
     publishedAt: String(formData.get("publishedAt") || new Date().toISOString().slice(0, 10)),
     readingMinutes: Number(formData.get("readingMinutes") || existing?.readingMinutes || 5),
     views: Number(formData.get("views") || existing?.views || 0),
@@ -53,49 +64,54 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
     seoDescription: String(formData.get("seoDescription") || formData.get("excerpt") || "").trim(),
   };
 
-  await prisma.post.upsert({
-    where: { id },
-    update: {
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      coverImage: post.coverImage,
-      categoryId: post.categoryId,
-      authorId: post.authorId,
-      status: post.status,
-      publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
-      readingMinutes: post.readingMinutes,
-      views: post.views,
-      comments: post.comments,
-      featured: post.featured,
-      tagsJson: JSON.stringify(post.tags),
-      content: post.content,
-      seoTitle: post.seoTitle,
-      seoDescription: post.seoDescription,
-    },
-    create: {
-      id: post.id,
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      coverImage: post.coverImage,
-      categoryId: post.categoryId,
-      authorId: post.authorId,
-      status: post.status,
-      publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
-      readingMinutes: post.readingMinutes,
-      views: post.views,
-      comments: post.comments,
-      featured: post.featured,
-      tagsJson: JSON.stringify(post.tags),
-      content: post.content,
-      seoTitle: post.seoTitle,
-      seoDescription: post.seoDescription,
-    },
-  });
+  try {
+    await prisma.post.upsert({
+      where: { id },
+      update: {
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        coverImage: post.coverImage,
+        categoryId: post.categoryId,
+        authorId: post.authorId,
+        status: post.status,
+        publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
+        readingMinutes: post.readingMinutes,
+        views: post.views,
+        comments: post.comments,
+        featured: post.featured,
+        tagsJson: JSON.stringify(post.tags),
+        content: post.content,
+        seoTitle: post.seoTitle,
+        seoDescription: post.seoDescription,
+      },
+      create: {
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        coverImage: post.coverImage,
+        categoryId: post.categoryId,
+        authorId: post.authorId,
+        status: post.status,
+        publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
+        readingMinutes: post.readingMinutes,
+        views: post.views,
+        comments: post.comments,
+        featured: post.featured,
+        tagsJson: JSON.stringify(post.tags),
+        content: post.content,
+        seoTitle: post.seoTitle,
+        seoDescription: post.seoDescription,
+      },
+    });
+  } catch {
+    return "文章儲存失敗，請確認欄位內容後再試一次。";
+  }
 
   revalidatePath("/");
   revalidatePath("/blog");
+  if (existing?.slug && existing.slug !== slug) revalidatePath(`/blog/${existing.slug}`);
   revalidatePath(`/blog/${slug}`);
   revalidatePath("/admin/posts");
   redirect("/admin/posts");

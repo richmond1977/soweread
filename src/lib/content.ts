@@ -60,17 +60,33 @@ export async function getContent(): Promise<CmsContent> {
 export async function getPublishedPosts() {
   const content = await getContent();
   return content.posts
-    .filter((post) => post.status === "published")
+    .filter((post) => isPostPublic(post))
     .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
 export async function getPostBySlug(slug: string) {
   const content = await getContent();
-  return content.posts.find((post) => post.slug === slug && post.status === "published") ?? null;
+  return content.posts.find((post) => post.slug === slug && isPostPublic(post)) ?? null;
 }
 
 export function categoryFor(post: Post, categories: Category[]) {
   return categories.find((category) => category.id === post.categoryId) ?? categories[0];
+}
+
+export function isPostPublic(post: Post, now = new Date()) {
+  if (post.status !== "published" && post.status !== "scheduled") return false;
+  return post.publishedAt <= formatTaipeiDate(now);
+}
+
+function formatTaipeiDate(date: Date) {
+  const parts = new Intl.DateTimeFormat("en", {
+    timeZone: "Asia/Taipei",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(date);
+  const byType = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${byType.year}-${byType.month}-${byType.day}`;
 }
 
 function parseTags(tagsJson: string) {

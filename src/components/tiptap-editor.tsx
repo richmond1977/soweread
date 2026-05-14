@@ -6,6 +6,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { useCallback, useRef } from "react";
+import { Bold, Code2, Heading2, Heading3, ImagePlus, Italic, LinkIcon, List, ListOrdered, Quote, Redo2, Undo2 } from "lucide-react";
 
 type TiptapEditorProps = {
   content: string;
@@ -60,6 +61,8 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
         const json = (await res.json()) as { url?: string; error?: string };
         if (json.url) {
           editor.chain().focus().setImage({ src: json.url, alt: file.name }).run();
+        } else if (json.error) {
+          alert(json.error);
         }
       } catch {
         alert("圖片上傳失敗，請重試。");
@@ -79,44 +82,44 @@ export function TiptapEditor({ content, onChange }: TiptapEditorProps) {
     <div className="tiptap-wrapper">
       <div className="tiptap-toolbar">
         <button type="button" className={btn(editor.isActive("bold"))} onClick={() => editor.chain().focus().toggleBold().run()} title="粗體">
-          <strong>B</strong>
+          <Bold size={16} aria-hidden="true" />
         </button>
         <button type="button" className={btn(editor.isActive("italic"))} onClick={() => editor.chain().focus().toggleItalic().run()} title="斜體">
-          <em>I</em>
+          <Italic size={16} aria-hidden="true" />
         </button>
         <div className="tiptap-divider" />
         <button type="button" className={btn(editor.isActive("heading", { level: 2 }))} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} title="H2 標題">
-          H2
+          <Heading2 size={16} aria-hidden="true" />
         </button>
         <button type="button" className={btn(editor.isActive("heading", { level: 3 }))} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} title="H3 標題">
-          H3
+          <Heading3 size={16} aria-hidden="true" />
         </button>
         <div className="tiptap-divider" />
         <button type="button" className={btn(editor.isActive("bulletList"))} onClick={() => editor.chain().focus().toggleBulletList().run()} title="項目清單">
-          ☰
+          <List size={16} aria-hidden="true" />
         </button>
         <button type="button" className={btn(editor.isActive("orderedList"))} onClick={() => editor.chain().focus().toggleOrderedList().run()} title="編號清單">
-          1.
+          <ListOrdered size={16} aria-hidden="true" />
         </button>
         <button type="button" className={btn(editor.isActive("blockquote"))} onClick={() => editor.chain().focus().toggleBlockquote().run()} title="引言">
-          "
+          <Quote size={16} aria-hidden="true" />
         </button>
         <button type="button" className={btn(editor.isActive("codeBlock"))} onClick={() => editor.chain().focus().toggleCodeBlock().run()} title="程式碼區塊">
-          {"</>"}
+          <Code2 size={16} aria-hidden="true" />
         </button>
         <div className="tiptap-divider" />
         <button type="button" className={btn(editor.isActive("link"))} onClick={insertLink} title="插入連結">
-          🔗
+          <LinkIcon size={16} aria-hidden="true" />
         </button>
         <button type="button" className="tiptap-btn" onClick={insertImage} title="插入圖片">
-          🖼
+          <ImagePlus size={16} aria-hidden="true" />
         </button>
         <div className="tiptap-divider" />
         <button type="button" className="tiptap-btn" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} title="復原">
-          ↩
+          <Undo2 size={16} aria-hidden="true" />
         </button>
         <button type="button" className="tiptap-btn" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} title="重做">
-          ↪
+          <Redo2 size={16} aria-hidden="true" />
         </button>
       </div>
 

@@ -1,7 +1,9 @@
 "use client";
 
 import { useActionState, useState, useCallback } from "react";
+import Link from "next/link";
 import { savePostAction } from "@/lib/actions";
+import { CoverImageField } from "@/components/cover-image-field";
 import { TiptapEditor } from "@/components/tiptap-editor";
 import type { Author, Category, Post } from "@/types/content";
 
@@ -25,7 +27,7 @@ export function AdminPostForm({ post, categories, authors }: AdminPostFormProps)
         .replace(/[\s　一-鿿㐀-䶿]+/g, "-")
         .replace(/[^a-z0-9-]+/g, "")
         .replace(/(^-|-$)/g, "");
-      if (generated) setSlug(generated);
+      setSlug(generated || `post-${Date.now()}`);
     },
     [slug]
   );
@@ -72,10 +74,7 @@ export function AdminPostForm({ post, categories, authors }: AdminPostFormProps)
         <textarea name="excerpt" defaultValue={post?.excerpt} placeholder="列表頁與 SEO 使用的文章摘要" />
       </label>
 
-      <label>
-        封面圖片 URL
-        <input name="coverImage" defaultValue={post?.coverImage} placeholder="https://... 或使用工具列插入圖片後複製網址" />
-      </label>
+      <CoverImageField defaultValue={post?.coverImage} />
 
       <div className="field-grid">
         <label>
@@ -109,6 +108,7 @@ export function AdminPostForm({ post, categories, authors }: AdminPostFormProps)
             <option value="scheduled">排程</option>
             <option value="archived">封存</option>
           </select>
+          <span className="admin-help">排程文章會在發布日期到達後才出現在前台。</span>
         </label>
         <label>
           閱讀分鐘
@@ -142,20 +142,29 @@ export function AdminPostForm({ post, categories, authors }: AdminPostFormProps)
         精選文章
       </label>
 
-      <div style={{ display: "flex", gap: 12 }}>
-        <button className="admin-button" type="submit" name="status" value="published" disabled={isPending}>
+      <div className="admin-form-actions">
+        <button className="admin-button" type="submit" name="submitIntent" value="published" disabled={isPending}>
           {isPending ? "儲存中…" : "發布文章"}
         </button>
         <button
-          className="admin-button"
+          className="admin-button admin-button--secondary"
           type="submit"
-          name="status"
+          name="submitIntent"
           value="draft"
           disabled={isPending}
-          style={{ background: "var(--bg-dark)", color: "var(--text-medium)" }}
         >
           儲存草稿
         </button>
+        <button className="admin-button admin-button--secondary" type="submit" name="submitIntent" value="save" disabled={isPending}>
+          儲存變更
+        </button>
+        {post ? (
+          <Link className="admin-button admin-button--ghost" href={`/admin/posts/${post.id}/preview`} target="_blank">
+            預覽文章
+          </Link>
+        ) : (
+          <span className="admin-help">新增文章需先儲存草稿後才能預覽。</span>
+        )}
       </div>
     </form>
   );

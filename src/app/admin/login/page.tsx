@@ -21,8 +21,8 @@ export default function AdminLoginPage() {
         )}
 
         <label>
-          Email
-          <input type="email" name="email" required autoComplete="email" placeholder="admin@soweread.com" />
+          帳號
+          <input type="text" name="email" required autoComplete="username" placeholder="Winslet872" />
         </label>
         <label>
           密碼
