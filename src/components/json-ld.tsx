@@ -49,12 +49,24 @@ type ArticleJsonLdProps = {
   description: string;
   slug: string;
   publishedAt: string;
+  modifiedAt: string;
   tags: string[];
   coverImage?: string | null;
+  coverImageAlt?: string;
   categoryName: string;
 };
 
-export function ArticleJsonLd({ title, description, slug, publishedAt, tags, coverImage, categoryName }: ArticleJsonLdProps) {
+export function ArticleJsonLd({
+  title,
+  description,
+  slug,
+  publishedAt,
+  modifiedAt,
+  tags,
+  coverImage,
+  coverImageAlt,
+  categoryName,
+}: ArticleJsonLdProps) {
   const url = `${SITE_URL}/blog/${slug}`;
   const image = coverImage
     ? coverImage.startsWith("http") ? coverImage : `${SITE_URL}${coverImage}`
@@ -70,14 +82,14 @@ export function ArticleJsonLd({ title, description, slug, publishedAt, tags, cov
         description,
         url,
         datePublished: publishedAt,
-        dateModified: publishedAt,
+        dateModified: modifiedAt,
         author: {
           "@type": "Organization",
           "@id": `${SITE_URL}/#organization`,
           name: "潤讀編輯部",
         },
         publisher: { "@id": `${SITE_URL}/#organization` },
-        image: { "@type": "ImageObject", url: image, width: 1200, height: 630 },
+        image: { "@type": "ImageObject", url: image, width: 1200, height: 630, caption: coverImageAlt || title },
         keywords: tags.join(", "),
         articleSection: categoryName,
         inLanguage: "zh-TW",

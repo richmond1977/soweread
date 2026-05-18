@@ -14,15 +14,19 @@ type CategoryPageProps = {
 const POSTS_PER_PAGE = 8;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
+  const { page } = await searchParams;
   const content = await getContent();
   const category = content.categories.find((c) => c.slug === slug);
   if (!category) return {};
+  const isPaginated = Boolean(page);
 
   return {
     title: `${category.name}｜潤讀 So We Read`,
     description: category.description,
+    alternates: { canonical: `${SITE_URL}/categories/${slug}` },
+    robots: isPaginated ? { index: false, follow: true } : undefined,
     openGraph: {
       title: `${category.name}｜潤讀 So We Read`,
       description: category.description,

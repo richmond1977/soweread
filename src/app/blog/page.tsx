@@ -5,10 +5,22 @@ import { Pagination } from "@/components/pagination";
 import { PublicShell } from "@/components/public-shell";
 import { categoryFor, getContent, getPublishedPosts } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "部落格｜潤讀 So We Read",
-  description: "探索食品安全、營養知識與飲食文化的精選文章。",
-};
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+
+export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const hasIndexChangingParams =
+    Boolean(params.q?.trim()) ||
+    Boolean(params.sort) ||
+    Boolean(params.page);
+
+  return {
+    title: "部落格｜潤讀 So We Read",
+    description: "探索食品安全、營養知識與飲食文化的精選文章。",
+    alternates: { canonical: `${SITE_URL}/blog` },
+    robots: hasIndexChangingParams ? { index: false, follow: true } : undefined,
+  };
+}
 
 const POSTS_PER_PAGE = 8;
 

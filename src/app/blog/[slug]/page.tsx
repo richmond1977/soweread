@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BlogSidebar } from "@/components/blog-sidebar";
 import { BookmarkButton } from "@/components/bookmark-button";
-import { ArticleJsonLd, FaqPageJsonLd } from "@/components/json-ld";
+import { ArticleJsonLd } from "@/components/json-ld";
 import { PublicShell } from "@/components/public-shell";
 import { ShareButtons } from "@/components/share-buttons";
 import { categoryFor, getContent, getPostBySlug, getPublishedPosts } from "@/lib/content";
@@ -21,8 +21,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   if (!post) return {};
 
   const ogImage = post.coverImage
-    ? [{ url: post.coverImage.startsWith("http") ? post.coverImage : `${SITE_URL}${post.coverImage}`, width: 1200, height: 630, alt: post.title }]
+    ? [{ url: post.coverImage.startsWith("http") ? post.coverImage : `${SITE_URL}${post.coverImage}`, width: 1200, height: 630, alt: post.coverImageAlt || post.title }]
     : [];
+  const modifiedAt = post.contentUpdatedAt ?? post.updatedAt ?? post.publishedAt;
 
   return {
     title: post.seoTitle,
@@ -39,6 +40,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
         : [{ url: "/assets/soweread-logo.png", width: 1200, height: 630, alt: post.title }],
       type: "article",
       publishedTime: post.publishedAt,
+      modifiedTime: modifiedAt,
       authors: ["潤讀編輯部"],
     },
     twitter: {
@@ -62,6 +64,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
   const category = categoryFor(post, content.categories);
   const related = posts.filter((item) => item.id !== post.id && item.categoryId === post.categoryId).slice(0, 3);
+  const modifiedAt = post.contentUpdatedAt ?? post.updatedAt ?? post.publishedAt;
+  const sources = post.sources ?? [];
 
   return (
     <PublicShell>
@@ -70,11 +74,12 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         description={post.seoDescription ?? ""}
         slug={slug}
         publishedAt={post.publishedAt}
+        modifiedAt={modifiedAt}
         tags={post.tags}
         coverImage={post.coverImage}
+        coverImageAlt={post.coverImageAlt}
         categoryName={category.name}
       />
-      <FaqPageJsonLd items={post.faq ?? []} />
       <main className="container">
         <div className="article-layout">
           <article className="article-main">
@@ -84,7 +89,8 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </Link>
               <h1 className="article-title">{post.title}</h1>
               <div className="article-meta">
-                <span>{post.publishedAt}</span>
+                <span>發布 {post.publishedAt}</span>
+                <span>更新 {modifiedAt}</span>
                 <span>{post.readingMinutes} 分鐘閱讀</span>
                 <span>{post.views.toLocaleString()} 次閱讀</span>
               </div>
@@ -95,10 +101,43 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
             {post.coverImage && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img className="article-cover" src={post.coverImage} alt={post.title} />
+              <img className="article-cover" src={post.coverImage} alt={post.coverImageAlt || post.title} />
             )}
 
             <div className="article-body">{renderArticleContent(post.content)}</div>
+
+            {sources.length > 0 && (
+              <section className="article-reference-section">
+                <h2>資料來源</h2>
+                <ul>
+                  {sources.map((source) => (
+                    <li key={`${source.label}-${source.url ?? ""}`}>
+                      {source.url ? (
+                        <a href={source.url} target="_blank" rel="noreferrer">
+                          {source.label}
+                        </a>
+                      ) : (
+                        source.label
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {post.showFaq && post.faq && post.faq.length > 0 && (
+              <section className="article-reference-section">
+                <h2>常見問題</h2>
+                <div className="article-faq-list">
+                  {post.faq.map((item) => (
+                    <details key={item.question}>
+                      <summary>{item.question}</summary>
+                      <p>{item.answer}</p>
+                    </details>
+                  ))}
+                </div>
+              </section>
+            )}
 
             {post.tags.length > 0 && (
               <div className="article-tags">
