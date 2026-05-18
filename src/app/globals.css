@@ -1675,6 +1675,54 @@ select {
   margin: 28px 0;
 }
 
+.article-reference-section {
+  border-top: 1px solid var(--bg-dark);
+  margin: 40px 0 28px;
+  padding-top: 28px;
+}
+
+.article-reference-section h2 {
+  color: var(--text-dark);
+  font-size: 1.25rem;
+  margin: 0 0 16px;
+}
+
+.article-reference-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.article-reference-section li {
+  margin: 8px 0;
+}
+
+.article-reference-section a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.article-faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.article-faq-list details {
+  border: 1px solid var(--bg-dark);
+  border-radius: 6px;
+  padding: 14px 16px;
+  background: var(--bg-light);
+}
+
+.article-faq-list summary {
+  color: var(--text-dark);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.article-faq-list p {
+  margin: 12px 0 0;
+}
+
 @media (max-width: 1024px) {
   .article-layout {
     grid-template-columns: 1fr;

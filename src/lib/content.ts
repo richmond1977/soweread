@@ -2,7 +2,7 @@ import "server-only";
 
 import { seedContent } from "@/data/seed-content";
 import { getPrisma } from "@/lib/prisma";
-import type { Category, CmsContent, FaqItem, Post, PostStatus } from "@/types/content";
+import type { Category, CmsContent, FaqItem, Post, PostStatus, SourceItem } from "@/types/content";
 
 export async function getContent(): Promise<CmsContent> {
   try {
@@ -37,16 +37,21 @@ export async function getContent(): Promise<CmsContent> {
         slug: post.slug,
         excerpt: post.excerpt,
         coverImage: post.coverImage ?? undefined,
+        coverImageAlt: post.coverImageAlt,
         categoryId: post.categoryId,
         authorId: post.authorId,
         status: post.status as PostStatus,
         publishedAt: post.publishedAt.toISOString().slice(0, 10),
+        contentUpdatedAt: post.contentUpdatedAt?.toISOString().slice(0, 10),
+        updatedAt: post.updatedAt.toISOString().slice(0, 10),
         readingMinutes: post.readingMinutes,
         views: post.views,
         comments: post.comments,
         featured: post.featured,
         tags: parseTags(post.tagsJson),
         faq: parseFaq(post.faqJson),
+        showFaq: post.showFaq,
+        sources: parseSources(post.sourcesJson),
         content: post.content,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
@@ -112,6 +117,26 @@ function parseFaq(faqJson: string): FaqItem[] {
           item !== null &&
           typeof (item as Record<string, unknown>).question === "string" &&
           typeof (item as Record<string, unknown>).answer === "string"
+      );
+    }
+  } catch {
+    return [];
+  }
+
+  return [];
+}
+
+function parseSources(sourcesJson: string): SourceItem[] {
+  try {
+    const parsed = JSON.parse(sourcesJson) as unknown;
+    if (Array.isArray(parsed)) {
+      return parsed.filter(
+        (item): item is SourceItem =>
+          typeof item === "object" &&
+          item !== null &&
+          typeof (item as Record<string, unknown>).label === "string" &&
+          ((item as Record<string, unknown>).url === undefined ||
+            typeof (item as Record<string, unknown>).url === "string")
       );
     }
   } catch {

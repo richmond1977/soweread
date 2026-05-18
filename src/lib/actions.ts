@@ -47,10 +47,13 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
     slug,
     excerpt: String(formData.get("excerpt") || "").trim(),
     coverImage: String(formData.get("coverImage") || "").trim() || undefined,
+    coverImageAlt: String(formData.get("coverImageAlt") || title).trim(),
     categoryId: String(formData.get("categoryId") || categories[0]?.id),
     authorId: String(formData.get("authorId") || authors[0]?.id),
     status,
     publishedAt: String(formData.get("publishedAt") || new Date().toISOString().slice(0, 10)),
+    contentUpdatedAt: String(formData.get("contentUpdatedAt") || "").trim() || undefined,
+    updatedAt: existing?.updatedAt.toISOString().slice(0, 10) ?? new Date().toISOString().slice(0, 10),
     readingMinutes: Number(formData.get("readingMinutes") || existing?.readingMinutes || 5),
     views: Number(formData.get("views") || existing?.views || 0),
     comments: Number(formData.get("comments") || existing?.comments || 0),
@@ -59,6 +62,9 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
       .split(",")
       .map((tag) => tag.trim())
       .filter(Boolean),
+    faq: parseFaqInput(String(formData.get("faq") || "")),
+    showFaq: formData.get("showFaq") === "on",
+    sources: parseSourcesInput(String(formData.get("sources") || "")),
     content: String(formData.get("content") || "").trim(),
     seoTitle: String(formData.get("seoTitle") || title).trim(),
     seoDescription: String(formData.get("seoDescription") || formData.get("excerpt") || "").trim(),
@@ -72,15 +78,20 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
         slug: post.slug,
         excerpt: post.excerpt,
         coverImage: post.coverImage,
+        coverImageAlt: post.coverImageAlt,
         categoryId: post.categoryId,
         authorId: post.authorId,
         status: post.status,
         publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
+        contentUpdatedAt: post.contentUpdatedAt ? new Date(`${post.contentUpdatedAt}T00:00:00.000Z`) : null,
         readingMinutes: post.readingMinutes,
         views: post.views,
         comments: post.comments,
         featured: post.featured,
         tagsJson: JSON.stringify(post.tags),
+        faqJson: JSON.stringify(post.faq ?? []),
+        showFaq: post.showFaq,
+        sourcesJson: JSON.stringify(post.sources),
         content: post.content,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
@@ -91,15 +102,20 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
         slug: post.slug,
         excerpt: post.excerpt,
         coverImage: post.coverImage,
+        coverImageAlt: post.coverImageAlt,
         categoryId: post.categoryId,
         authorId: post.authorId,
         status: post.status,
         publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
+        contentUpdatedAt: post.contentUpdatedAt ? new Date(`${post.contentUpdatedAt}T00:00:00.000Z`) : null,
         readingMinutes: post.readingMinutes,
         views: post.views,
         comments: post.comments,
         featured: post.featured,
         tagsJson: JSON.stringify(post.tags),
+        faqJson: JSON.stringify(post.faq ?? []),
+        showFaq: post.showFaq,
+        sourcesJson: JSON.stringify(post.sources),
         content: post.content,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,
@@ -146,4 +162,34 @@ export async function saveCategoryAction(formData: FormData) {
   revalidatePath("/blog");
   revalidatePath("/admin/categories");
   redirect("/admin/categories");
+}
+
+function parseSourcesInput(value: string) {
+  return value
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [labelPart, urlPart] = line.split(/\s+\|\s+|\s+-\s+|\t/);
+      const label = (labelPart || line).trim();
+      const url = (urlPart || "").trim();
+      if (!url && /^https?:\/\//i.test(label)) {
+        return { label, url: label };
+      }
+      return url ? { label, url } : { label };
+    });
+}
+
+function parseFaqInput(value: string) {
+  return value
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean)
+    .map((block) => {
+      const lines = block.split(/\n/).map((line) => line.trim()).filter(Boolean);
+      const question = (lines.shift() || "").replace(/^Q[:：]\s*/i, "").trim();
+      const answer = lines.join("\n").replace(/^A[:：]\s*/i, "").trim();
+      return { question, answer };
+    })
+    .filter((item) => item.question && item.answer);
 }

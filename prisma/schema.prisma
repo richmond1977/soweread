@@ -36,15 +36,19 @@ model Post {
   slug           String   @unique
   excerpt        String
   coverImage     String?
+  coverImageAlt  String   @default("")
   content        String
   status         String
   publishedAt    DateTime
+  contentUpdatedAt DateTime?
   readingMinutes Int
   views          Int      @default(0)
   comments       Int      @default(0)
   featured       Boolean  @default(false)
   tagsJson       String   @default("[]")
   faqJson        String   @default("[]")
+  showFaq        Boolean  @default(false)
+  sourcesJson    String   @default("[]")
   seoTitle       String
   seoDescription String
   createdAt      DateTime @default(now())

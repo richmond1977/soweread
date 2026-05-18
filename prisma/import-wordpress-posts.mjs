@@ -40,7 +40,9 @@ for (const [index, post] of wpPosts.entries()) {
   const content = wpHtmlToMarkdown(post.content?.rendered ?? "");
   const plain = cleanText(post.content?.rendered ?? "");
   const excerpt = buildExcerpt(post.excerpt?.rendered, plain);
-  const coverImage = post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? firstMarkdownImage(content);
+  const media = post._embedded?.["wp:featuredmedia"]?.[0];
+  const coverImage = media?.source_url ?? firstMarkdownImage(content);
+  const coverImageAlt = cleanText(media?.alt_text ?? "") || title;
   const tags = extractTags(plain);
   const readingMinutes = Math.max(3, Math.ceil(plain.length / 520));
   const publishedAt = new Date(post.date);
@@ -52,15 +54,18 @@ for (const [index, post] of wpPosts.entries()) {
       slug: `wp-${post.id}`,
       excerpt,
       coverImage,
+      coverImageAlt,
       categoryId: category.id,
       authorId: author.id,
       status: "published",
       publishedAt,
+      contentUpdatedAt: new Date(post.modified || post.date),
       readingMinutes,
       views: 1600 - index * 83,
       comments: 0,
       featured: index < 3,
       tagsJson: JSON.stringify(tags),
+      sourcesJson: JSON.stringify([{ label: "原始 WordPress 文章", url: post.link }].filter((source) => source.url)),
       content,
       seoTitle: title,
       seoDescription: excerpt,
