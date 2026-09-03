@@ -1,5 +1,6 @@
 import "server-only";
 
+import { growthContent } from "@/data/growth-content";
 import { growthFixture } from "@/data/growth-fixture";
 import { getPrismaForRole } from "@/lib/prisma";
 import { getRequestSiteConfig } from "@/lib/request-site-config";
@@ -129,7 +130,24 @@ async function loadKnowledge(config: SiteConfig): Promise<GrowthKnowledge> {
   }
 }
 
+/**
+ * Offline fallback, used only when the growth database is empty or unreachable.
+ *
+ * Two mutually exclusive sources, both opt-in:
+ *
+ *  - `GROWTH_CONTENT_SOURCE=module` serves the reviewed content module. That is
+ *    real editorial content with verified sources, so it is safe to show to a
+ *    reader; it exists so the first batch can be previewed before it is seeded
+ *    into a database.
+ *  - `GROWTH_USE_FIXTURE=true` serves the fixture, which is TEST DATA with
+ *    placeholder sources and carries a visible warning on every page.
+ *
+ * The content module wins when both are set, because serving reviewed content
+ * is always preferable to serving placeholders. With neither set the deployment
+ * serves nothing at all rather than guessing.
+ */
 function fixtureOrEmpty(): GrowthKnowledge {
+  if (process.env.GROWTH_CONTENT_SOURCE === "module") return growthContent;
   return process.env.GROWTH_USE_FIXTURE === "true" ? growthFixture : EMPTY_KNOWLEDGE;
 }
 
