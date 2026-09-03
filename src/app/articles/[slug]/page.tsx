@@ -78,7 +78,9 @@ export default async function GrowthArticlePage({ params }: ArticlePageProps) {
 
           <p className="growth-byline">
             {article.authorName}
-            {article.reviewerName ? `｜審閱：${article.reviewerName}` : "｜尚未經第二人審閱"}
+            {/* 審閱者只在真的有人審閱過時才顯示。沒有審閱者時保持沉默，
+                而不是宣告「尚未審閱」——那對讀者沒有用，卻會出現在每一篇上。 */}
+            {article.reviewerName ? `｜審閱：${article.reviewerName}` : ""}
             {article.datePublished ? `｜發布 ${article.datePublished}` : ""}
             {article.dateModified && article.dateModified !== article.datePublished
               ? `｜更新 ${article.dateModified}`
