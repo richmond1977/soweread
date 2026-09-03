@@ -1,4 +1,5 @@
 import type { GrowthArticle, GrowthEntity, GrowthSource, GrowthTopic } from "@/lib/growth/knowledge-core";
+import type { PrimaryArticle } from "@/lib/growth/primary-articles";
 
 type Breadcrumb = { name: string; href: string };
 
@@ -18,6 +19,13 @@ function organizationNode(baseUrl: string) {
     name: "潤讀知識站",
     url: baseUrl,
     inLanguage: "zh-TW",
+    // 與頁首實際顯示的標誌是同一個檔案，structured data 不得宣稱頁面上沒有的東西。
+    logo: {
+      "@type": "ImageObject",
+      url: `${baseUrl}/soweread-logo.png`,
+      width: 600,
+      height: 400,
+    },
     parentOrganization: {
       "@type": "Organization",
       name: "潤讀 So We Read",
@@ -72,6 +80,62 @@ export function GrowthSiteJsonLd({ baseUrl, breadcrumbs }: GrowthSiteJsonLdProps
           ...(breadcrumbs && breadcrumbs.length > 1
             ? [breadcrumbNode(baseUrl, breadcrumbs)]
             : []),
+        ],
+      }}
+    />
+  );
+}
+
+interface PrimaryArticleIndexJsonLdProps {
+  baseUrl: string;
+  breadcrumbs: Breadcrumb[];
+  name: string;
+  description: string;
+  articles: PrimaryArticle[];
+}
+
+/**
+ * 主站文章總覽的結構化資料。
+ *
+ * 這一頁的每個項目都指向 soweread.com，所以 ItemList 的 url 也指向那裡——
+ * structured data 必須與頁面上看得到的連結一致（計畫書 §9.1）。這裡不宣稱
+ * 這些文章是本站的作品，只描述它們是本站整理的一份清單。
+ */
+export function PrimaryArticleIndexJsonLd({
+  baseUrl,
+  breadcrumbs,
+  name,
+  description,
+  articles,
+}: PrimaryArticleIndexJsonLdProps) {
+  const url = `${baseUrl}/reading`;
+
+  return (
+    <JsonLd
+      schema={{
+        "@context": "https://schema.org",
+        "@graph": [
+          organizationNode(baseUrl),
+          {
+            "@type": "CollectionPage",
+            "@id": `${url}#collection`,
+            url,
+            name,
+            description,
+            inLanguage: "zh-TW",
+            isPartOf: { "@id": `${baseUrl}/#website` },
+            mainEntity: {
+              "@type": "ItemList",
+              numberOfItems: articles.length,
+              itemListElement: articles.map((article, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                name: article.title,
+                url: article.url,
+              })),
+            },
+          },
+          breadcrumbNode(baseUrl, breadcrumbs),
         ],
       }}
     />

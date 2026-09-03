@@ -183,6 +183,7 @@ export function growthSitemapPaths(knowledge: GrowthKnowledge): string[] {
   return [
     "/",
     "/topics",
+    "/reading",
     ...publishedTopics(knowledge).map((topic) => `/topics/${topic.slug}`),
     ...publishedEntities(knowledge).map((entity) => `/entities/${entity.slug}`),
     ...publishedArticles(knowledge).map((article) => `/articles/${article.slug}`),

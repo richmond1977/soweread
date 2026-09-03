@@ -2175,3 +2175,92 @@ select {
     padding: 16px 16px 0;
   }
 }
+
+/* ── 主站文章總覽 ──────────────────────────────────────────────────── */
+
+.growth-index-meta {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: -12px 0 24px;
+}
+
+.growth-primary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.growth-primary-list > li {
+  display: flex;
+  /* 標題優先，長標題換行後日期落到次列並靠右對齊 */
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+.growth-primary-list > li:last-child {
+  border-bottom: none;
+}
+
+.growth-primary-list a {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 16px;
+  color: var(--text-dark);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.growth-primary-list a:hover {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* 發布日期靠右對齊，掃視時形成一條時間軸 */
+.growth-primary-list time {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ── 品牌鎖定：主站標誌 ＋ 本站名稱 ────────────────────────────────── */
+
+.growth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 標誌原圖 600x400，四周留白很多；用高度控制，寬度自動。 */
+.growth-brand-logo {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+/* 「知識站」是子品牌，用一道分隔線與主站標誌區隔 */
+.growth-brand-suffix {
+  padding-left: 10px;
+  border-left: 1px solid var(--bg-dark);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 640px) {
+  .growth-brand-logo {
+    height: 36px;
+  }
+
+  .growth-brand-suffix {
+    font-size: 15px;
+  }
+}

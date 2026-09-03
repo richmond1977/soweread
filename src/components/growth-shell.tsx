@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FIXTURE_NOTICE } from "@/data/growth-fixture";
 
@@ -13,11 +14,22 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
   return (
     <div className="growth-shell">
       <header className="growth-header">
+        {/* 子品牌鎖定：主站標誌 ＋ 本站名稱。alt 只描述標誌本身，
+            「知識站」是可選取的文字，不靠圖片傳達。 */}
         <Link className="growth-brand" href="/">
-          潤讀知識站
+          <Image
+            src="/soweread-logo.png"
+            alt="潤讀 So We Read"
+            width={600}
+            height={400}
+            priority
+            className="growth-brand-logo"
+          />
+          <span className="growth-brand-suffix">知識站</span>
         </Link>
         <nav className="growth-nav" aria-label="主要導覽">
           <Link href="/topics">主題</Link>
+          <Link href="/reading">主站文章</Link>
           <a href="https://soweread.com/" rel="noopener">
             潤讀主站
           </a>

@@ -89,6 +89,8 @@ test("the growth sitemap lists published canonical paths and nothing else", () =
     "/articles/reading-nutrition-labels",
     "/entities/nutrition-facts-label",
     "/entities/tfda",
+    // 主站文章總覽是固定頁，不隨知識庫內容變動。
+    "/reading",
     "/topics",
     "/topics/food-labeling",
   ]);
