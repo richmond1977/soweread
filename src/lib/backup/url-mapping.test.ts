@@ -53,3 +53,20 @@ test("shared infrastructure paths belong to neither role", () => {
     assert.equal(isGrowthOnlyPath(path), false, path);
   }
 });
+
+test("domain-ownership files bypass every role rule so verification cannot break", () => {
+  for (const path of [
+    "/google9ac0854fdca4504b.html",
+    "/GOOGLE9AC0854FDCA4504B.HTML",
+    "/.well-known/security.txt",
+    "/.well-known/acme-challenge/token",
+  ]) {
+    assert.equal(shouldBypassBackupProxy(path), true, path);
+  }
+});
+
+test("the verification bypass does not open up arbitrary html paths", () => {
+  for (const path of ["/index.html", "/google.html", "/googleshort.html", "/blog/post.html"]) {
+    assert.equal(shouldBypassBackupProxy(path), false, path);
+  }
+});

@@ -111,6 +111,7 @@ NEXT_PUBLIC_SITE_URL=https://soweread.vercel.app
 PRIMARY_SITE_URL=https://soweread.com
 GROWTH_ENFORCE_CANONICAL_HOST=true
 GROWTH_SITE_VERIFICATION=<Search Console meta tag token>
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-FSYTV0011X
 
 GROWTH_DATABASE_URL=<growth Neon pooled URL>
 DATABASE_URL=<growth Neon pooled URL>        # Prisma CLI 預設 datasource
@@ -269,4 +270,15 @@ Richmond 決定用與 wisecode website 相同的 Google 帳號管理這個站的
 
 - **GA4 要開獨立的 property**（或至少獨立 data stream），不要併進 wisecode website 的 property。計畫書 §11 要求分開記錄 growth 的 impressions／clicks／indexed pages，以及 growth → `soweread.com` 的 referral sessions；混在同一個 property 裡兩邊的報表都會失真。
 - **Search Console 同樣要獨立 property**，而且因為是 `*.vercel.app`，只能用 **URL-prefix property**（無法做 DNS 驗證的 domain property）。驗證用 meta tag，token 放進 `GROWTH_SITE_VERIFICATION`。
-- GA 追蹤碼本身**尚未實作**。要裝的時候需要決定：measurement ID 走環境變數、是否需要 consent gate、以及是否排除內部流量。
+### GA4 追蹤碼（已實作）
+
+- Measurement ID：`G-FSYTV0011X`，透過 `NEXT_PUBLIC_GA_MEASUREMENT_ID` 提供。
+- **只在 growth 角色且設定健康時載入**。backup 鏡像與未解析的 host 不會載入任何追蹤碼。
+- 用 `next/script` 的 `afterInteractive`，不阻擋首次繪製。
+- ID 會被驗證（`^G-[A-Z0-9]{4,20}$`）。格式錯誤就完全不輸出追蹤碼，而不是產生壞掉的 inline script。
+- **這個變數只設在 Production**。若設成 All Environments，每個 preview 部署都會把資料灌進同一個 GA property。
+
+尚未實作、需要你決定的部分：
+
+- **Consent gate**：目前沒有 cookie 同意橫幅，GA 會在頁面載入後直接啟動。站台語言與客群以台灣為主，台灣個資法沒有像 GDPR 那樣要求事前同意；但如果預期有歐盟訪客，就需要加 consent mode。要加請告知。
+- **排除內部流量**：建議在 GA4 後台用 IP 過濾設定（Admin → Data Streams → Configure tag settings → Define internal traffic），不需要改程式。

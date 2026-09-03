@@ -35,7 +35,12 @@ export function shouldBypassBackupProxy(pathname: string) {
     pathname === "/api/sync/wordpress" ||
     pathname === "/robots.txt" ||
     pathname === "/sitemap.xml" ||
-    pathname === "/rss.xml"
+    pathname === "/rss.xml" ||
+    // Search Console / other domain-ownership files live at the site root and
+    // must be served verbatim on every role: a redirect or a 404 here fails
+    // verification.
+    pathname.startsWith("/.well-known/") ||
+    /^\/google[0-9a-f]{16}\.html$/i.test(pathname)
   ) {
     return true;
   }

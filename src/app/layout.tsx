@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { GrowthAnalytics } from "@/components/growth-analytics";
 import { WebSiteJsonLd } from "@/components/json-ld";
+import { parseMeasurementId } from "@/lib/growth/analytics";
 import { getRequestSiteConfig } from "@/lib/request-site-config";
 import "./globals.css";
 
@@ -77,6 +79,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const config = await getRequestSiteConfig();
+  // Analytics belongs to the growth site only: the backup deployment is a
+  // private mirror and must not report traffic anywhere.
+  const measurementId = config.canServeGrowthContent
+    ? parseMeasurementId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID)
+    : null;
 
   return (
     <html lang="zh-Hant">
@@ -85,6 +92,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             soweread.com graph must not be asserted on the growth domain. */}
         {config.isGrowth ? null : <WebSiteJsonLd />}
         {children}
+        {measurementId ? <GrowthAnalytics measurementId={measurementId} /> : null}
       </body>
     </html>
   );
