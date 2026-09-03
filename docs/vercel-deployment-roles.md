@@ -1,6 +1,14 @@
 # Vercel 部署：primary／growth／backup 角色隔離
 
-**狀態：** 程式已實作並在本機 production server 驗證；**尚未做任何實際部署**（沒有 Vercel 或 Neon 授權）。
+**狀態（2026-09-03）：growth 已完成部署並上線。** https://soweread.vercel.app
+
+線上實測：`SITE_ROLE=growth`、`configIssues: 0`、首頁 `潤讀知識站`、`index, follow`、self-canonical、robots.txt 帶 sitemap、`/blog` 與 `/rss.xml` 回 404、Search Console 驗證檔 200、GA4 已在瀏覽器確認實際初始化、cron 回 `200 {"skipped":true}`、`/status` 顯示 `configHealthy: true`。
+
+資料庫：舊的 Neon（`ep-empty-butterfly`）已由 Richmond 刪除；現用新資料庫（`ep-cold-dawn`），4 個 migration 全部套用、`migrate diff` 無 drift。
+
+**目前站上沒有內容**（`/topics` 顯示「尚未發布任何主題」，sitemap 只有 `/` 與 `/topics`）。Production 刻意**不開** `GROWTH_USE_FIXTURE`：fixture 是標示為測試資料、來源為佔位 URL 的內容，用 `index, follow` 送進索引會違反「不建立假來源、不假裝已查證」的邊界。
+
+> Vercel 已改版：環境變數不再是單一頁面，改為 **Settings → Environments → 點該環境（Production／Preview）→ Environment Variables**。
 
 ## 0. 目前決策（2026-09-03，優先讀這節）
 
@@ -128,7 +136,19 @@ ADMIN_PASSWORD=<...>
 
 **關於 cron**：`vercel.json` 的每日 WordPress 同步排程會被 growth Project 一起繼承。程式已處理：growth 角色呼叫 `/api/sync/wordpress` 會回 **200 `{"skipped": true}`**，不寫入任何資料、也不會在 Vercel 儀表板留下每天一次的失敗 cron。想更乾淨可以在 Settings → Cron Jobs 直接關掉。
 
-Preview 環境變數：`GROWTH_USE_FIXTURE=true`、`GROWTH_ENFORCE_CANONICAL_HOST=false`。
+Preview 環境變數（已設定）：
+
+```
+SITE_ROLE_RESOLUTION=env
+SITE_ROLE=growth
+PRIMARY_SITE_URL=https://soweread.com
+GROWTH_ENFORCE_CANONICAL_HOST=false
+GROWTH_USE_FIXTURE=true
+```
+
+Preview **不要**設 `NEXT_PUBLIC_GA_MEASUREMENT_ID`，否則預覽流量會灌進同一個 GA property。
+
+> ⚠️ 這五個目前只綁在 `codex/seo-ai-search-content-fields` 這個分支。Vercel CLI 在非互動模式下拒絕設定「all Preview branches」（回 `git_branch_required`），只能指定單一分支。要讓所有預覽分支都適用，請在 dashboard 把這幾個變數的 Git Branch 條件清空。
 
 ### 2.2 Backup Project（延後，目前不建立）
 
@@ -257,10 +277,10 @@ backup 刻意保持 crawler 可讀（不用 `Disallow: /`），否則 crawler �
 
 ## 8. 上線前還缺什麼
 
-- Vercel 帳號授權：建立 Project `soweread`（growth 角色）。
-- **一個** Neon 資料庫與連線字串（pooled + direct）。
-- Search Console URL-prefix property + `GROWTH_SITE_VERIFICATION` token。
-- Google Analytics：GA4 的**獨立 property**（見 §9）。目前程式**還沒有安裝 GA 追蹤碼**。
+- ~~Vercel Project~~ → 已建立並上線。
+- ~~Neon 資料庫~~ → 已建立並套用 migration。
+- ~~Search Console URL-prefix property~~ → 已用 `public/google9ac0854fdca4504b.html` 驗證檔，`GROWTH_SITE_VERIFICATION` 不需設定。
+- ~~Google Analytics~~ → 已完成。獨立串流「Soweread」，`G-FSYTV0011X`，線上已確認初始化。
 - 取代 fixture 的真實 cornerstone 內容（含實際查證的來源）。
 - 媒體檔案獨立鏡像——在那之前備援狀態必須標示為「非 disaster-complete」。
 
