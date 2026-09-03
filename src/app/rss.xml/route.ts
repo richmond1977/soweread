@@ -1,8 +1,19 @@
 import { getPublishedPosts } from "@/lib/content";
+import { getRequestSiteConfig } from "@/lib/request-site-config";
+import { getSiteConfig } from "@/lib/site-config";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+const SITE_URL = getSiteConfig().primarySiteUrl;
+
+export const dynamic = "force-dynamic";
 
 export async function GET() {
+  // This feed lists soweread.com articles. The growth domain has its own
+  // content tree and must not republish the primary feed.
+  const config = await getRequestSiteConfig();
+  if (config.isGrowth || config.siteRole === "unresolved") {
+    return new Response("Not found", { status: 404, headers: { "X-Robots-Tag": "noindex, follow" } });
+  }
+
   const posts = await getPublishedPosts();
 
   const items = posts

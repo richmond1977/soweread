@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getPrisma } from "@/lib/prisma";
+import { getPostEditRestriction } from "@/lib/post-edit-guard";
 import type { Category, Post, PostStatus } from "@/types/content";
 
 async function getDefaultContent() {
@@ -41,6 +42,10 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
   }
 
   const existing = await prisma.post.findUnique({ where: { id } });
+  const editSourceError = getPostEditRestriction(existing?.sourceType);
+  if (editSourceError) {
+    return editSourceError;
+  }
   const post: Post = {
     id,
     title,
@@ -84,6 +89,12 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
         status: post.status,
         publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
         contentUpdatedAt: post.contentUpdatedAt ? new Date(`${post.contentUpdatedAt}T00:00:00.000Z`) : null,
+        sourceType: existing?.sourceType ?? "native",
+        externalSourceId: existing?.externalSourceId ?? null,
+        sourceCanonicalUrl: existing?.sourceCanonicalUrl ?? null,
+        sourceModifiedAt: existing?.sourceModifiedAt ?? null,
+        sourceHash: existing?.sourceHash ?? null,
+        lastSyncedAt: existing?.lastSyncedAt ?? null,
         readingMinutes: post.readingMinutes,
         views: post.views,
         comments: post.comments,
@@ -108,6 +119,7 @@ export async function savePostAction(_prevState: string | null, formData: FormDa
         status: post.status,
         publishedAt: new Date(`${post.publishedAt}T00:00:00.000Z`),
         contentUpdatedAt: post.contentUpdatedAt ? new Date(`${post.contentUpdatedAt}T00:00:00.000Z`) : null,
+        sourceType: "native",
         readingMinutes: post.readingMinutes,
         views: post.views,
         comments: post.comments,

@@ -52,6 +52,8 @@ export async function getContent(): Promise<CmsContent> {
         faq: parseFaq(post.faqJson),
         showFaq: post.showFaq,
         sources: parseSources(post.sourcesJson),
+        sourceType: post.sourceType as "native" | "wordpress",
+        sourceCanonicalUrl: post.sourceCanonicalUrl ?? undefined,
         content: post.content,
         seoTitle: post.seoTitle,
         seoDescription: post.seoDescription,

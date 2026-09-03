@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { BlogSidebar } from "@/components/blog-sidebar";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { ArticleJsonLd } from "@/components/json-ld";
@@ -8,18 +8,21 @@ import { PublicShell } from "@/components/public-shell";
 import { ShareButtons } from "@/components/share-buttons";
 import { categoryFor, getContent, getPostBySlug, getPublishedPosts } from "@/lib/content";
 import { renderArticleContent } from "@/lib/markdown";
+import { getSiteConfig } from "@/lib/site-config";
 
 type ArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+const siteConfig = getSiteConfig();
+const SITE_URL = siteConfig.primarySiteUrl;
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
   if (!post) return {};
 
+  const canonicalUrl = post.sourceCanonicalUrl ?? `${SITE_URL}/blog/${slug}`;
   const ogImage = post.coverImage
     ? [{ url: post.coverImage.startsWith("http") ? post.coverImage : `${SITE_URL}${post.coverImage}`, width: 1200, height: 630, alt: post.coverImageAlt || post.title }]
     : [];
@@ -29,11 +32,11 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     title: post.seoTitle,
     description: post.seoDescription,
     keywords: post.tags,
-    alternates: { canonical: `${SITE_URL}/blog/${slug}` },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
       title: post.seoTitle,
       description: post.seoDescription,
-      url: `${SITE_URL}/blog/${slug}`,
+      url: canonicalUrl,
       siteName: "潤讀 So We Read",
       images: ogImage.length
         ? ogImage
@@ -60,6 +63,12 @@ export async function generateStaticParams() {
 export default async function ArticlePage({ params }: ArticlePageProps) {
   const { slug } = await params;
   const [content, posts, post] = await Promise.all([getContent(), getPublishedPosts(), getPostBySlug(slug)]);
+  if (siteConfig.shouldRedirectInProxy) {
+    if (post?.sourceCanonicalUrl) {
+      redirect(post.sourceCanonicalUrl);
+    }
+    redirect(SITE_URL);
+  }
   if (!post) notFound();
 
   const category = categoryFor(post, content.categories);

@@ -41,6 +41,12 @@ model Post {
   status         String
   publishedAt    DateTime
   contentUpdatedAt DateTime?
+  sourceType     String   @default("native")
+  externalSourceId String? @unique
+  sourceCanonicalUrl String?
+  sourceModifiedAt DateTime?
+  sourceHash     String?
+  lastSyncedAt   DateTime?
   readingMinutes Int
   views          Int      @default(0)
   comments       Int      @default(0)
@@ -62,4 +68,184 @@ model Post {
   @@index([status, publishedAt])
   @@index([categoryId])
   @@index([authorId])
+  @@index([sourceType, status])
+}
+
+model SyncState {
+  key                String   @id
+  lastAttemptAt      DateTime?
+  lastSuccessAt      DateTime?
+  lastError          String?
+  lastSuccessSummary String?
+  syncedItemCount    Int      @default(0)
+  lastDurationMs     Int?
+  updatedAt          DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Growth knowledge model (SITE_ROLE=growth only).
+//
+// These tables live in the growth database. The WordPress mirror lives in the
+// backup database and is never joined to anything here: mirror rows must not be
+// able to become public growth pages (plan §2, §8.2).
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Topic {
+  id          String   @id
+  slug        String   @unique
+  name        String
+  summary     String
+  definition  String   @default("")
+  keyQuestionsJson String @default("[]")
+  publicationStatus String @default("draft")
+  seoTitle    String   @default("")
+  seoDescription String @default("")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  reviewedAt  DateTime?
+
+  entities  TopicEntity[]
+  articles  GrowthArticle[]
+
+  @@index([publicationStatus, sortOrder])
+}
+
+model Entity {
+  id           String   @id
+  slug         String   @unique
+  entityType   String
+  name         String
+  aliasesJson  String   @default("[]")
+  description  String
+  canonicalUrl String?
+  publicationStatus String @default("draft")
+  seoTitle     String   @default("")
+  seoDescription String @default("")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  reviewedAt   DateTime?
+
+  topics           TopicEntity[]
+  sources          EntitySource[]
+  articles         ArticleEntity[]
+  outgoingRelations EntityRelation[] @relation("EntityRelationSubject")
+  incomingRelations EntityRelation[] @relation("EntityRelationObject")
+
+  @@index([publicationStatus, entityType])
+}
+
+model EntityRelation {
+  id              String   @id
+  subjectEntityId String
+  predicate       String
+  objectEntityId  String
+  sourceId        String?
+  confidence      String   @default("reported")
+  note            String   @default("")
+  reviewedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  subjectEntity Entity  @relation("EntityRelationSubject", fields: [subjectEntityId], references: [id], onDelete: Cascade)
+  objectEntity  Entity  @relation("EntityRelationObject", fields: [objectEntityId], references: [id], onDelete: Cascade)
+  source        Source? @relation(fields: [sourceId], references: [id])
+
+  @@unique([subjectEntityId, predicate, objectEntityId])
+  @@index([objectEntityId])
+}
+
+model Source {
+  id          String   @id
+  title       String
+  publisher   String
+  url         String
+  sourceType  String   @default("web")
+  publishedAt DateTime?
+  retrievedAt DateTime
+  note        String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  entityLinks    EntitySource[]
+  articleLinks   ArticleSource[]
+  relations      EntityRelation[]
+
+  @@index([publisher])
+}
+
+model GrowthArticle {
+  id             String   @id
+  slug           String   @unique
+  title          String
+  summary        String
+  content        String
+  editorialStatus String  @default("draft")
+  authorName     String
+  reviewerName   String   @default("")
+  seoTitle       String   @default("")
+  seoDescription String   @default("")
+  primaryCtaUrl  String?
+  primaryCtaLabel String  @default("")
+  datePublished  DateTime?
+  dateModified   DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  topicId  String?
+  topic    Topic?   @relation(fields: [topicId], references: [id])
+  entities ArticleEntity[]
+  sources  ArticleSource[]
+
+  @@index([editorialStatus, datePublished])
+}
+
+model TopicEntity {
+  topicId   String
+  entityId  String
+  sortOrder Int    @default(0)
+
+  topic  Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  entity Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  @@id([topicId, entityId])
+  @@index([entityId])
+}
+
+model ArticleEntity {
+  articleId String
+  entityId  String
+  role      String @default("mentions")
+
+  article GrowthArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  entity  Entity        @relation(fields: [entityId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, entityId])
+  @@index([entityId])
+}
+
+model ArticleSource {
+  articleId String
+  sourceId  String
+  note      String @default("")
+  sortOrder Int    @default(0)
+
+  article GrowthArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  source  Source        @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, sourceId])
+  @@index([sourceId])
+}
+
+model EntitySource {
+  entityId  String
+  sourceId  String
+  note      String @default("")
+  sortOrder Int    @default(0)
+
+  entity Entity @relation(fields: [entityId], references: [id], onDelete: Cascade)
+  source Source @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@id([entityId, sourceId])
+  @@index([sourceId])
 }
