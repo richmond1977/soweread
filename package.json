@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1 --port 3000",
+    "dev:growth": "node scripts/dev-growth.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:backup": "node --test --experimental-strip-types src/lib/site-config.test.ts src/lib/actions.test.ts src/lib/backup/url-mapping.test.ts src/lib/backup/wordpress-sync.test.ts src/lib/growth/knowledge-core.test.ts src/lib/growth/analytics.test.ts",
+    "test:backup": "node --test --experimental-strip-types src/lib/site-config.test.ts src/lib/actions.test.ts src/lib/backup/url-mapping.test.ts src/lib/backup/wordpress-sync.test.ts src/lib/growth/knowledge-core.test.ts src/lib/growth/analytics.test.ts src/data/growth-content.test.ts",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",
     "db:seed": "prisma db seed",
+    "db:seed:growth": "node scripts/seed-growth-content.mjs",
+    "backup:wordpress": "node scripts/backup-wordpress.mjs",
     "db:import:wordpress": "node prisma/import-wordpress-posts.mjs",
     "db:export:sqlite": "node prisma/export-sqlite.mjs",
     "db:import:neon": "node prisma/import-to-neon.mjs",
     "postinstall": "prisma generate"
-  },
-  "prisma": {
-    "seed": "node prisma/seed.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",

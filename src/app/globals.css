@@ -1789,3 +1789,389 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Growth 知識站（SITE_ROLE=growth）
+   --------------------------------------------------------------------------
+   沿用本檔頂端既有的 design token，不另立一套色票。
+   版面刻意與主站區隔：內容以單欄長文寬度為主，來源區塊必須在視覺上明顯
+   獨立於內文，讀者才分得出「這是編輯寫的」與「這是引用的官方資料」。
+   ========================================================================== */
+
+.growth-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── 頁首與導覽 ────────────────────────────────────────────────────── */
+
+.growth-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--bg-dark);
+  padding: 18px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 28px;
+}
+
+.growth-brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: 0.02em;
+}
+
+.growth-nav {
+  display: flex;
+  gap: 20px;
+  font-size: 15px;
+}
+
+.growth-nav a {
+  color: var(--text-light);
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.growth-nav a:hover {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ── 測試資料警語：必須無法被忽略 ──────────────────────────────────── */
+
+.growth-fixture-notice {
+  margin: 0;
+  padding: 12px 24px;
+  background: var(--accent-red);
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* ── 麵包屑 ────────────────────────────────────────────────────────── */
+
+.growth-breadcrumbs {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 24px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.growth-breadcrumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.growth-breadcrumbs li + li::before {
+  content: "›";
+  margin-right: 8px;
+  color: var(--bg-dark);
+}
+
+.growth-breadcrumbs a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* ── 主要內容 ──────────────────────────────────────────────────────── */
+
+.growth-main {
+  flex: 1;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 8px 24px 64px;
+}
+
+.growth-main h1 {
+  font-size: 32px;
+  line-height: 1.35;
+  color: var(--text-dark);
+  margin: 24px 0 12px;
+}
+
+.growth-main h2 {
+  font-size: 21px;
+  line-height: 1.4;
+  color: var(--text-dark);
+  margin: 40px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+.growth-main h3 {
+  font-size: 17px;
+  color: var(--text-dark);
+  margin: 28px 0 8px;
+}
+
+.growth-main p {
+  margin: 0 0 16px;
+}
+
+.growth-main ul,
+.growth-main ol {
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+
+.growth-main li {
+  margin-bottom: 8px;
+}
+
+.growth-main a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.growth-main a:hover {
+  color: var(--text-dark);
+}
+
+/* 摘要段：每頁最上方的一句話答案，GEO 的關鍵區塊 */
+.growth-lede {
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--text-dark);
+  border-left: 3px solid var(--primary);
+  padding-left: 16px;
+  margin: 0 0 28px;
+}
+
+/* ── 清單：主題、實體、文章 ────────────────────────────────────────── */
+
+.growth-topic-list,
+.growth-entity-list,
+.growth-article-list,
+.growth-relation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+
+.growth-topic-list > li,
+.growth-entity-list > li,
+.growth-article-list > li {
+  background: var(--white);
+  border: 1px solid var(--bg-dark);
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+}
+
+.growth-topic-list > li > a,
+.growth-entity-list > li > a,
+.growth-article-list > li > a {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.growth-topic-list > li > a:hover,
+.growth-entity-list > li > a:hover,
+.growth-article-list > li > a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.growth-topic-list p,
+.growth-entity-list p,
+.growth-article-list p {
+  margin: 6px 0 0;
+  font-size: 15px;
+  color: var(--text-light);
+}
+
+/* 實體類型徽章 */
+.growth-entity-type {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-medium);
+  color: var(--text-light);
+  font-size: 12px;
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  vertical-align: middle;
+}
+
+.growth-entity-aliases {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.growth-parent-topic {
+  font-size: 14px;
+  color: var(--text-light);
+}
+
+/* ── 知識關係 ──────────────────────────────────────────────────────── */
+
+.growth-relation-list > li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--bg-dark);
+  font-size: 15px;
+}
+
+.growth-predicate {
+  margin: 0 6px;
+  color: var(--text-light);
+}
+
+/* 沒有來源的關係不會被 render；有來源的一律把出處帶出來 */
+.growth-relation-source {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ── 文章 ──────────────────────────────────────────────────────────── */
+
+.growth-byline {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--bg-dark);
+}
+
+.growth-article-body p {
+  font-size: 17px;
+  line-height: 1.85;
+  color: var(--text-medium);
+}
+
+.growth-article-body strong {
+  color: var(--text-dark);
+}
+
+/* ── 來源清單：視覺上必須明顯獨立於內文 ────────────────────────────── */
+
+.growth-sources {
+  margin: 48px 0 0;
+  padding: 20px 22px;
+  background: var(--bg-medium);
+  border-radius: 6px;
+  border-left: 4px solid var(--primary-light);
+}
+
+.growth-sources h2 {
+  margin-top: 0;
+  font-size: 17px;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.growth-sources ol {
+  padding-left: 20px;
+  margin: 0;
+}
+
+.growth-sources li {
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.growth-sources li:last-child {
+  margin-bottom: 0;
+}
+
+.growth-source-meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+.growth-source-note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.growth-official-link {
+  font-size: 15px;
+}
+
+/* ── 導向主站的 CTA ────────────────────────────────────────────────── */
+
+.growth-cta {
+  margin: 40px 0 0;
+  padding: 20px 22px;
+  background: var(--white);
+  border: 1px solid var(--bg-dark);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.growth-cta-link {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.growth-cta-link:hover {
+  background: var(--text-dark);
+  color: var(--white);
+}
+
+/* ── 頁尾 ──────────────────────────────────────────────────────────── */
+
+.growth-footer {
+  background: var(--white);
+  border-top: 1px solid var(--bg-dark);
+  padding: 28px 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.growth-footer a {
+  color: var(--text-light);
+  text-decoration: underline;
+}
+
+/* ── 窄螢幕 ────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .growth-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .growth-main {
+    padding: 8px 16px 48px;
+  }
+
+  .growth-main h1 {
+    font-size: 26px;
+  }
+
+  .growth-lede {
+    font-size: 17px;
+  }
+
+  .growth-breadcrumbs {
+    padding: 16px 16px 0;
+  }
+}

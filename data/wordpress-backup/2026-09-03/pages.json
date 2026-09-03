@@ -1,0 +1,1298 @@
+[
+  {
+    "id": 301,
+    "date": "2026-01-29T14:14:21",
+    "date_gmt": "2026-01-29T06:14:21",
+    "guid": {
+      "rendered": "https://soweread.com/contact/"
+    },
+    "modified": "2026-05-14T20:26:12",
+    "modified_gmt": "2026-05-14T12:26:12",
+    "slug": "contact",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/home/contact/",
+    "title": {
+      "rendered": "與我們聯絡Contact"
+    },
+    "content": {
+      "rendered": "\n\n\n<div class=\"wp-block-uagb-container uagb-block-c6494f04 alignfull uagb-is-root-container\">\n\n</div>\n\n\n\n<h2 class=\"wp-block-heading\">與我們聯繫，分享您的想法或問題</h2>\n\n\n\n<p class=\"wp-block-paragraph\">我們樂於聆聽您的聲音，無論是建議、問題，都歡迎隨時聯絡我們。</p>\n\n\n<div class=\"wpforms-container wpforms-container-full wpforms-block wpforms-block-4abaf67a-5542-4fe5-ab88-7dae56e38399\" id=\"wpforms-2298\"><form id=\"wpforms-form-2298\" class=\"wpforms-validate wpforms-form wpforms-ajax-form\" data-formid=\"2298\" method=\"post\" enctype=\"multipart/form-data\" action=\"/wp-json/wp/v2/pages?per_page=100&#038;page=1\" data-token=\"3a11121a08a87ece61a09cc5ba44fee7\" data-token-time=\"1788430205\"><noscript class=\"wpforms-error-noscript\">Please enable JavaScript in your browser to complete this form.</noscript><div class=\"wpforms-field-container\">\t\t<div id=\"wpforms-2298-field_4-container\"\n\t\t\tclass=\"wpforms-field wpforms-field-text\"\n\t\t\tdata-field-type=\"text\"\n\t\t\tdata-field-id=\"4\"\n\t\t\t>\n\t\t\t<label class=\"wpforms-field-label\" for=\"wpforms-2298-field_4\" >Name Comment or</label>\n\t\t\t<input type=\"text\" id=\"wpforms-2298-field_4\" class=\"wpforms-field-medium\" name=\"wpforms[fields][4]\" >\n\t\t</div>\n\t\t<div id=\"wpforms-2298-field_1-container\" class=\"wpforms-field wpforms-field-name\" data-field-id=\"1\"><label class=\"wpforms-field-label\">Name <span class=\"wpforms-required-label\">*</span></label><div class=\"wpforms-field-row wpforms-field-medium\"><div class=\"wpforms-field-row-block wpforms-first wpforms-one-half\"><input type=\"text\" id=\"wpforms-2298-field_1\" class=\"wpforms-field-name-first wpforms-field-required\" name=\"wpforms[fields][1][first]\" required><label for=\"wpforms-2298-field_1\" class=\"wpforms-field-sublabel after\">First</label></div><div class=\"wpforms-field-row-block wpforms-one-half\"><input type=\"text\" id=\"wpforms-2298-field_1-last\" class=\"wpforms-field-name-last wpforms-field-required\" name=\"wpforms[fields][1][last]\" required><label for=\"wpforms-2298-field_1-last\" class=\"wpforms-field-sublabel after\">Last</label></div></div></div><div id=\"wpforms-2298-field_2-container\" class=\"wpforms-field wpforms-field-email\" data-field-id=\"2\"><label class=\"wpforms-field-label\" for=\"wpforms-2298-field_2\">Email <span class=\"wpforms-required-label\">*</span></label><input type=\"email\" id=\"wpforms-2298-field_2\" class=\"wpforms-field-medium wpforms-field-required\" name=\"wpforms[fields][2]\" spellcheck=\"false\" required></div><div id=\"wpforms-2298-field_3-container\" class=\"wpforms-field wpforms-field-textarea\" data-field-id=\"3\"><label class=\"wpforms-field-label\" for=\"wpforms-2298-field_3\">Comment or Message</label><textarea id=\"wpforms-2298-field_3\" class=\"wpforms-field-medium\" name=\"wpforms[fields][3]\" ></textarea></div><script>\n\t\t\t\t( function() {\n\t\t\t\t\tconst style = document.createElement( 'style' );\n\t\t\t\t\tstyle.appendChild( document.createTextNode( '#wpforms-2298-field_4-container { position: absolute !important; overflow: hidden !important; display: inline !important; height: 1px !important; width: 1px !important; z-index: -1000 !important; padding: 0 !important; } #wpforms-2298-field_4-container input { visibility: hidden; } #wpforms-conversational-form-page #wpforms-2298-field_4-container label { counter-increment: none; }' ) );\n\t\t\t\t\tdocument.head.appendChild( style );\n\t\t\t\t\tdocument.currentScript?.remove();\n\t\t\t\t} )();\n\t\t\t</script></div><!-- .wpforms-field-container --><div class=\"wpforms-submit-container\" ><input type=\"hidden\" name=\"wpforms[id]\" value=\"2298\"><input type=\"hidden\" name=\"page_title\" value=\"\"><input type=\"hidden\" name=\"page_url\" value=\"https://soweread.com/wp-json/wp/v2/pages?per_page=100&#038;page=1\"><input type=\"hidden\" name=\"url_referer\" value=\"\"><button type=\"submit\" name=\"wpforms[submit]\" id=\"wpforms-submit-2298\" class=\"wpforms-submit\" data-alt-text=\"Sending...\" data-submit-text=\"Submit\" aria-live=\"assertive\" value=\"wpforms-submit\">Submit</button><img loading=\"lazy\" decoding=\"async\" src=\"https://soweread.com/wp-content/plugins/wpforms-lite/assets/images/submit-spin.svg\" class=\"wpforms-submit-spinner\" style=\"display: none;\" width=\"26\" height=\"26\" alt=\"Loading\"></div></form></div>  <!-- .wpforms-container -->",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>與我們聯繫，分享您的想法或問題 我們樂於 [&hellip;]</p>\n",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 296,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "disabled",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-301",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/301",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=301"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 8,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/301/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2332,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/301/revisions/2332"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=301"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 300,
+    "date": "2026-01-29T14:14:20",
+    "date_gmt": "2026-01-29T06:14:20",
+    "guid": {
+      "rendered": "https://soweread.com/blog/"
+    },
+    "modified": "2026-05-14T21:40:29",
+    "modified_gmt": "2026-05-14T13:40:29",
+    "slug": "%e6%96%87%e7%ab%a0%e9%83%a8%e8%90%bdblog",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/home/%e6%96%87%e7%ab%a0%e9%83%a8%e8%90%bdblog/",
+    "title": {
+      "rendered": "文章部落Blog"
+    },
+    "content": {
+      "rendered": "",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 296,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-300",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/300",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=300"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 3,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/300/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2330,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/300/revisions/2330"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=300"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 299,
+    "date": "2026-01-29T14:14:20",
+    "date_gmt": "2026-01-29T06:14:20",
+    "guid": {
+      "rendered": "https://soweread.com/services/"
+    },
+    "modified": "2026-05-14T20:26:05",
+    "modified_gmt": "2026-05-14T12:26:05",
+    "slug": "manifesto",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/home/manifesto/",
+    "title": {
+      "rendered": "主張Manifesto"
+    },
+    "content": {
+      "rendered": "\n<figure class=\"wp-block-image size-full is-resized\"><img loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"348\" src=\"https://soweread.com/wp-content/uploads/2026/01/g7fa8a21ed72c06c8b3430187baecaf2dd81c44dfdf0c56617498ce86af9686843a4e4f7a27c86bfe3eed10080be51b74_640-1845614.jpg\" alt=\"books, stack, white, stack of books, knowledge, study, read, textbooks, novels, leisure, bookworm, education, literature, pages, wisdom, books, books, books, books, books, white, white, knowledge, study, study, study, study, education, education, education, education\" class=\"wp-image-2148\" style=\"width:1107px;height:auto\" srcset=\"https://soweread.com/wp-content/uploads/2026/01/g7fa8a21ed72c06c8b3430187baecaf2dd81c44dfdf0c56617498ce86af9686843a4e4f7a27c86bfe3eed10080be51b74_640-1845614.jpg 640w, https://soweread.com/wp-content/uploads/2026/01/g7fa8a21ed72c06c8b3430187baecaf2dd81c44dfdf0c56617498ce86af9686843a4e4f7a27c86bfe3eed10080be51b74_640-1845614-300x163.jpg 300w\" sizes=\"auto, (max-width: 640px) 100vw, 640px\" /></figure>\n\n\n\n<p class=\"wp-block-paragraph\">在瞬息萬變的資訊洪流中，我們常常被大量資訊淹沒，卻難以找到真正有價值的知識。</p>\n\n\n\n<p class=\"wp-block-paragraph\">知識的傳遞不是單向的，從好奇心出發，讀者可以此找到探索世界的起點，</p>\n\n\n\n<p class=\"wp-block-paragraph\">也可以在這裡尋找靈感火花、建立知識脈絡，甚至與其他志同道合的人交流、分享觀點。</p>\n\n\n\n<p class=\"wp-block-paragraph\">因此潤讀 So We Read 誕生於這樣的需求：慢下腳步，沉澱知識，用心梳理每一份資訊，</p>\n\n\n\n<p class=\"wp-block-paragraph\">將新舊知識、新聞脈絡、產業趨勢與世界觀點整合成清晰、立體的理解是我們著墨於此的理念。</p>\n\n\n\n<p class=\"wp-block-paragraph\">我們以最客觀忠實的筆觸，將梳理後的真相與現況，呈獻給在數位網路中與我們相遇的每一位讀者，</p>\n\n\n\n<p class=\"wp-block-paragraph\">潤讀所提供的知識由淺入深，並且反應社會現況，在與時事結合的過程中，幫助讀者建立宏觀的視角。</p>\n\n\n\n<div class=\"wp-block-group alignfull is-content-justification-center is-layout-constrained wp-container-core-group-is-layout-36525d6f wp-block-group-is-layout-constrained\" id=\"whyus\" style=\"padding-top:144px;padding-bottom:144px\">\n潤讀所提供的文章特色主要有三：\n\n\n\n<div class=\"wp-block-columns is-layout-flex wp-container-core-columns-is-layout-be1b85cf wp-block-columns-is-layout-flex\" style=\"margin-top:60px\">\n<div class=\"wp-block-column is-layout-flow wp-container-core-column-is-layout-cbc690f8 wp-block-column-is-layout-flow\">\n<figure class=\"wp-block-image size-large\"><img decoding=\"async\" src=\"https://soweread.com/wp-content/themes/astra/inc/assets/images/starter-content/professional.svg\" alt=\"\" class=\"wp-image-163\"/></figure>\n\n\n\n<h3 class=\"wp-block-heading\" style=\"margin-top:16px\">精選內容<br>Selection</h3>\n\n\n\n<p class=\"wp-block-paragraph\">潤讀專注於精選內容，以引領讀者的知識探索，旨在為讀者帶來更精煉、有價值的知識。</p>\n</div>\n\n\n\n<div class=\"wp-block-column is-layout-flow wp-container-core-column-is-layout-cbc690f8 wp-block-column-is-layout-flow\">\n<figure class=\"wp-block-image size-large\"><img decoding=\"async\" src=\"https://soweread.com/wp-content/themes/astra/inc/assets/images/starter-content/passionate.svg\" alt=\"\" class=\"wp-image-162\"/></figure>\n\n\n\n<h3 class=\"wp-block-heading\" style=\"margin-top:16px\">由淺入深<br>Wide &amp; Depth</h3>\n\n\n\n<p class=\"wp-block-paragraph\">關於知識，潤讀會從淺入深、從點到面，幫助讀者理解脈絡，這種方式既能滿足行家「溫故知新」的需求，也能讓新手建立完整的知識底座。</p>\n</div>\n\n\n\n<div class=\"wp-block-column is-layout-flow wp-container-core-column-is-layout-cbc690f8 wp-block-column-is-layout-flow\">\n<figure class=\"wp-block-image size-large\"><img decoding=\"async\" src=\"https://soweread.com/wp-content/themes/astra/inc/assets/images/starter-content/support.svg\" alt=\"\" class=\"wp-image-164\"/></figure>\n\n\n\n<h3 class=\"wp-block-heading\" style=\"margin-top:16px\">宏觀的視角<br>Optics</h3>\n\n\n\n<p class=\"wp-block-paragraph\">潤讀探索現實中的新聞與世界趨勢，結合新聞背景、產業動態與世界趨勢，提供讀者一個更完整、立體的視角。這種方式既能滿足行家「溫故知新」的需求，也能讓新手建立完整的知識底座。</p>\n</div>\n</div>\n</div>\n\n\n\n<div class=\"wp-block-group is-layout-constrained wp-block-group-is-layout-constrained\">\n<div class=\"wp-block-columns is-layout-flex wp-container-core-columns-is-layout-7387b849 wp-block-columns-is-layout-flex\">\n<div class=\"wp-block-column is-layout-flow wp-block-column-is-layout-flow\" style=\"flex-basis:100%\"></div>\n</div>\n</div>\n\n\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>在瞬息萬變的資訊洪流中，我們常常被大量資 [&hellip;]</p>\n",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 296,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "disabled",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-299",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/299",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=299"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 33,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/299/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2498,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/299/revisions/2498"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=299"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 298,
+    "date": "2026-01-29T14:14:16",
+    "date_gmt": "2026-01-29T06:14:16",
+    "guid": {
+      "rendered": "https://soweread.com/about/"
+    },
+    "modified": "2026-05-14T20:26:19",
+    "modified_gmt": "2026-05-14T12:26:19",
+    "slug": "about",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/about/",
+    "title": {
+      "rendered": "關於潤讀 About Us"
+    },
+    "content": {
+      "rendered": "\n<div class=\"wp-block-group alignfull has-ast-global-color-4-background-color has-background is-layout-constrained wp-container-core-group-is-layout-8dd8e200 wp-block-group-is-layout-constrained\" id=\"reviews\">\n<figure class=\"wp-block-image size-full is-resized\"><img loading=\"lazy\" decoding=\"async\" width=\"600\" height=\"400\" src=\"https://soweread.com/wp-content/uploads/2026/02/So-We-Read-潤讀-logo-關於-1.png\" alt=\"\" class=\"wp-image-2363\" style=\"width:774px;height:auto\" srcset=\"https://soweread.com/wp-content/uploads/2026/02/So-We-Read-潤讀-logo-關於-1.png 600w, https://soweread.com/wp-content/uploads/2026/02/So-We-Read-潤讀-logo-關於-1-300x200.png 300w\" sizes=\"auto, (max-width: 600px) 100vw, 600px\" /></figure>\n\n\n\n<p class=\"has-text-align-center wp-block-paragraph\" style=\"font-size:22px;line-height:1.6\">“潤讀是一個多元知識的平台，旨在篩選和整理重要資訊。”</p>\n</div>\n\n\n\n<h3 class=\"wp-block-heading\">成立初衷 Origin</h3>\n\n\n\n<p class=\"wp-block-paragraph\">潤讀於2026年一月中創立，因緣際會之下，有幸能另闢蹊徑，以文字結交志同道合的朋友。</p>\n\n\n\n<p class=\"wp-block-paragraph\">承蒙各界賢達賞光，抽空於百忙之中、在相同或者不同的時間來到此網域相會，一探耕讀究竟。無論是出於好奇、希望更深入了解，或尋找靈感的火花的八方讀者，潤讀都深表歡迎。</p>\n\n\n\n<p class=\"wp-block-paragraph\">自成立以來，潤讀透過清晰的呈現幫助讀者深度理解各類知識與趨勢，潤讀為讀者提供深刻的見解，並幫助他們在繁雜的信息中找到真正有價值的內容，從讀者的反饋與好評之中，建立穩固與長久的讀者社群。</p>\n\n\n\n<p class=\"wp-block-paragraph\">您的關注與分享，不僅能讓這份書寫與思索的旅程延續，更是讓潤讀盡棉薄之力的最大推進力。</p>\n\n\n\n<h3 class=\"wp-block-heading\">讀者與社群 Engagements</h3>\n\n\n\n<p class=\"wp-block-paragraph\">潤讀相信，知識的傳遞不是單向的。每一位讀者的關注、分享、思考與討論，都是讓閏讀持續前進的動力。從好奇心出發，讀者可以在這裡找到探索世界的起點，也可以在這裡尋找靈感火花、建立知識脈絡，甚至與其他志同道合的人交流、分享觀點。</p>\n\n\n\n<p class=\"wp-block-paragraph\">在此，潤讀不僅「以文會友」，更是一個<strong>匯聚同好、共同探索知識的社群空間</strong>。</p>\n\n\n\n<p class=\"wp-block-paragraph\">文章的每一次點擊、每一次分享，不僅是潤讀書寫旅程的標記，更是您知識之田被耕耘的證明。</p>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>“潤讀是一個多元知識的平台，旨在篩選和整 [&hellip;]</p>\n",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 0,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "disabled",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-298",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/298",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=298"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 31,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/298/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2412,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/298/revisions/2412"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=298"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 296,
+    "date": "2026-01-29T14:14:16",
+    "date_gmt": "2026-01-29T06:14:16",
+    "guid": {
+      "rendered": "https://soweread.com/home/"
+    },
+    "modified": "2026-05-14T20:26:00",
+    "modified_gmt": "2026-05-14T12:26:00",
+    "slug": "home",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/home/",
+    "title": {
+      "rendered": "潤讀首頁Home"
+    },
+    "content": {
+      "rendered": "\n<h4 class=\"wp-block-heading\">歡迎回到潤讀 So We Read&#8230;</h4>\n\n\n\n<figure class=\"wp-block-image size-medium is-resized\"><img loading=\"lazy\" decoding=\"async\" width=\"300\" height=\"247\" src=\"https://soweread.com/wp-content/uploads/2026/02/絲綢-1-300x247.jpg\" alt=\"潤讀 So We Read 知識平台\" class=\"wp-image-2244\" style=\"width:600px\" srcset=\"https://soweread.com/wp-content/uploads/2026/02/絲綢-1-300x247.jpg 300w, https://soweread.com/wp-content/uploads/2026/02/絲綢-1-1024x841.jpg 1024w, https://soweread.com/wp-content/uploads/2026/02/絲綢-1-768x631.jpg 768w, https://soweread.com/wp-content/uploads/2026/02/絲綢-1-1536x1262.jpg 1536w, https://soweread.com/wp-content/uploads/2026/02/絲綢-1-2048x1683.jpg 2048w\" sizes=\"auto, (max-width: 300px) 100vw, 300px\" /></figure>\n\n\n\n<p class=\"has-text-align-left has-ast-global-color-2-color has-text-color has-link-color wp-elements-1 wp-block-paragraph\">在知識的洪流中，請在潤讀緩下腳步，</p>\n\n\n\n<p class=\"has-text-align-left has-ast-global-color-2-color has-text-color has-link-color wp-elements-2 wp-block-paragraph\">猶如海綿吸納百川，我們在知識的大海裡潛心採集，</p>\n\n\n\n<p class=\"has-text-align-left has-ast-global-color-2-color has-text-color has-link-color wp-elements-3 wp-block-paragraph\">歷經層層過濾與去蕪存菁，將繁雜轉化為純粹，</p>\n\n\n\n<p class=\"has-text-align-left has-ast-global-color-2-color has-text-color has-link-color wp-elements-4 wp-block-paragraph\">如同春耕、夏耘、秋收、冬藏的沈澱，</p>\n\n\n\n<p class=\"has-text-align-left has-ast-global-color-2-color has-text-color has-link-color wp-elements-5 wp-block-paragraph\">Reap from read, so we read，在網域的交會處，與真實相遇。</p>\n\n\n\n<h2 class=\"wp-block-heading\">「讓知識沉潛，讓閱讀潤心<br>Reap from read, so we read. 」</h2>\n\n\n\n<p class=\"wp-block-paragraph\"></p>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>歡迎回到潤讀 So We Read&#038;#8 [&hellip;]</p>\n",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 0,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "disabled",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "disabled",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-296",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=296"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 29,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2495,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296/revisions/2495"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=296"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "date": "2026-01-07T04:02:53",
+    "date_gmt": "2026-01-07T04:02:53",
+    "guid": {
+      "rendered": "https://soweread.com/?page_id=3"
+    },
+    "modified": "2026-05-14T20:26:16",
+    "modified_gmt": "2026-05-14T12:26:16",
+    "slug": "privacy-policy",
+    "status": "publish",
+    "type": "page",
+    "link": "https://soweread.com/home/privacy-policy/",
+    "title": {
+      "rendered": "隱私權聲明"
+    },
+    "content": {
+      "rendered": "\n<h2 class=\"wp-block-heading\">著作權保護政策聲明</h2>\n\n\n\n<p class=\"wp-block-paragraph\">感謝您造訪潤讀（以下簡稱「本站」）。本站所刊載之所有內容（包括但不限於文字、圖片及網頁排版），均受到著作權法律的保護。</p>\n\n\n\n<h2 class=\"wp-block-heading\">一、 權利歸屬</h2>\n\n\n\n<p class=\"wp-block-paragraph\"><br>本站所有原創內容之著作權均歸屬 潤讀之作者（以下簡稱「權利人」）所有。非經權利人事前書面同意，任何人不得以任何形式對本站內容進行重製、散布、修改、展示、傳送、出版或進行商業開發。</p>\n\n\n\n<p class=\"wp-block-paragraph\"></p>\n\n\n\n<h2 class=\"wp-block-heading\">二、 授權與使用範圍</h2>\n\n\n\n<p class=\"wp-block-paragraph\">個人非商業使用：使用者得基於個人非商業目的，在保留完整出處標示（包含作者姓名、原文標題與原始連結）之前提下，進行閱讀、儲存或分享。</p>\n\n\n\n<p class=\"wp-block-paragraph\">合理引述：在符合著作權法合理使用範圍內（如評論、新聞報導、學術研究），引述時請務必註明來源出處，且引述比例不應超過全文之 10%。</p>\n\n\n\n<h2 class=\"wp-block-heading\">三、 禁止行為</h2>\n\n\n\n<p class=\"wp-block-paragraph\">嚴格禁止以下未經書面授權之行為：</p>\n\n\n\n<p class=\"wp-block-paragraph\">重製與轉載：禁止將本站內容全文或大部分內容複製、轉貼至其他網站、社群媒體或印刷媒介。</p>\n\n\n\n<p class=\"wp-block-paragraph\">商業開發：禁止將本站內容用於廣告、課程素材、付費訂閱服務或其他具營利性質之活動。</p>\n\n\n\n<p class=\"wp-block-paragraph\">非法自動化抓取：禁止使用爬蟲軟體、機器人（Bot）或其他自動化工具大規模抓取本站數據。</p>\n\n\n\n<p class=\"wp-block-paragraph\">AI 訓練用途：禁止將本站內容輸入至任何人工智慧（AI）模型進行訓練或生成新內容。</p>\n\n\n\n<h2 class=\"wp-block-heading\">四、 侵權處理</h2>\n\n\n\n<p class=\"wp-block-paragraph\">凡未經授權而有上述禁止行為者，權利人將保留法律追訴權。對於侵權行為，本站將採取包括但不限於以下措施：</p>\n\n\n\n<p class=\"wp-block-paragraph\">要求限期移除侵權內容；向相關搜尋引擎及社群平台提出侵權檢舉（如 DMCA 通知）；依法請求損害賠償，並請求負擔因此產生之律師費與訴訟費用。</p>\n\n\n\n<h2 class=\"wp-block-heading\">五、 授權聯繫</h2>\n\n\n\n<p class=\"wp-block-paragraph\">如需進行內容轉載、商業合作或任何形式之授權使用，請務必事前聯繫!</p>\n\n\n\n<p class=\"wp-block-paragraph\"></p>\n",
+      "protected": false
+    },
+    "excerpt": {
+      "rendered": "<p>著作權保護政策聲明 感謝您造訪潤讀（以下 [&hellip;]</p>\n",
+      "protected": false
+    },
+    "author": 1,
+    "featured_media": 0,
+    "parent": 296,
+    "menu_order": 0,
+    "comment_status": "closed",
+    "ping_status": "closed",
+    "template": "",
+    "meta": {
+      "site-sidebar-layout": "default",
+      "site-content-layout": "",
+      "ast-site-content-layout": "default",
+      "site-content-style": "default",
+      "site-sidebar-style": "default",
+      "ast-global-header-display": "",
+      "ast-banner-title-visibility": "",
+      "ast-main-header-display": "",
+      "ast-hfb-above-header-display": "",
+      "ast-hfb-below-header-display": "",
+      "ast-hfb-mobile-header-display": "",
+      "site-post-title": "",
+      "ast-breadcrumbs-content": "",
+      "ast-featured-img": "",
+      "footer-sml-layout": "",
+      "ast-disable-related-posts": "",
+      "theme-transparent-header-meta": "",
+      "adv-header-id-meta": "",
+      "stick-header-meta": "",
+      "header-above-stick-meta": "",
+      "header-main-stick-meta": "",
+      "header-below-stick-meta": "",
+      "astra-migrate-meta-layouts": "default",
+      "ast-page-background-enabled": "default",
+      "ast-page-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-4)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "ast-content-background-meta": {
+        "desktop": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "tablet": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        },
+        "mobile": {
+          "background-color": "var(--ast-global-color-5)",
+          "background-image": "",
+          "background-repeat": "repeat",
+          "background-position": "center center",
+          "background-size": "auto",
+          "background-attachment": "scroll",
+          "background-type": "",
+          "background-media": "",
+          "overlay-type": "",
+          "overlay-color": "",
+          "overlay-opacity": "",
+          "overlay-gradient": ""
+        }
+      },
+      "footnotes": ""
+    },
+    "class_list": [
+      "post-3",
+      "page",
+      "type-page",
+      "status-publish",
+      "hentry"
+    ],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages/3",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/pages"
+        }
+      ],
+      "about": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/types/page"
+        }
+      ],
+      "author": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/users/1"
+        }
+      ],
+      "replies": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/comments?post=3"
+        }
+      ],
+      "version-history": [
+        {
+          "count": 3,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/3/revisions"
+        }
+      ],
+      "predecessor-version": [
+        {
+          "id": 2335,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/3/revisions/2335"
+        }
+      ],
+      "up": [
+        {
+          "embeddable": true,
+          "href": "https://soweread.com/wp-json/wp/v2/pages/296"
+        }
+      ],
+      "wp:attachment": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/media?parent=3"
+        }
+      ],
+      "curies": [
+        {
+          "name": "wp",
+          "href": "https://api.w.org/{rel}",
+          "templated": true
+        }
+      ]
+    }
+  }
+]
