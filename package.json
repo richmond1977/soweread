@@ -7,7 +7,7 @@
     "dev:growth": "node scripts/dev-growth.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test:backup": "node --test --experimental-strip-types src/lib/site-config.test.ts src/lib/actions.test.ts src/lib/backup/url-mapping.test.ts src/lib/backup/wordpress-sync.test.ts src/lib/growth/knowledge-core.test.ts src/lib/growth/analytics.test.ts src/data/growth-content.test.ts",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate deploy",

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ArticleCard } from "@/components/article-card";
 import { BlogSidebar } from "@/components/blog-sidebar";
 import { Pagination } from "@/components/pagination";
@@ -104,7 +105,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
             {query && (
               <p className="search-result-label">
                 搜尋「{params.q}」— 共 {filtered.length} 筆結果
-                <a href="/blog" className="search-clear">清除</a>
+                <Link href="/blog" className="search-clear">清除</Link>
               </p>
             )}
 
