@@ -46,6 +46,8 @@ export type Post = {
   faq?: FaqItem[];
   showFaq?: boolean;
   sources?: SourceItem[];
+  sourceType?: "native" | "wordpress";
+  sourceCanonicalUrl?: string;
   content: string;
   seoTitle: string;
   seoDescription: string;

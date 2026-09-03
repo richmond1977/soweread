@@ -1,10 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
+import { GrowthHome } from "@/components/growth-home";
 import { HomeArticleGrid } from "@/components/home-article-grid";
 import { PublicShell } from "@/components/public-shell";
 import { getContent, getPublishedPosts } from "@/lib/content";
+import { getGrowthKnowledge } from "@/lib/growth/knowledge";
+import { getRequestSiteConfig } from "@/lib/request-site-config";
 
 export default async function HomePage() {
+  const siteConfig = await getRequestSiteConfig();
+
+  // The growth domain must never serve the soweread.com homepage: it needs its
+  // own indexable landing page, not a near-duplicate of the primary site.
+  if (siteConfig.isGrowth) {
+    // A growth role whose config is unhealthy serves nothing at all, matching
+    // the other growth routes rather than showing an empty landing page.
+    if (!siteConfig.canServeGrowthContent) notFound();
+
+    const { knowledge } = await getGrowthKnowledge(siteConfig);
+    return <GrowthHome baseUrl={siteConfig.canonicalBaseUrl} knowledge={knowledge} />;
+  }
+
   const [content, posts] = await Promise.all([getContent(), getPublishedPosts()]);
   const featuredPosts = posts.slice(0, 6);
 

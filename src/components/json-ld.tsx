@@ -1,4 +1,6 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+import { getSiteConfig } from "@/lib/site-config";
+
+const SITE_URL = getSiteConfig().primarySiteUrl;
 
 const ORGANIZATION = {
   "@type": "Organization",

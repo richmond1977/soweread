@@ -5,6 +5,8 @@ import { BlogSidebar } from "@/components/blog-sidebar";
 import { Pagination } from "@/components/pagination";
 import { PublicShell } from "@/components/public-shell";
 import { getContent, getPublishedPosts } from "@/lib/content";
+import { getRequestSiteConfig } from "@/lib/request-site-config";
+import { getSiteConfig } from "@/lib/site-config";
 
 type CategoryPageProps = {
   params: Promise<{ slug: string }>;
@@ -12,7 +14,7 @@ type CategoryPageProps = {
 };
 
 const POSTS_PER_PAGE = 8;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+const SITE_URL = getSiteConfig().primarySiteUrl;
 
 export async function generateMetadata({ params, searchParams }: CategoryPageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -26,7 +28,7 @@ export async function generateMetadata({ params, searchParams }: CategoryPagePro
     title: `${category.name}｜潤讀 So We Read`,
     description: category.description,
     alternates: { canonical: `${SITE_URL}/categories/${slug}` },
-    robots: isPaginated ? { index: false, follow: true } : undefined,
+    robots: isPaginated ? { index: false, follow: true } : (await getRequestSiteConfig()).metaRobots,
     openGraph: {
       title: `${category.name}｜潤讀 So We Read`,
       description: category.description,

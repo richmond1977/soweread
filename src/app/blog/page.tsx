@@ -4,11 +4,14 @@ import { BlogSidebar } from "@/components/blog-sidebar";
 import { Pagination } from "@/components/pagination";
 import { PublicShell } from "@/components/public-shell";
 import { categoryFor, getContent, getPublishedPosts } from "@/lib/content";
+import { getRequestSiteConfig } from "@/lib/request-site-config";
+import { getSiteConfig } from "@/lib/site-config";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://soweread.com";
+const SITE_URL = getSiteConfig().primarySiteUrl;
 
 export async function generateMetadata({ searchParams }: BlogPageProps): Promise<Metadata> {
   const params = await searchParams;
+  const siteConfig = await getRequestSiteConfig();
   const hasIndexChangingParams =
     Boolean(params.q?.trim()) ||
     Boolean(params.sort) ||
@@ -18,7 +21,9 @@ export async function generateMetadata({ searchParams }: BlogPageProps): Promise
     title: "部落格｜潤讀 So We Read",
     description: "探索食品安全、營養知識與飲食文化的精選文章。",
     alternates: { canonical: `${SITE_URL}/blog` },
-    robots: hasIndexChangingParams ? { index: false, follow: true } : undefined,
+    // An explicit `undefined` would erase the layout directive, which would drop
+    // the backup deployment's noindex. Fall back to the role default instead.
+    robots: hasIndexChangingParams ? { index: false, follow: true } : siteConfig.metaRobots,
   };
 }
 
