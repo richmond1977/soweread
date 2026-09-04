@@ -1,0 +1,22 @@
+{
+  "_comment": "Growth 週報（Phase 1，GSC 三層分析）的業務設定。密鑰與環境相關值（GSC site URL、GA4 property id）不放這裡——見 .env.production.example 與 scripts/growth/lib/load-config.mjs。",
+
+  "brandTerms": ["潤讀", "so we read", "soweread"],
+
+  "minImpressions": 8,
+
+  "strikingMinPosition": 3.5,
+  "strikingMaxPosition": 20.5,
+  "ctrGapMaxPosition": 5.5,
+
+  "ctrBenchmarkByPosition": {
+    "_note": "移植來源專案有一組類似的 CTR-by-position 基準，但沒有標註出處，且是從另一個網站、另一群受眾的歷史點擊資料量出來的，直接沿用等於拿別人的行為模式當潤讀的基準，套在潤讀身上沒有意義，因此改用業界公開發表過的 organic CTR-by-position 概略基準（多份 SEO 產業研究常見的量級區間，如 Backlinko、Advanced Web Ranking 等機構歷年 CTR-by-position 研究的粗略共識），並刻意取整數避免營造虛假精確度。這組數字只是『沒有更好資料前的起點』，不是潤讀的實測值——累積至少 4-8 週的潤讀自有 GSC 資料後，必須用潤讀自己的實際 CTR 分布重新校準這條曲線，屆時把這個 _note 一併更新掉。",
+    "curve": [
+      { "maxPosition": 1.5, "ctr": 0.25 },
+      { "maxPosition": 2.5, "ctr": 0.15 },
+      { "maxPosition": 3.5, "ctr": 0.11 },
+      { "maxPosition": 5.5, "ctr": 0.07 },
+      { "maxPosition": 999, "ctr": 0.02 }
+    ]
+  }
+}

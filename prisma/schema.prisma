@@ -249,3 +249,31 @@ model EntitySource {
   @@id([entityId, sourceId])
   @@index([sourceId])
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Growth weekly report (SEO/GEO opportunity digest), Phase 1: GSC only.
+// See docs/growth-weekly-report-migration.md. Snapshots and rendered reports
+// live in the database (not git) — the source project's mistake of committing
+// raw GSC data to a public repo is the migration doc's trap #1.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model GrowthSnapshot {
+  id        String   @id
+  site      String
+  startDate String
+  endDate   String
+  rawRows   Json
+  fetchedAt DateTime
+
+  @@unique([site, endDate])
+}
+
+model GrowthReport {
+  id        String   @id
+  startDate String
+  endDate   String
+  markdown  String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([endDate])
+}

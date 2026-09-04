@@ -1,0 +1,76 @@
+name: Growth opportunities weekly
+
+# 每週自動：抓 GSC 成效資料（growth + primary 兩個 property）→ 三層機會分析
+# → 寫入 Neon 的 GrowthSnapshot / GrowthReport → 寄週報信給 Richmond。
+#
+# 與來源端排程設計的關鍵差異，見
+# docs/growth-weekly-report-migration.md 第 6 節「必須擋掉的移植陷阱」：
+#   - 資料只進 Neon，不 commit 回這個 public repo（風險 1：公開 repo 資料外洩）。
+#   - 寄信步驟不設 continue-on-error：失敗就讓整個 job 失敗，Richmond 才會
+#     在 GitHub Actions 收到失敗通知（風險 3：寄信靜默失敗）。
+#
+# 也可在 Actions 頁手動觸發（workflow_dispatch）。
+#
+# 需要的 repo secrets：
+#   GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET / GOOGLE_OAUTH_REFRESH_TOKEN
+#   GSC_SITE_URL_GROWTH / GSC_SITE_URL_PRIMARY
+#   DATABASE_URL / DATABASE_DIRECT_URL
+#   SMTP_HOST / SMTP_PORT / SMTP_SECURE / SMTP_USER / SMTP_PASS
+#   GROWTH_REPORT_TO
+
+on:
+  schedule:
+    - cron: '0 2 * * 1' # 每週一 02:00 UTC（約台灣時間 10:00）
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: growth-weekly
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Ingest GSC data
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GSC_SITE_URL_GROWTH: ${{ secrets.GSC_SITE_URL_GROWTH }}
+          GSC_SITE_URL_PRIMARY: ${{ secrets.GSC_SITE_URL_PRIMARY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+        run: npm run growth:ingest
+
+      - name: Analyze opportunities
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+        run: npm run growth:analyze
+
+      - name: Email report to Richmond
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          GROWTH_REPORT_TO: ${{ secrets.GROWTH_REPORT_TO }}
+        run: npm run growth:mail
