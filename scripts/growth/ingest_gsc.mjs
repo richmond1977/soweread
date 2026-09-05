@@ -92,15 +92,29 @@ async function main() {
   const range = dateRange();
   const prisma = new PrismaClient();
 
+  let succeeded = 0;
   try {
     for (const site of sites) {
-      await ingestSite(prisma, site, range);
+      try {
+        await ingestSite(prisma, site, range);
+        succeeded++;
+      } catch (e) {
+        // 寬容處理：單站取數失敗（例如尚未取得該站的 GSC 存取權限）不應該
+        // 擋住其他站——呼應 analyze.mjs 的「缺哪站列哪站」設計（2026-09-04
+        // 決定，見 docs/growth-weekly-report-migration.md）。整個 ingest 只在
+        // 「所有站都失敗」時才視為失敗，讓排程能持續產出至少涵蓋部分站的週報。
+        console.warn(`⚠️  ${site.label}（${site.gscSiteUrl}）取數失敗，本次略過：${e.message}`);
+      }
     }
   } finally {
     await prisma.$disconnect();
   }
 
-  console.log('\n✅ growth／primary 兩站的 GSC 快照已寫入 GrowthSnapshot。');
+  if (succeeded === 0) {
+    throw new Error('所有站的 GSC 取數皆失敗，無任何快照可用。');
+  }
+
+  console.log(`\n✅ ${succeeded}/${sites.length} 站的 GSC 快照已寫入 GrowthSnapshot。`);
 }
 
 main().catch((e) => {
