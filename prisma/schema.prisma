@@ -31,34 +31,34 @@ model Category {
 }
 
 model Post {
-  id             String   @id
-  title          String
-  slug           String   @unique
-  excerpt        String
-  coverImage     String?
-  coverImageAlt  String   @default("")
-  content        String
-  status         String
-  publishedAt    DateTime
-  contentUpdatedAt DateTime?
-  sourceType     String   @default("native")
-  externalSourceId String? @unique
+  id                 String    @id
+  title              String
+  slug               String    @unique
+  excerpt            String
+  coverImage         String?
+  coverImageAlt      String    @default("")
+  content            String
+  status             String
+  publishedAt        DateTime
+  contentUpdatedAt   DateTime?
+  sourceType         String    @default("native")
+  externalSourceId   String?   @unique
   sourceCanonicalUrl String?
-  sourceModifiedAt DateTime?
-  sourceHash     String?
-  lastSyncedAt   DateTime?
-  readingMinutes Int
-  views          Int      @default(0)
-  comments       Int      @default(0)
-  featured       Boolean  @default(false)
-  tagsJson       String   @default("[]")
-  faqJson        String   @default("[]")
-  showFaq        Boolean  @default(false)
-  sourcesJson    String   @default("[]")
-  seoTitle       String
-  seoDescription String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  sourceModifiedAt   DateTime?
+  sourceHash         String?
+  lastSyncedAt       DateTime?
+  readingMinutes     Int
+  views              Int       @default(0)
+  comments           Int       @default(0)
+  featured           Boolean   @default(false)
+  tagsJson           String    @default("[]")
+  faqJson            String    @default("[]")
+  showFaq            Boolean   @default(false)
+  sourcesJson        String    @default("[]")
+  seoTitle           String
+  seoDescription     String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   authorId   String
   categoryId String
@@ -72,14 +72,14 @@ model Post {
 }
 
 model SyncState {
-  key                String   @id
+  key                String    @id
   lastAttemptAt      DateTime?
   lastSuccessAt      DateTime?
   lastError          String?
   lastSuccessSummary String?
-  syncedItemCount    Int      @default(0)
+  syncedItemCount    Int       @default(0)
   lastDurationMs     Int?
-  updatedAt          DateTime @updatedAt
+  updatedAt          DateTime  @updatedAt
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -91,44 +91,44 @@ model SyncState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Topic {
-  id          String   @id
-  slug        String   @unique
-  name        String
-  summary     String
-  definition  String   @default("")
-  keyQuestionsJson String @default("[]")
-  publicationStatus String @default("draft")
-  seoTitle    String   @default("")
-  seoDescription String @default("")
-  sortOrder   Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  reviewedAt  DateTime?
+  id                String    @id
+  slug              String    @unique
+  name              String
+  summary           String
+  definition        String    @default("")
+  keyQuestionsJson  String    @default("[]")
+  publicationStatus String    @default("draft")
+  seoTitle          String    @default("")
+  seoDescription    String    @default("")
+  sortOrder         Int       @default(0)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  reviewedAt        DateTime?
 
-  entities  TopicEntity[]
-  articles  GrowthArticle[]
+  entities TopicEntity[]
+  articles GrowthArticle[]
 
   @@index([publicationStatus, sortOrder])
 }
 
 model Entity {
-  id           String   @id
-  slug         String   @unique
-  entityType   String
-  name         String
-  aliasesJson  String   @default("[]")
-  description  String
-  canonicalUrl String?
-  publicationStatus String @default("draft")
-  seoTitle     String   @default("")
-  seoDescription String @default("")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  reviewedAt   DateTime?
+  id                String    @id
+  slug              String    @unique
+  entityType        String
+  name              String
+  aliasesJson       String    @default("[]")
+  description       String
+  canonicalUrl      String?
+  publicationStatus String    @default("draft")
+  seoTitle          String    @default("")
+  seoDescription    String    @default("")
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  reviewedAt        DateTime?
 
-  topics           TopicEntity[]
-  sources          EntitySource[]
-  articles         ArticleEntity[]
+  topics            TopicEntity[]
+  sources           EntitySource[]
+  articles          ArticleEntity[]
   outgoingRelations EntityRelation[] @relation("EntityRelationSubject")
   incomingRelations EntityRelation[] @relation("EntityRelationObject")
 
@@ -136,16 +136,16 @@ model Entity {
 }
 
 model EntityRelation {
-  id              String   @id
+  id              String    @id
   subjectEntityId String
   predicate       String
   objectEntityId  String
   sourceId        String?
-  confidence      String   @default("reported")
-  note            String   @default("")
+  confidence      String    @default("reported")
+  note            String    @default("")
   reviewedAt      DateTime?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   subjectEntity Entity  @relation("EntityRelationSubject", fields: [subjectEntityId], references: [id], onDelete: Cascade)
   objectEntity  Entity  @relation("EntityRelationObject", fields: [objectEntityId], references: [id], onDelete: Cascade)
@@ -156,44 +156,44 @@ model EntityRelation {
 }
 
 model Source {
-  id          String   @id
+  id          String    @id
   title       String
   publisher   String
   url         String
-  sourceType  String   @default("web")
+  sourceType  String    @default("web")
   publishedAt DateTime?
   retrievedAt DateTime
-  note        String   @default("")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  note        String    @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  entityLinks    EntitySource[]
-  articleLinks   ArticleSource[]
-  relations      EntityRelation[]
+  entityLinks  EntitySource[]
+  articleLinks ArticleSource[]
+  relations    EntityRelation[]
 
   @@index([publisher])
 }
 
 model GrowthArticle {
-  id             String   @id
-  slug           String   @unique
-  title          String
-  summary        String
-  content        String
-  editorialStatus String  @default("draft")
-  authorName     String
-  reviewerName   String   @default("")
-  seoTitle       String   @default("")
-  seoDescription String   @default("")
-  primaryCtaUrl  String?
-  primaryCtaLabel String  @default("")
-  datePublished  DateTime?
-  dateModified   DateTime?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String    @id
+  slug            String    @unique
+  title           String
+  summary         String
+  content         String
+  editorialStatus String    @default("draft")
+  authorName      String
+  reviewerName    String    @default("")
+  seoTitle        String    @default("")
+  seoDescription  String    @default("")
+  primaryCtaUrl   String?
+  primaryCtaLabel String    @default("")
+  datePublished   DateTime?
+  dateModified    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   topicId  String?
-  topic    Topic?   @relation(fields: [topicId], references: [id])
+  topic    Topic?          @relation(fields: [topicId], references: [id])
   entities ArticleEntity[]
   sources  ArticleSource[]
 
@@ -276,4 +276,27 @@ model GrowthReport {
   createdAt DateTime @default(now())
 
   @@unique([endDate])
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Growth weekly report, Phase 4: GEO citation tracking (Gemini Batch API, no
+// google_search grounding — see docs/growth-weekly-report-migration.md §2).
+// Batch jobs are asynchronous (can take hours), so submit and collect are two
+// separate scripts running on separate schedule ticks; this table is the
+// hand-off between them.
+// ─────────────────────────────────────────────────────────────────────────────
+
+model CitationBatchJob {
+  id           String    @id
+  batchJobId   String    @unique
+  status       String    @default("pending") // pending | completed | failed
+  queriesJson  Json
+  resultsJson  Json?
+  submittedAt  DateTime
+  completedAt  DateTime?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([status])
 }

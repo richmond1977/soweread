@@ -10,11 +10,13 @@
 //   content   內容缺口：有曝光但排名 20+ → 需要新的專屬內容
 //   （品牌詞、雜訊詞會被濾除）
 //
-// AI 引擎能見度（GEO）追蹤留待後續階段，本報告不涵蓋、不放佔位章節。
+// Phase 4：若有已完成的 GEO citation batch job，會在報告末尾接上「AI 知識能見度」
+// 章節（見 lib/render-geo.mjs）；沒有已完成的 job 就整段省略，不放空章節佔位符。
 
 import './lib/env.mjs';
 import { PrismaClient } from '@prisma/client';
 import { loadGrowthConfig, loadGrowthSites, expectedCtr } from './lib/load-config.mjs';
+import { renderGeoSection } from './lib/render-geo.mjs';
 
 // 雜訊判斷：含搜尋運算子（-site: 等）的字串
 function isNoise(query) {
@@ -140,7 +142,7 @@ function renderSiteSection(site, snapshot, result) {
   return lines;
 }
 
-function renderReport(bySite, skippedSites, config) {
+function renderReport(bySite, skippedSites, config, latestGeoJob) {
   const lines = [];
   lines.push('# 潤讀成長機會週報');
   lines.push('');
@@ -150,7 +152,9 @@ function renderReport(bySite, skippedSites, config) {
   lines.push('');
   lines.push(
     `門檻：最低曝光 ${config.minImpressions} 次。以下建議皆為規則式分析結果，需人工判斷後執行。` +
-      '本期僅涵蓋 SEO 三層機會分析；AI 引擎能見度追蹤留待後續階段推出。'
+      (latestGeoJob
+        ? '本期含 SEO 三層機會分析與 GEO AI 知識能見度（見文末章節）。'
+        : '本期僅涵蓋 SEO 三層機會分析；GEO AI 知識能見度追蹤尚無已完成的批次結果。')
   );
   lines.push('');
 
@@ -165,6 +169,10 @@ function renderReport(bySite, skippedSites, config) {
       `_本期未涵蓋：${skippedSites.map((s) => s.label).join('、')}（尚未取得 GSC 存取權限或無快照，權限到位後執行 npm run growth:refresh 即可補上）_`
     );
     lines.push('');
+  }
+
+  if (latestGeoJob) {
+    lines.push(...renderGeoSection(latestGeoJob));
   }
 
   return lines.join('\n');
@@ -201,7 +209,14 @@ async function main() {
       throw new Error('所有站都沒有 GrowthSnapshot，請先執行 npm run growth:ingest');
     }
 
-    const report = renderReport(bySite, skippedSites, config);
+    // Phase 4：撿最新一筆已完成的 GEO citation batch job（若有）。查無資料是
+    // 正常情況（Phase 4 尚未跑過、或本週還在等 batch job 完成），不當成錯誤。
+    const latestGeoJob = await prisma.citationBatchJob.findFirst({
+      where: { status: 'completed' },
+      orderBy: { completedAt: 'desc' },
+    });
+
+    const report = renderReport(bySite, skippedSites, config, latestGeoJob);
     const endDate = bySite.reduce((max, s) => (s.snapshot.endDate > max ? s.snapshot.endDate : max), bySite[0].snapshot.endDate);
     const startDate = bySite.reduce((min, s) => (s.snapshot.startDate < min ? s.snapshot.startDate : min), bySite[0].snapshot.startDate);
 

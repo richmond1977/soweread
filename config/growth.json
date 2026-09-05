@@ -18,5 +18,34 @@
       { "maxPosition": 5.5, "ctr": 0.07 },
       { "maxPosition": 999, "ctr": 0.02 }
     ]
-  }
+  },
+
+  "_citationQueriesComment": "Phase 4 GEO 題庫。萃取自 docs/So We Read 潤讀 SEO × GEO Growth Plan v0.1.md §16 Topic Architecture（Cluster A–F，行 812-918）、§18 Query Strategy 的提問句型（行 946-971）與 §19 第一批 20 個高價值 Explainers（行 971-998）。cluster 欄位直接沿用 §16 的六大 Knowledge Vertical 名稱。這是一般讀者會問 AI 助理的自然語言問句，不是 SEO keyword；量的是 Gemini 模型既有知識裡有沒有提到潤讀，見 docs/growth-weekly-report-migration.md 第 2 節。",
+
+  "citationQueries": [
+    { "id": "cite-a1", "cluster": "食品安全與風險判讀", "query": "檢出、超標、不合格有什麼不同？" },
+    { "id": "cite-a2", "cluster": "食品安全與風險判讀", "query": "MRL（農藥殘留容許量）是什麼？" },
+    { "id": "cite-a3", "cluster": "食品安全與風險判讀", "query": "Hazard（危害）與 Risk（風險）有什麼不同？" },
+    { "id": "cite-a4", "cluster": "食品安全與風險判讀", "query": "農藥檢出就代表這個食品不安全嗎？" },
+    { "id": "cite-b1", "cluster": "食品添加物", "query": "食品添加物與加工助劑差在哪裡？" },
+    { "id": "cite-b2", "cluster": "食品添加物", "query": "天然食品就沒有食品添加物嗎？" },
+    { "id": "cite-b3", "cluster": "食品添加物", "query": "「無添加」在台灣有法律定義嗎？" },
+    { "id": "cite-b4", "cluster": "食品添加物", "query": "食品加的亞硝酸鹽安全嗎？" },
+    { "id": "cite-c1", "cluster": "食品標示", "query": "食品包裝上哪些標示一定要有？" },
+    { "id": "cite-c2", "cluster": "食品標示", "query": "食品成分表是按照什麼順序排列的？" },
+    { "id": "cite-c3", "cluster": "食品標示", "query": "營養標示上的每份與每 100 公克怎麼看？" },
+    { "id": "cite-c4", "cluster": "食品標示", "query": "食品標示反式脂肪 0 公克，是否代表完全沒有？" },
+    { "id": "cite-d1", "cluster": "生產與認證", "query": "有機、產銷履歷與 CAS 認證有什麼不同？" },
+    { "id": "cite-d2", "cluster": "生產與認證", "query": "平飼、放牧、豐富化籠飼與格子籠雞蛋有什麼不同？" },
+    { "id": "cite-d3", "cluster": "生產與認證", "query": "台灣的產銷履歷制度是什麼？可以怎麼查？" },
+    { "id": "cite-d4", "cluster": "生產與認證", "query": "台灣的 TAP 吉園圃標章代表什麼？" },
+    { "id": "cite-e1", "cluster": "營養科學", "query": "什麼是超加工食品（UPF）？" },
+    { "id": "cite-e2", "cluster": "營養科學", "query": "反式脂肪跟飽和脂肪對健康的影響有什麼不同？" },
+    { "id": "cite-e3", "cluster": "營養科學", "query": "精緻糖跟果糖對身體的影響一樣嗎？" },
+    { "id": "cite-e4", "cluster": "營養科學", "query": "成人每天鈉攝取上限是多少？" },
+    { "id": "cite-f1", "cluster": "高爭議物質", "query": "嘉磷塞（年年春的主成分）對人體有害嗎？" },
+    { "id": "cite-f2", "cluster": "高爭議物質", "query": "萊克多巴胺（瘦肉精）在台灣的殘留標準是什麼？" },
+    { "id": "cite-f3", "cluster": "高爭議物質", "query": "為什麼食品容器要限制 BPA 的使用？" },
+    { "id": "cite-f4", "cluster": "高爭議物質", "query": "新聞說食物中驗出塑膠微粒，應該怎麼看待這件事？" }
+  ]
 }

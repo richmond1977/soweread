@@ -52,6 +52,26 @@ export function loadGrowthConfig() {
   return config;
 }
 
+// Phase 4 GEO 題庫（citationQueries）不是 REQUIRED_FIELDS 的一員：Phase 1-3 的
+// config/growth.json 沒有這個欄位也要能正常跑 GSC 分析，缺欄位不該讓整個
+// loadGrowthConfig() 炸掉。只有真的要跑引用追蹤或渲染 GEO 章節時才需要，由呼叫端
+// 自己檢查（2026-09-05：原本的 submit_citations_batch.mjs／collect_citations_batch.mjs
+// 已刪除，見 docs/growth-weekly-report-migration.md 第 2 節——Batch API 與同步
+// grounding 皆因免費層 API key 的計費層級限制而打不通，Phase 4 目前暫停，待
+// Richmond 決定是否開通計費）。
+export function loadCitationQueries(config = loadGrowthConfig()) {
+  const queries = config.citationQueries;
+  if (!Array.isArray(queries) || queries.length === 0) {
+    throw new Error('config/growth.json 缺少非空的 citationQueries 陣列（GEO 題庫）');
+  }
+  for (const q of queries) {
+    if (!q.id || !q.cluster || !q.query) {
+      throw new Error(`config/growth.json 的 citationQueries 有題目缺 id/cluster/query：${JSON.stringify(q)}`);
+    }
+  }
+  return queries;
+}
+
 // 依 GSC 排名查預期 CTR：取第一個 maxPosition >= position 的區間；
 // 曲線最後一筆的 maxPosition 應涵蓋所有更差的排名（見 config/growth.json）。
 export function expectedCtr(position, config = loadGrowthConfig()) {

@@ -66,6 +66,18 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
           </a>{" "}
           同屬一個編輯團隊。
         </p>
+        <p className="growth-footer-follow">
+          追蹤我們：
+          <a href="https://www.dcard.tw/@soweread" rel="noopener" target="_blank">
+            Dcard
+          </a>
+          <a href="https://www.facebook.com/people/Winslet-Chang/61560169946019/" rel="noopener" target="_blank">
+            Facebook
+          </a>
+          <a href="https://vocus.cc/user/@soweread" rel="noopener" target="_blank">
+            方格子
+          </a>
+        </p>
       </footer>
     </div>
   );

@@ -2150,6 +2150,25 @@ select {
   text-decoration: underline;
 }
 
+.growth-footer-follow {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.growth-footer-follow a {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.growth-footer-follow a:hover {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
 /* ── 窄螢幕 ────────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {

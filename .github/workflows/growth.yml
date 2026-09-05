@@ -11,7 +11,15 @@ name: Growth opportunities weekly
 #
 # 也可在 Actions 頁手動觸發（workflow_dispatch）。
 #
-# 需要的 repo secrets：
+# Phase 4（GEO 引用追蹤，選配、有成本）目前暫停，本檔不含任何呼叫 Gemini 的步驟。
+# 2026-09-05 實測：Batch API（400 FAILED_PRECONDITION）與改回的同步 generateContent
+# + google_search grounding（429 RESOURCE_EXHAUSTED，訊息指向 plan/billing）都因
+# 免費層 GEMINI_API_KEY 的計費層級限制打不通——純文字同步呼叫本身沒問題，卡的是
+# grounding 這個工具本身的額度。詳見 docs/growth-weekly-report-migration.md 第 2 節、
+# scripts/growth/lib/gemini-grounded.mjs 檔頭。待 Richmond 決定是否開通計費後，
+# 再補回引用追蹤步驟（程式碼骨架已在 scripts/growth/lib/gemini-grounded.mjs）。
+#
+# 需要的 repo secrets（目前）：
 #   GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET / GOOGLE_OAUTH_REFRESH_TOKEN
 #   GSC_SITE_URL_GROWTH / GSC_SITE_URL_PRIMARY
 #   DATABASE_URL / DATABASE_DIRECT_URL
