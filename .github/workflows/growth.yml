@@ -59,6 +59,10 @@ jobs:
 
       - name: Analyze opportunities
         env:
+          # GSC_SITE_URL_* 這裡不是用來打 API，是 load-config.mjs 用來組
+          # 站台標籤／網域（analyze.mjs 跟 ingest_gsc.mjs 共用同一個 loader）。
+          GSC_SITE_URL_GROWTH: ${{ secrets.GSC_SITE_URL_GROWTH }}
+          GSC_SITE_URL_PRIMARY: ${{ secrets.GSC_SITE_URL_PRIMARY }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
         run: npm run growth:analyze
