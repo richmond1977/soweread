@@ -2012,6 +2012,31 @@ select {
   color: var(--text-muted);
 }
 
+/* 索引頁把別名接在名稱後面當行內附註，不是名詞頁那種獨立段落 */
+.growth-entity-list .growth-entity-aliases {
+  margin: 0;
+  margin-left: 4px;
+}
+
+.growth-entity-index-count {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* 首頁的名詞清單：只有連結，密集排列，目的是讓每個名詞頁離首頁一跳 */
+.growth-entity-inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.growth-entity-inline-list > li > a {
+  font-size: 15px;
+}
+
 .growth-parent-topic {
   font-size: 14px;
   color: var(--text-light);

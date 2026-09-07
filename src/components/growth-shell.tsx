@@ -29,6 +29,10 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
         </Link>
         <nav className="growth-nav" aria-label="主要導覽">
           <Link href="/topics">主題</Link>
+          {/* 名詞索引放進全站導覽，是為了讓每個名詞頁離任何一個已被收錄的頁面
+              都只有兩跳。名詞頁原本只能從主題頁與文章頁進入，而那些頁面自己
+              也還在等收錄，等於整批名詞頁躲在爬蟲搆不到的深處。 */}
+          <Link href="/entities">名詞索引</Link>
           <Link href="/reading">主站文章</Link>
           <a href="https://soweread.com/" rel="noopener">
             潤讀主站

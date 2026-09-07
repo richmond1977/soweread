@@ -2,7 +2,11 @@ import Link from "next/link";
 import { GrowthSiteJsonLd } from "@/components/growth-json-ld";
 import { GrowthShell, PrimaryCta } from "@/components/growth-shell";
 import type { GrowthKnowledge } from "@/lib/growth/knowledge-core";
-import { publishedArticles, publishedTopics } from "@/lib/growth/knowledge-core";
+import {
+  publishedArticles,
+  publishedEntities,
+  publishedTopics,
+} from "@/lib/growth/knowledge-core";
 
 interface GrowthHomeProps {
   baseUrl: string;
@@ -12,6 +16,10 @@ interface GrowthHomeProps {
 export function GrowthHome({ baseUrl, knowledge }: GrowthHomeProps) {
   const topics = publishedTopics(knowledge);
   const articles = publishedArticles(knowledge).slice(0, 5);
+  // 全部列出，不截斷：首頁是本站唯一已被 Google 收錄的入口，名詞頁能不能被
+  // 爬到就取決於這裡有沒有連結。名詞數量成長到首頁放不下時，再改成節選＋
+  // 索引頁連結（/entities 已經是完整清單）。
+  const entities = publishedEntities(knowledge);
 
   return (
     <>
@@ -41,6 +49,23 @@ export function GrowthHome({ baseUrl, knowledge }: GrowthHomeProps) {
             <Link href="/topics">查看所有主題</Link>
           </p>
         </section>
+
+        {entities.length ? (
+          <section aria-labelledby="home-entities">
+            <h2 id="home-entities">知識名詞</h2>
+            <p>
+              每則名詞都附定義、適用範圍與可追溯的來源。
+              <Link href="/entities">查看完整名詞索引</Link>
+            </p>
+            <ul className="growth-entity-inline-list">
+              {entities.map((entity) => (
+                <li key={entity.slug}>
+                  <Link href={`/entities/${entity.slug}`}>{entity.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         {articles.length ? (
           <section aria-labelledby="home-articles">

@@ -33,6 +33,7 @@ async function growthSitemap(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   return [
     { url: baseUrl, lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/topics`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/entities`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/reading`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     ...publishedTopics(knowledge).map((topic) => ({
       url: `${baseUrl}/topics/${topic.slug}`,
