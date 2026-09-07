@@ -10,6 +10,10 @@
 //   content   內容缺口：有曝光但排名 20+ → 需要新的專屬內容
 //   （品牌詞、雜訊詞會被濾除）
 //
+// 三層分析之前先放一節「收錄進度」（ingest 從 URL Inspection API 取數，渲染在
+// lib/coverage.mjs）：三層分析的輸入是曝光，站台還沒被收錄時三區必然全空，
+// 那是資料不足而非沒有機會，兩者在報告上要看得出差別。
+//
 // Phase 4：若有已完成的 GEO citation batch job，會在報告末尾接上「AI 知識能見度」
 // 章節（見 lib/render-geo.mjs）；沒有已完成的 job 就整段省略，不放空章節佔位符。
 
@@ -17,6 +21,7 @@ import './lib/env.mjs';
 import { PrismaClient } from '@prisma/client';
 import { loadGrowthConfig, loadGrowthSites, expectedCtr } from './lib/load-config.mjs';
 import { renderGeoSection } from './lib/render-geo.mjs';
+import { renderCoverageSection } from './lib/coverage.mjs';
 
 // 雜訊判斷：含搜尋運算子（-site: 等）的字串
 function isNoise(query) {
@@ -78,7 +83,7 @@ function classify(rawRows, config) {
   return { striking, ctrGap, content };
 }
 
-function renderSiteSection(site, snapshot, result) {
+function renderSiteSection(site, snapshot, result, config) {
   const { startDate, endDate, rawRows } = snapshot;
   const { striking, ctrGap, content } = result;
   const tc = rawRows.byQuery.reduce((s, r) => s + r.clicks, 0);
@@ -91,6 +96,14 @@ function renderSiteSection(site, snapshot, result) {
   lines.push('');
   lines.push(`**區間總覽**：${ti} 次曝光、${tc} 次點擊、整體 CTR ${fmtPct(ti ? tc / ti : 0)}`);
   lines.push('');
+
+  lines.push(
+    ...renderCoverageSection(snapshot.coverage, {
+      impressions: ti,
+      minImpressions: config.minImpressions,
+      opportunityCount: striking.length + ctrGap.length + content.length,
+    })
+  );
 
   lines.push('### 🎯 臨門一腳（強化既有頁面，投報最高）');
   lines.push('');
@@ -152,14 +165,15 @@ function renderReport(bySite, skippedSites, config, latestGeoJob) {
   lines.push('');
   lines.push(
     `門檻：最低曝光 ${config.minImpressions} 次。以下建議皆為規則式分析結果，需人工判斷後執行。` +
+      '每站先列收錄進度（Google 收了幾頁），再列 SEO 三層機會分析。' +
       (latestGeoJob
-        ? '本期含 SEO 三層機會分析與 GEO AI 知識能見度（見文末章節）。'
-        : '本期僅涵蓋 SEO 三層機會分析；GEO AI 知識能見度追蹤尚無已完成的批次結果。')
+        ? '文末另有 GEO AI 知識能見度章節。'
+        : 'GEO AI 知識能見度追蹤本期無已完成的批次結果，未列入。')
   );
   lines.push('');
 
   for (const { site, snapshot, result } of bySite) {
-    lines.push(...renderSiteSection(site, snapshot, result));
+    lines.push(...renderSiteSection(site, snapshot, result, config));
     lines.push('---');
     lines.push('');
   }

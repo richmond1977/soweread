@@ -1,7 +1,11 @@
 name: Growth opportunities weekly
 
-# 每週自動：抓 GSC 成效資料（growth + primary 兩個 property）→ 三層機會分析
-# → 寫入 Neon 的 GrowthSnapshot / GrowthReport → 寄週報信給 Richmond。
+# 每週自動：抓 GSC 成效資料（growth + primary 兩個 property）＋ 用 URL Inspection
+# API 查 sitemap 各頁的收錄狀態 → 收錄進度 + 三層機會分析 → 寫入 Neon 的
+# GrowthSnapshot / GrowthReport → 寄週報信給 Richmond。
+#
+# 收錄檢查沿用同一組 OAuth 憑證與 webmasters.readonly scope，不需要新的 secret，
+# 也不產生費用（URL Inspection API 免費，配額每站每日 2000 次）。
 #
 # 與來源端排程設計的關鍵差異，見
 # docs/growth-weekly-report-migration.md 第 6 節「必須擋掉的移植陷阱」：

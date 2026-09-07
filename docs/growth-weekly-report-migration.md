@@ -53,8 +53,12 @@ scripts/growth/
   lib/gemini-grounded.mjs             新增（同步 generateContent + google_search grounding）
   lib/load-config.mjs                 新增（取代硬編的 ai-sources.mjs，讀 config/growth.json）
   lib/env.mjs                         新增（取代 ../radar/load_env.mjs 的相對路徑依賴）
+  lib/coverage.mjs                    新增（Phase 3.5：sitemap 解析／收錄統計／章節渲染，純函式）
+  lib/url-inspection.mjs              新增（Phase 3.5：URL Inspection API 取數）
+  lib/coverage.test.mjs               新增，掛進 `npm run test:backup` 同一組
   __tests__/citation-stats.test.mjs   移植，掛進 `npm run test:backup` 同一組
 prisma/schema.prisma                  新增 GrowthSnapshot / AiBotHit / CitationCheck 三個 model
+                                      （Phase 3.5 再補 GrowthSnapshot.coverage 欄位）
 src/proxy.ts                          修改：AI bot UA 命中時記一筆到 AiBotHit
 src/lib/growth/ai-bots.ts             新增（UA 清單，proxy 與腳本共用）
 .env.production.example               補 GOOGLE_OAUTH_*／GA4／GEMINI／GSC 等變數
@@ -70,7 +74,10 @@ src/lib/growth/ai-bots.ts             新增（UA 清單，proxy 與腳本共用
 | **1. GSC 取數與分析（免費）** | `ingest_gsc.mjs` 多站版 + `analyze.mjs` 三層分類；快照寫 Neon（新增 `GrowthSnapshot` model + migration） | 手動 `npm run growth:refresh` 產出一份 Markdown，三個章節都有列；`prisma studio` 看得到快照列 |
 | **2. 設定外部化與品牌重寫** | 建 `config/growth.json`；從 Growth Plan §16/§18/§19 萃取題庫與分組；清掉來源端報告內文所有 WISECODE 歷史事件註解 | `grep -ri "wisecode\|知典\|專利"` 在 `scripts/growth/` 與 `config/` 下零命中 |
 | **3. 排程與寄信** | 新增 `.github/workflows/growth.yml`（`0 2 * * 1`）+ GitHub Secrets；`mail_report.mjs` 主旨改「【潤讀成長引擎】」且不再反解 Markdown 標題 | `workflow_dispatch` 手動觸發成功一次，信件收到且主旨非空字串 |
+| **3.5 收錄進度（2026-09-07 追加，免費）** | `lib/coverage.mjs`（純函式：sitemap 解析、統計、渲染）+ `lib/url-inspection.mjs`（URL Inspection API）；`GrowthSnapshot.coverage` 欄位；週報每站在三層分析之前多一節「收錄進度」 | `npm run growth:refresh` 後週報列出 sitemap 頁數、已收錄／未收錄數與未收錄頁清單；`npm run test:backup` 含 `coverage.test.mjs` 全綠 |
 | **4. GEO 層（選配、有成本）** | `check_citations.mjs`（同步）+ `lib/gemini-grounded.mjs`；`CitationCheck` model 取代原本為 Batch 設計的 `CitationBatchJob`；`ai-bots.ts` + `proxy.ts` 計數 + `AiBotHit` model；GA4 AI referrer | 24 題實際跑完一輪、寫入 `CitationCheck`；引用率表有數字；連續兩週後趨勢表有兩列 |
+
+Phase 3.5 是 2026-09-07 追加的：成長站當週只有 1 次曝光（而且那 1 次是 `site:vercel.app` 這種運算子查詢，不是讀者需求），三層分析必然全空，但「全空」在報告上跟「已經優化到沒東西可做」長得一模一樣。收錄進度就是拿來分辨這兩者的——在有曝光之前，它是唯一有訊號的指標。
 
 Phase 1 結束即有可用週報。Phase 4 為加值，2026-09-05 起量測的是真實 grounding 引用率（見第 2 節，非代理指標）。
 
@@ -87,7 +94,7 @@ Impact  : unknown — needs pricing check。grounding 呼叫按次計費，比�
 Reason  : 追蹤潤讀在 AI 答案中被即時引用的比率（GEO 的核心直接指標）
 ───────────────────────────────────────────────
 ```
-Phase 0–3 不產生任何新費用（GSC / GA4 API 免費；GitHub Actions 在 public repo 免費；Neon 增加儲存量級可忽略）。
+Phase 0–3.5 不產生任何新費用（GSC / GA4 API 免費；Phase 3.5 的 URL Inspection API 與 GSC 同屬 Search Console API，同樣免費，配額每站每日 2000 次；GitHub Actions 在 public repo 免費；Neon 增加儲存量級可忽略）。
 
 ## 6. 五個必須擋掉的移植陷阱
 

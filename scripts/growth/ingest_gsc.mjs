@@ -14,6 +14,7 @@ import './lib/env.mjs';
 import { PrismaClient } from '@prisma/client';
 import { googlePost } from './lib/google-auth.mjs';
 import { loadGrowthSites } from './lib/load-config.mjs';
+import { collectCoverage } from './lib/url-inspection.mjs';
 
 const LOOKBACK_DAYS = Number(process.env.GSC_LOOKBACK_DAYS || 28);
 const LAG_DAYS = 3; // GSC 資料延遲緩衝
@@ -66,6 +67,15 @@ async function ingestSite(prisma, site, range) {
 
   console.log(`  query: ${byQuery.length} 列　page: ${byPage.length} 列　query+page: ${byQueryPage.length} 列`);
 
+  // 收錄進度：Search Analytics 只回答「排到第幾名」，回答不了「有沒有被收錄」。
+  // 站台曝光趨近 0 時，三層機會分析必然全空，收錄數是唯一還有訊號的指標。
+  // 這一步失敗不影響上面已經拿到的成效資料——照樣寫入快照，coverage 記下
+  // 錯誤原因，週報如實顯示「本期無收錄資料」，不靜默留白。
+  const coverage = await collectCoverage(site);
+  if (coverage.error) {
+    console.warn(`  ⚠️  收錄檢查失敗（成效資料不受影響）：${coverage.error}`);
+  }
+
   const rawRows = { byQuery, byPage, byQueryPage };
   const fetchedAt = new Date();
 
@@ -77,11 +87,13 @@ async function ingestSite(prisma, site, range) {
       startDate: range.startDate,
       endDate: range.endDate,
       rawRows,
+      coverage,
       fetchedAt,
     },
     update: {
       startDate: range.startDate,
       rawRows,
+      coverage,
       fetchedAt,
     },
   });

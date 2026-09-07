@@ -263,6 +263,11 @@ model GrowthSnapshot {
   startDate String
   endDate   String
   rawRows   Json
+  /// Index coverage from the URL Inspection API: sitemap size, per-URL verdicts
+  /// and the summary the weekly report renders. Nullable because snapshots taken
+  /// before the coverage step existed have none, and because a site whose
+  /// sitemap or inspection call fails still keeps its Search Analytics rows.
+  coverage  Json?
   fetchedAt DateTime
 
   @@unique([site, endDate])
