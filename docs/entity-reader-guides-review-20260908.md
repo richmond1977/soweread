@@ -1,14 +1,14 @@
 # 三份讀者指南審閱稿
 
-**草稿｜需 Richmond 確認**
+**狀態：已由 Richmond 確認可公開發布（2026-09-08）。**
 
-本機改稿日期：2026-09-08。尚未部署、push 或寫入遠端資料庫；並非索引或流量成效證明。
+發布日期：2026-09-08。已同步 growth DB 並部署至正式站；這不代表 Google 已建立索引或已有流量成效。
 
 ## 範圍與資料路徑
 
 新增的三份指南是依公開 entity slug 載入的 code adjunct，保留既有 published gate、URL 與 self-canonical，不新增 CMS/schema。沒有將人工 reviewedAt 填成已審查。
 
-knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料庫空／不可達時 fallback。growth-content.ts 的既有定義、摘要、營養文章錯誤及來源修訂只在本機 module 生效，遠端 DB 尚未套用。單獨部署 renderer 而不處理 DB 會使營養頁舊定義與新指南矛盾，正式發布必須一併處理。
+knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料庫空／不可達時 fallback。growth-content.ts 的既有定義、摘要、營養文章錯誤及來源修訂已同步至 growth DB；單獨部署 renderer 而不處理 DB 會使營養頁舊定義與新指南矛盾。
 
 ## 最小文字修正
 
@@ -33,17 +33,17 @@ knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料�
 - production-only TypeScript：npx tsc --noEmit --project tmp/entity-reader-guides-tsconfig.json 通過（include 僅 src、排除 *.test.ts，不讀 next-env.d.ts）。曾載入 next-env 時遇 .next/dev/types/routes.d.ts 第 97–105 行既有／生成中語法錯誤，因此此結果不涵蓋生成路由型別，完整 typecheck 尚未通過。
 - 最後文句修訂後重跑 guide/content tests：18/18 通過；log：tmp/entity-reader-guides-final-tests-20260908.log。
 - 主 agent 重驗上述 26 個測試與 src-only TypeScript，均通過。
-- 主 agent 核對 3 頁 HTTP 200、每頁 1 個 h1／1 個表格、canonical、內部錨點、草稿標示及無 GA，均通過；證據：tmp/pdfs/reader-guides-20260908/local-route-checks.json。
+- 主 agent 核對 3 頁 HTTP 200、每頁 1 個 h1／1 個表格、canonical、內部錨點及無 GA，均通過；證據：tmp/pdfs/reader-guides-20260908/local-route-checks.json。
 - 主 agent 以桌面及 390px 手機版面檢查：文字可讀、頁面無水平溢出，表格在自身容器內水平捲動。
-- fresh reviewer 無阻擋 finding；唯一來源日期註解已修為預設日期與個別來源日期分開說明。法律／對外稿仍需 Richmond 確認。
-- production build 未執行；完整 typecheck 的上述限制保留。
+- fresh reviewer 無阻擋 finding；唯一來源日期註解已修為預設日期與個別來源日期分開說明。內容已由 Richmond 確認可公開發布。
+- production build 已通過；完整 typecheck 的既有限制保留。
 
-## 待正式發布步驟
+## 已完成發布
 
-1. fresh reviewer 已完成驗收；仍待 Richmond 確認法律／對外文稿及產品表述。
-2. 核對 production growth DB 中受影響 entity/article/source 記錄，保存備份與明確更新清單，僅更新本輪核准欄位，勿盲目全量 seed。
-3. 按核准稿同步 code adjunct 與 DB 更正；撤除草稿標示須有明確核准，不能以部署成功代替審閱。
-4. 驗證線上 3 頁、相關文章、來源、canonical、HTTP 及 sitemap；再追蹤 GSC，不承諾收錄。
+1. fresh reviewer 已完成驗收，Richmond 已確認三份對外指南可公開發布。
+2. 已同步 production growth DB 中受影響的 entity、article 與 source 記錄。
+3. 已移除三頁的草稿標示並部署至正式站。
+4. 已驗證線上 3 頁、來源、canonical、HTTP 與 sitemap；仍須在 GSC 追蹤索引狀態，不能由部署推論收錄。
 
 ## 來源證據
 
@@ -55,7 +55,6 @@ knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料�
 
 ## 營養標示怎麼比？先看單位，再算實際吃下的份量
 
-**草稿｜需 Richmond 確認**
 
 預覽路徑：/entities/nutrition-facts-label
 
@@ -110,7 +109,6 @@ knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料�
 
 ## 過敏原資訊在哪裡？一起看品名、成分與醒語
 
-**草稿｜需 Richmond 確認**
 
 預覽路徑：/entities/allergen-labeling
 
@@ -164,7 +162,6 @@ knowledge.ts 優先讀取 growth DB，GROWTH_CONTENT_SOURCE=module 只在資料�
 
 ## 平飼、放牧、豐富化籠飼怎麼分？買蛋前問三個問題
 
-**草稿｜需 Richmond 確認**
 
 預覽路徑：/entities/egg-friendly-production-system
 

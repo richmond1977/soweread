@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { readerGuideDraftLabel, readerGuideSources, type ReaderGuide } from "@/data/entity-reader-guides";
+import { readerGuideSources, type ReaderGuide } from "@/data/entity-reader-guides";
 import styles from "./entity-reader-guide.module.css";
 
 export function EntityReaderGuide({ guide }: { guide: ReaderGuide }) {
   const sources = readerGuideSources.filter((source) => guide.sections.some((section) => section.sourceIds.includes(source.id)));
   return (
     <section className={styles.guide} aria-labelledby="reader-guide-title">
-      <p className={styles.draft}><strong>{readerGuideDraftLabel}</strong></p>
       <h2 id="reader-guide-title">{guide.title}</h2>
       <p>{guide.introduction}</p>
       <nav aria-label="這份指南的閱讀順序">

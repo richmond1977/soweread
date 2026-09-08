@@ -1,12 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { entityReaderGuides, findEntityReaderGuide, nutritionTeachingExamples, readerGuideDraftLabel, readerGuideSources, sodiumForGrams } from "./entity-reader-guides.ts";
+import { entityReaderGuides, findEntityReaderGuide, nutritionTeachingExamples, readerGuideSources, sodiumForGrams } from "./entity-reader-guides.ts";
 import { growthContent } from "./growth-content.ts";
 import { findPublicEntity, growthSitemapPaths } from "../lib/growth/knowledge-core.ts";
 
 test("三份指南保留既有公開頁，未虛構人工審查", () => {
   assert.deepEqual(entityReaderGuides.map((guide) => guide.slug).sort(), ["allergen-labeling", "egg-friendly-production-system", "nutrition-facts-label"]);
-  assert.equal(readerGuideDraftLabel, "草稿｜需 Richmond 確認");
   for (const guide of entityReaderGuides) {
     const entity = findPublicEntity(growthContent, guide.slug);
     assert.ok(entity);

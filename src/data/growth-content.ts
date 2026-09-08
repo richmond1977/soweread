@@ -182,7 +182,7 @@ export const growthContent: GrowthKnowledge = {
       sourceType: "government-guidance",
       publishedAt: "2022-06-23",
       retrievedAt: "2026-09-08",
-      note: "PDF 第 8–9 頁 Q5.2 提供兩種一般範例格式，特定食品另有要求；來源已擷取，相關改稿需 Richmond 確認。",
+      note: "PDF 第 8–9 頁 Q5.2 提供兩種一般範例格式；特定食品另有格式要求。",
     },
     {
       id: "src-allergen-2018",

@@ -16,8 +16,6 @@ export type ReaderGuide = {
   links: { href: string; label: string }[];
 };
 
-export const readerGuideDraftLabel = "草稿｜需 Richmond 確認";
-
 export const readerGuideSources = [
   {
     id: "nutrition-format",

@@ -2,7 +2,6 @@
 .guide h3 { margin-top: 2rem; scroll-margin-top: 2rem; }
 .guide li { margin-block: .5rem; }
 .guide dd { margin: .4rem 0 1rem; }
-.draft { border-left: 4px solid #8c5b20; background: #fff5df; color: #633b0b; padding: .75rem 1rem; }
 .tableScroll { overflow-x: auto; margin-block: 1.5rem; }
 .tableScroll:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 .tableScroll table { border-collapse: collapse; min-width: 36rem; width: 100%; }
