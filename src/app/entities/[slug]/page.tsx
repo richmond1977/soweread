@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EntityJsonLd } from "@/components/growth-json-ld";
+import { EntityReaderGuide } from "@/components/entity-reader-guide";
+import { findEntityReaderGuide } from "@/data/entity-reader-guides";
 import { GrowthShell, PrimaryCta, SourceList } from "@/components/growth-shell";
 import { getGrowthKnowledge } from "@/lib/growth/knowledge";
 import {
@@ -78,6 +80,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
   const relations = publicRelationsForEntity(knowledge, entity.slug);
   const articles = articlesForEntity(knowledge, entity.slug);
   const sources = sourcesByIds(knowledge, entity.sourceIds);
+  const readerGuide = findEntityReaderGuide(entity.slug);
 
   const breadcrumbs = [
     { name: "首頁", href: "/" },
@@ -97,12 +100,14 @@ export default async function EntityPage({ params }: EntityPageProps) {
       <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
         <article className="growth-entity">
           <h1>{entity.name}</h1>
-          <p className="growth-entity-type">類型：{entity.entityType}</p>
+          <p className="growth-entity-type">類型：{readerGuide?.typeLabel ?? entity.entityType}</p>
           {entity.aliases.length ? (
             <p className="growth-entity-aliases">別名：{entity.aliases.join("、")}</p>
           ) : null}
 
           <p className="growth-lede">{entity.description}</p>
+
+          {readerGuide ? <EntityReaderGuide guide={readerGuide} /> : null}
 
           {parentTopic ? (
             <p className="growth-parent-topic">

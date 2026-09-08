@@ -1,0 +1,12 @@
+.guide { margin-block: 2rem; line-height: 1.85; }
+.guide h3 { margin-top: 2rem; scroll-margin-top: 2rem; }
+.guide li { margin-block: .5rem; }
+.guide dd { margin: .4rem 0 1rem; }
+.draft { border-left: 4px solid #8c5b20; background: #fff5df; color: #633b0b; padding: .75rem 1rem; }
+.tableScroll { overflow-x: auto; margin-block: 1.5rem; }
+.tableScroll:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.tableScroll table { border-collapse: collapse; min-width: 36rem; width: 100%; }
+.tableScroll caption { text-align: left; font-weight: 600; padding-bottom: .75rem; }
+.tableScroll th, .tableScroll td { border: 1px solid #d9d5ce; padding: .75rem; text-align: left; vertical-align: top; }
+.tableScroll thead { background: #f4f1eb; color: #28231c; }
+.citation { font-size: .875rem; }
