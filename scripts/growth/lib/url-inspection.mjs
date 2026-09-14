@@ -31,7 +31,7 @@ async function fetchText(url) {
 /**
  * 取得站台 sitemap 裡的頁面 URL。遇到 sitemap index 會往下展開一層。
  *
- * @param {string} domain 例如 https://soweread.vercel.app
+ * @param {string} domain 例如 https://knowledge.soweread.com
  * @returns {Promise<string[]>} 去重後的頁面 URL
  */
 export async function fetchSitemapUrls(domain) {
@@ -55,9 +55,28 @@ export async function fetchSitemapUrls(domain) {
   return [...new Set(urls)];
 }
 
+/**
+ * Google 的索引鍵用的是解碼後的 URL（回傳的 googleCanonical 即為解碼形式），
+ * 但 WordPress sitemap 對中文 slug 輸出的是「小寫」percent-encoding
+ * （%e5%8f%b0…）。直接把 sitemap 原字送進 URL Inspection，Google 會查無此
+ * 字串而回 `URL is unknown to Google`——那是查詢字串沒對上，不是真的沒收錄。
+ * 2026-09-14 實測同一頁：小寫編碼 → unknown；解碼後 → Submitted and indexed。
+ * 送出前一律解碼；decodeURI 對含無效逸出序列的字串會丟例外，那種情況維持原字。
+ */
+function normalizeForInspection(url) {
+  try {
+    return decodeURI(url);
+  } catch {
+    return url;
+  }
+}
+
 async function inspectOne(gscSiteUrl, url) {
   try {
-    const data = await googlePost(INSPECT_ENDPOINT, { inspectionUrl: url, siteUrl: gscSiteUrl });
+    const data = await googlePost(INSPECT_ENDPOINT, {
+      inspectionUrl: normalizeForInspection(url),
+      siteUrl: gscSiteUrl,
+    });
     const r = data.inspectionResult?.indexStatusResult ?? {};
     return {
       url,
