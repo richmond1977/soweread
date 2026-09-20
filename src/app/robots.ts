@@ -27,8 +27,22 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       return { rules: [{ userAgent: "*", disallow: "/" }] };
     }
 
+    // This site's entire purpose is AI answer-engine citation (Growth Plan
+    // §GEO), so the default rule already allows every crawler. The explicit
+    // entries below only carry the one distinction the plan calls out
+    // (§8): OAI-SearchBot serves live ChatGPT Search citations and must stay
+    // allowed, while GPTBot is a training-data crawler, which is a separate
+    // decision from search visibility.
+    const disallowAdmin = ["/admin", "/admin/", "/api/"];
     return {
-      rules: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/admin/", "/api/"] }],
+      rules: [
+        { userAgent: "*", allow: "/", disallow: disallowAdmin },
+        { userAgent: "OAI-SearchBot", allow: "/", disallow: disallowAdmin },
+        { userAgent: "PerplexityBot", allow: "/", disallow: disallowAdmin },
+        { userAgent: "ClaudeBot", allow: "/", disallow: disallowAdmin },
+        { userAgent: "Google-Extended", allow: "/", disallow: disallowAdmin },
+        { userAgent: "GPTBot", disallow: "/" },
+      ],
       sitemap: `${config.canonicalBaseUrl}/sitemap.xml`,
       host: config.canonicalBaseUrl,
     };

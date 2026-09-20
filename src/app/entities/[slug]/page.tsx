@@ -96,6 +96,7 @@ export default async function EntityPage({ params }: EntityPageProps) {
         entity={entity}
         breadcrumbs={breadcrumbs}
         sources={sources}
+        relations={relations}
       />
       <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
         <article className="growth-entity">
@@ -103,6 +104,11 @@ export default async function EntityPage({ params }: EntityPageProps) {
           <p className="growth-entity-type">類型：{readerGuide?.typeLabel ?? entity.entityType}</p>
           {entity.aliases.length ? (
             <p className="growth-entity-aliases">別名：{entity.aliases.join("、")}</p>
+          ) : null}
+          {/* 沒有審閱紀錄時保持沉默，而不是宣告「尚未審閱」——
+              與文章頁 reviewerName 的顯示規則一致（growth-article page.tsx）。 */}
+          {entity.reviewedAt ? (
+            <p className="growth-reviewed">最後審閱：{entity.reviewedAt}</p>
           ) : null}
 
           <p className="growth-lede">{entity.description}</p>

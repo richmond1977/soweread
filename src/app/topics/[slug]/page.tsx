@@ -88,6 +88,9 @@ export default async function TopicHubPage({ params }: TopicPageProps) {
       <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
         <article className="growth-topic">
           <h1>{topic.name}</h1>
+          {topic.reviewedAt ? (
+            <p className="growth-reviewed">最後審閱：{topic.reviewedAt}</p>
+          ) : null}
           <p className="growth-lede">{topic.summary}</p>
 
           <section aria-labelledby="topic-definition">

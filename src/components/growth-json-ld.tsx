@@ -1,5 +1,18 @@
-import type { GrowthArticle, GrowthEntity, GrowthSource, GrowthTopic } from "@/lib/growth/knowledge-core";
+import type {
+  GrowthArticle,
+  GrowthEntity,
+  GrowthRelation,
+  GrowthSource,
+  GrowthTopic,
+} from "@/lib/growth/knowledge-core";
 import type { PrimaryArticle } from "@/lib/growth/primary-articles";
+
+/** The shape `publicRelationsForEntity` returns: a relation with both ends resolved. */
+type ResolvedRelation = GrowthRelation & {
+  subject: GrowthEntity;
+  object: GrowthEntity;
+  source: GrowthSource;
+};
 
 type Breadcrumb = { name: string; href: string };
 
@@ -44,6 +57,27 @@ function organizationNode(baseUrl: string) {
   };
 }
 
+function websiteNode(baseUrl: string) {
+  return {
+    "@type": "WebSite",
+    "@id": `${baseUrl}/#website`,
+    url: baseUrl,
+    name: "潤讀知識站",
+    publisher: { "@id": `${baseUrl}/#organization` },
+    inLanguage: "zh-TW",
+  };
+}
+
+/**
+ * Every page that references `#organization`/`#website` by `@id` must also
+ * define them in its own `@graph` — each page's JSON-LD is read in isolation,
+ * so a reference to a node defined only on a different page is a dangling
+ * `@id` no crawler can resolve.
+ */
+function siteNodes(baseUrl: string) {
+  return [organizationNode(baseUrl), websiteNode(baseUrl)];
+}
+
 function breadcrumbNode(baseUrl: string, breadcrumbs: Breadcrumb[]) {
   return {
     "@type": "BreadcrumbList",
@@ -78,15 +112,7 @@ export function GrowthSiteJsonLd({ baseUrl, breadcrumbs }: GrowthSiteJsonLdProps
       schema={{
         "@context": "https://schema.org",
         "@graph": [
-          organizationNode(baseUrl),
-          {
-            "@type": "WebSite",
-            "@id": `${baseUrl}/#website`,
-            url: baseUrl,
-            name: "潤讀知識站",
-            publisher: { "@id": `${baseUrl}/#organization` },
-            inLanguage: "zh-TW",
-          },
+          ...siteNodes(baseUrl),
           ...(breadcrumbs && breadcrumbs.length > 1
             ? [breadcrumbNode(baseUrl, breadcrumbs)]
             : []),
@@ -125,7 +151,7 @@ export function PrimaryArticleIndexJsonLd({
       schema={{
         "@context": "https://schema.org",
         "@graph": [
-          organizationNode(baseUrl),
+          ...siteNodes(baseUrl),
           {
             "@type": "CollectionPage",
             "@id": `${url}#collection`,
@@ -167,6 +193,7 @@ export function TopicJsonLd({ baseUrl, topic, breadcrumbs, entities }: TopicJson
       schema={{
         "@context": "https://schema.org",
         "@graph": [
+          ...siteNodes(baseUrl),
           {
             "@type": "CollectionPage",
             "@id": `${url}#collectionpage`,
@@ -177,6 +204,7 @@ export function TopicJsonLd({ baseUrl, topic, breadcrumbs, entities }: TopicJson
             inLanguage: "zh-TW",
             isPartOf: { "@id": `${baseUrl}/#website` },
             publisher: { "@id": `${baseUrl}/#organization` },
+            ...(topic.reviewedAt ? { dateModified: topic.reviewedAt } : {}),
             hasPart: entities.map((entity) => ({
               "@type": "WebPage",
               url: `${baseUrl}/entities/${entity.slug}`,
@@ -195,16 +223,46 @@ interface EntityJsonLdProps {
   entity: GrowthEntity;
   breadcrumbs: Breadcrumb[];
   sources: GrowthSource[];
+  /** From `publicRelationsForEntity` — already filtered to published, sourced relations. */
+  relations: ResolvedRelation[];
 }
 
-export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources }: EntityJsonLdProps) {
+/**
+ * Express each relation as a plain-language sentence pointing at the *other*
+ * entity. `DefinedTerm` has no schema.org predicate for "related term", so
+ * this rides on `WebPage.mentions` (already used the same way for articles'
+ * `mentionedEntities`) instead of inventing a non-standard property.
+ */
+function relationMentions(baseUrl: string, entitySlug: string, relations: ResolvedRelation[]) {
+  return relations.map((relation) => {
+    const other = relation.subjectSlug === entitySlug ? relation.object : relation.subject;
+    return {
+      "@type": "DefinedTerm",
+      "@id": `${baseUrl}/entities/${other.slug}#term`,
+      name: other.name,
+      url: `${baseUrl}/entities/${other.slug}`,
+      description: `${relation.subject.name} ${relation.predicate} ${relation.object.name}`,
+    };
+  });
+}
+
+export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources, relations }: EntityJsonLdProps) {
   const url = `${baseUrl}/entities/${entity.slug}`;
+
+  // Relation sources are shown next to each relation on the page (plan §7.2),
+  // so they belong in `citation` too — merged with the entity's own sources
+  // and de-duplicated by URL rather than listed twice.
+  const allSources = [...sources, ...relations.map((relation) => relation.source)];
+  const dedupedSources = Array.from(
+    new Map(allSources.map((source) => [source.url, source])).values()
+  );
 
   return (
     <JsonLd
       schema={{
         "@context": "https://schema.org",
         "@graph": [
+          ...siteNodes(baseUrl),
           {
             "@type": "DefinedTerm",
             "@id": `${url}#term`,
@@ -225,7 +283,11 @@ export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources }: EntityJs
             inLanguage: "zh-TW",
             isPartOf: { "@id": `${baseUrl}/#website` },
             publisher: { "@id": `${baseUrl}/#organization` },
-            citation: citationNodes(sources),
+            ...(entity.reviewedAt ? { dateModified: entity.reviewedAt } : {}),
+            citation: citationNodes(dedupedSources),
+            ...(relations.length
+              ? { mentions: relationMentions(baseUrl, entity.slug, relations) }
+              : {}),
           },
           breadcrumbNode(baseUrl, breadcrumbs),
         ],
@@ -256,6 +318,7 @@ export function GrowthArticleJsonLd({
       schema={{
         "@context": "https://schema.org",
         "@graph": [
+          ...siteNodes(baseUrl),
           {
             "@type": "Article",
             "@id": `${url}#article`,

@@ -2012,6 +2012,13 @@ select {
   color: var(--text-muted);
 }
 
+/* 審閱日期：entity/topic 頁的 freshness 訊號，跟別名同一種次要文字處理 */
+.growth-reviewed {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
 /* 索引頁把別名接在名稱後面當行內附註，不是名詞頁那種獨立段落 */
 .growth-entity-list .growth-entity-aliases {
   margin: 0;
