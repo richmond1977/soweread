@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GrowthArticleJsonLd } from "@/components/growth-json-ld";
 import { GrowthShell, PrimaryCta, SourceList } from "@/components/growth-shell";
+import { FaqPageJsonLd } from "@/components/json-ld";
 import { getGrowthKnowledge } from "@/lib/growth/knowledge";
 import {
   findPublicArticle,
@@ -94,6 +95,7 @@ export default async function GrowthArticlePage({ params }: ArticlePageProps) {
         sources={sources}
         mentionedEntities={entities}
       />
+      {article.faq?.length ? <FaqPageJsonLd items={article.faq} /> : null}
       <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
         <article className="growth-article">
           <h1>{article.title}</h1>
@@ -133,6 +135,20 @@ export default async function GrowthArticlePage({ params }: ArticlePageProps) {
                   </li>
                 ))}
               </ul>
+            </section>
+          ) : null}
+
+          {article.faq?.length ? (
+            <section aria-labelledby="article-faq">
+              <h2 id="article-faq">常見問題</h2>
+              <dl>
+                {article.faq.map((item) => (
+                  <div key={item.question}>
+                    <dt><strong>{item.question}</strong></dt>
+                    <dd>{item.answer}</dd>
+                  </div>
+                ))}
+              </dl>
             </section>
           ) : null}
 
