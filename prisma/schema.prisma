@@ -283,6 +283,44 @@ model GrowthReport {
   @@unique([endDate])
 }
 
+// SERP 驗證層（2026-09-19，Serper.dev 免費額度）：對 analyze.mjs 分類出的「內容缺口」
+// 候選查詢，實際查一次 Google Top 10，判斷知識物件型態，避免把「GSC 有曝光」直接當成
+// 「需要新內容」。同樣不進 git（見 GrowthSnapshot 註解的公開 repo 陷阱），(site, endDate)
+// 對齊同一次 GrowthSnapshot 的區間，upsert 鍵重跑不會重複。
+model SerpSnapshot {
+  id              String   @id
+  site            String
+  endDate         String
+  maxQueries      Int
+  totalCandidates Int
+  resultsJson     Json
+  fetchedAt       DateTime
+
+  @@unique([site, endDate])
+}
+
+// 改版成效追蹤（純規則，不用 AI，2026-09-24 移植自 WISECODE_Website）：記錄一次
+// 頁面改版的基準值（baseline，來自建立當下最新的 GrowthSnapshot），供到期後
+// 與最新快照比對前後差值。是否「算成功」由人（Richmond）決定，這裡只存量測
+// 結果與人工決定，見 scripts/growth/lib/experiments.mjs、scripts/growth/experiment.mjs。
+model Experiment {
+  id              String    @id
+  site            String
+  page            String
+  queriesJson     Json
+  change          String
+  hypothesis      String
+  changedAt       String
+  reviewAfterDays Int       @default(28)
+  baselineJson    Json
+  status          String    @default("running") // running | keep | revert | iterate
+  decision        String?
+  decidedAt       String?
+  createdAt       DateTime  @default(now())
+
+  @@index([site, status])
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Growth weekly report, Phase 4: GEO citation tracking (Gemini Batch API, no
 // google_search grounding — see docs/growth-weekly-report-migration.md §2).
