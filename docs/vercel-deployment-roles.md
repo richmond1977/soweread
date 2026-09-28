@@ -1,8 +1,12 @@
 # Vercel 部署：primary／growth／backup 角色隔離
 
-**狀態（2026-09-03）：growth 已完成部署並上線。** https://soweread.vercel.app
+**狀態（2026-09-08）：growth 已從 `soweread.vercel.app` 遷移至自有子網域 `https://knowledge.soweread.com`。**
 
-線上實測：`SITE_ROLE=growth`、`configIssues: 0`、首頁 `潤讀知識站`、`index, follow`、self-canonical、robots.txt 帶 sitemap、`/blog` 與 `/rss.xml` 回 404、Search Console 驗證檔 200、GA4 已在瀏覽器確認實際初始化、cron 回 `200 {"skipped":true}`、`/status` 顯示 `configHealthy: true`。
+網域設定：`knowledge` 是 `soweread.com`（既有 WordPress 主站網域，DNS 在 hosting.com 的 cPanel）底下新增的一筆 **CNAME** 記錄，指到 Vercel 配發的 `<random>.vercel-dns-0xx.com`。`soweread.vercel.app` 仍留在 Vercel Domains 清單裡（未移除），靠 `GROWTH_ENFORCE_CANONICAL_HOST` 的既有機制（[proxy.ts:55](../src/proxy.ts)）308 轉址到新網域，不需要另外設定 redirect。
+
+線上待驗證（遷移後）：`NEXT_PUBLIC_SITE_URL` 改指新網域並 redeploy 後，需重新確認 `configIssues: 0`、`index, follow`、self-canonical、robots.txt sitemap 網址、Search Console 新 property（若原本只做 URL-prefix property，子網域需另開；若原本是 domain property則自動涵蓋）、GA4 initialization。
+
+線上實測（遷移前，`soweread.vercel.app` 時期）：`SITE_ROLE=growth`、`configIssues: 0`、首頁 `潤讀知識站`、`index, follow`、self-canonical、robots.txt 帶 sitemap、`/blog` 與 `/rss.xml` 回 404、Search Console 驗證檔 200、GA4 已在瀏覽器確認實際初始化、cron 回 `200 {"skipped":true}`、`/status` 顯示 `configHealthy: true`。
 
 資料庫：舊的 Neon（`ep-empty-butterfly`）已由 Richmond 刪除；現用新資料庫（`ep-cold-dawn`），4 個 migration 全部套用、`migrate diff` 無 drift。
 
@@ -14,7 +18,7 @@
 
 - **優先目標是 SEO／GEO 增長**，備援次要。
 - **只部署 growth**，一個 Vercel Project，一個 Neon 資料庫。
-- Vercel Project 名稱 **`soweread`**，growth 網域 **`https://soweread.vercel.app`**。
+- Vercel Project 名稱 **`soweread`**，growth 網域 **`https://knowledge.soweread.com`**（2026-09-08 前為 `https://soweread.vercel.app`，現仍保留在 Domains 清單但非 canonical）。
 - backup 的程式碼**保留但不部署**（`SITE_ROLE=backup` 隨時可啟用）。
 
 因為只跑一個角色，就只需要一個 hostname，所以：
@@ -63,9 +67,9 @@
 
 若日後這三點造成困擾，把 `SITE_ROLE_RESOLUTION` 改成 `env` 並拆成兩個 Project 即可，**不需要改任何程式碼**。
 
-## 1.5 使用 Vercel 提供的網域（`*.vercel.app`）
+## 1.5 使用 Vercel 提供的網域（`*.vercel.app`）——歷史決策，2026-09-08 已依本節末建議遷移至自有網域
 
-Richmond 決定 growth 先用 Vercel 提供的網域。這個決定有兩個直接後果。
+Richmond 當初決定 growth 先用 Vercel 提供的網域，理由與後果記錄在本節，供之後理解演進過程；**目前實際網域已是 `https://knowledge.soweread.com`**（見 §0、§2.1）。本節其餘內容維持原樣不改寫，只在提及具體網域值的地方加註目前狀態。
 
 ### 後果一：一個 Project 只能有一個角色
 
@@ -78,7 +82,7 @@ host 模式的角色解析需要**兩個穩定且不同的 hostname**，而一�
 - 日後真的要開備援：再建**第二個 Project**，自動取得自己的 `.vercel.app`，設 `SITE_ROLE=backup` 即可。
 
 ```text
-Project soweread         → https://soweread.vercel.app          SITE_ROLE=growth   ← 現在只做這個
+Project soweread         → https://soweread.vercel.app          SITE_ROLE=growth   ← 曾經只做這個，2026-09-08 起 canonical 改為 knowledge.soweread.com（見 §0）
 Project soweread-backup  → https://soweread-backup.vercel.app   SITE_ROLE=backup   ← 延後
 ```
 
@@ -88,7 +92,7 @@ Project soweread-backup  → https://soweread-backup.vercel.app   SITE_ROLE=back
 
 一個 Vercel Project 的 production 部署會同時回應多個 `.vercel.app` alias。以 Project 名稱 `soweread` 為例，`soweread.vercel.app` 與 `soweread-<scope-slug>.vercel.app` 都會回同一份內容。若不處理，growth 站會自己跟自己重複。
 
-canonical 定為 **`https://soweread.vercel.app`**。
+canonical 原本定為 **`https://soweread.vercel.app`**；2026-09-08 起改為 **`https://knowledge.soweread.com`**，機制不變，只是 `NEXT_PUBLIC_SITE_URL` 換了值。
 
 Production 設定 `GROWTH_ENFORCE_CANONICAL_HOST=true`，非 canonical 的 alias 會 **308** 導到 `NEXT_PUBLIC_SITE_URL` 的 host。Preview 保持 `false`，預覽網址才進得去。
 
@@ -108,14 +112,16 @@ Production 設定 `GROWTH_ENFORCE_CANONICAL_HOST=true`，非 canonical 的 alias
 
 ### 2.1 Growth Project（目前唯一需要建立的）
 
-網域：`https://soweread.vercel.app`（Project 名稱 `soweread`，自動取得，不需任何 DNS 設定）。
+網域：**`https://knowledge.soweread.com`**（2026-09-08 起，見 Vercel Domains 設定；原本自動取得的 `soweread.vercel.app` 仍留在清單中，靠 `GROWTH_ENFORCE_CANONICAL_HOST` 308 轉址過來，不用刪除）。
+
+`knowledge.soweread.com` 是 `soweread.com`（主站網域，DNS 在 hosting.com cPanel 管理）底下的 CNAME 子網域，指到 Vercel 分配的 `*.vercel-dns-0xx.com`；不是新買的獨立網域，不需要 A record 或換 nameserver。
 
 Production 環境變數：
 
 ```
 SITE_ROLE_RESOLUTION=env
 SITE_ROLE=growth
-NEXT_PUBLIC_SITE_URL=https://soweread.vercel.app
+NEXT_PUBLIC_SITE_URL=https://knowledge.soweread.com
 PRIMARY_SITE_URL=https://soweread.com
 GROWTH_ENFORCE_CANONICAL_HOST=true
 GROWTH_SITE_VERIFICATION=<Search Console meta tag token>

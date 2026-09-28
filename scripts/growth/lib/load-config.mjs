@@ -82,17 +82,18 @@ export function expectedCtr(position, config = loadGrowthConfig()) {
   return curve[curve.length - 1].ctr;
 }
 
-// growth + primary 兩站的 GSC 存取設定。domain 只用來在報告裡顯示，
-// 沿用 src/lib/site-config.ts 既有的環境變數名稱與 fallback 網域，
-// 不另外發明一套（regarding growth 站在 SOWEREAD 目前的實際網域是
-// https://soweread.vercel.app，primary 是 WordPress 主站 https://soweread.com——
-// 見 docs/handoff-next-slice.md、src/lib/site-config.ts 的 FALLBACK_PRIMARY_SITE_URL）。
+// growth + primary 兩站的 GSC 存取設定。domain 除了報告顯示，也是
+// url-inspection.mjs 抓 sitemap 的來源，沿用 src/lib/site-config.ts 既有的
+// 環境變數名稱與 fallback 網域，不另外發明一套（growth 站在 SOWEREAD 目前的
+// 實際網域是 https://knowledge.soweread.com，2026-09-08 前為
+// https://soweread.vercel.app；primary 是 WordPress 主站 https://soweread.com——
+// 見 docs/vercel-deployment-roles.md、src/lib/site-config.ts 的 FALLBACK_PRIMARY_SITE_URL）。
 export function loadGrowthSites(env = process.env) {
   const sites = [
     {
       site: 'growth',
       gscSiteUrl: env.GSC_SITE_URL_GROWTH,
-      domain: env.GROWTH_SITE_URL || 'https://soweread.vercel.app',
+      domain: env.GROWTH_SITE_URL || 'https://knowledge.soweread.com',
       label: '潤讀成長站',
     },
     {
@@ -108,7 +109,9 @@ export function loadGrowthSites(env = process.env) {
     throw new Error(
       `缺少環境變數：${missing.join('、')}。請在 .env.local 補上 GSC 網站 URL` +
         '（primary 通常是 domain 屬性字串，如 sc-domain:soweread.com；' +
-        'growth 是 vercel.app 網址前綴屬性，例如 https://soweread.vercel.app/——' +
+        'growth 是 knowledge.soweread.com 的網址前綴屬性，例如 https://knowledge.soweread.com/——' +
+        '注意 growth 子網域已在 soweread.com 底下，若 primary 用的是 sc-domain: 網域屬性會自動涵蓋它，' +
+        '要讓兩邊報表分開務必替 growth 另開一個獨立的 URL-prefix property，不要沿用 sc-domain 那個；' +
         '需與 Google Search Console 內登記的屬性字串完全一致，包含結尾斜線）。'
     );
   }
