@@ -1,0 +1,51 @@
+{
+  "retrievedAt": "2026-09-28T13:52:16.857Z",
+  "source": "https://soweread.com/wp-json/wp/v2",
+  "counts": {
+    "posts": 34,
+    "pages": 6,
+    "categories": 4,
+    "tags": 267,
+    "users": 1,
+    "media": 116
+  },
+  "files": [
+    {
+      "file": "posts.json",
+      "bytes": 536772,
+      "sha256": "4f08fd437a2314ac0efb2f4b48ea759ec4548c7fa22ddaf5b5d9c10e430d16a7"
+    },
+    {
+      "file": "pages.json",
+      "bytes": 54928,
+      "sha256": "2bc8609416057ed5573b93121ada50c5f839b97a41a02329a33f8ed0693e0b5c"
+    },
+    {
+      "file": "categories.json",
+      "bytes": 4089,
+      "sha256": "a42e6761b128f818c8004c608260e86e736db8be4175649d9ef8a0723a21fd58"
+    },
+    {
+      "file": "tags.json",
+      "bytes": 273130,
+      "sha256": "d62e3b93095cb29382af5437e9893eef7e18edfda5b4c2b6b3d9f32119558fa1"
+    },
+    {
+      "file": "users.json",
+      "bytes": 945,
+      "sha256": "d51053fc4335a56e49802eb41ec324174fa54abb70a5a29f8ccc292f6cfbcc4e"
+    },
+    {
+      "file": "media.json",
+      "bytes": 1058375,
+      "sha256": "2919c12e0e80659614a85eb9644321f340cc473647f42c1b4dfcba79716c238b"
+    },
+    {
+      "file": "media-urls.txt",
+      "bytes": 11079,
+      "sha256": "e20edd3fa1088ef3fd1dab76f28cd8201699205a03959ee1f703b3ea79517a7e"
+    }
+  ],
+  "mediaBinariesIncluded": false,
+  "note": "只對主站公開 REST API 發 GET，未對主站做任何寫入。媒體二進位檔未下載，因此本快照不是 disaster-complete。"
+}

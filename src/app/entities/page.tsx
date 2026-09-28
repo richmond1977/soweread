@@ -89,6 +89,14 @@ export default async function EntitiesIndexPage() {
   );
 }
 
+// 索引頁只帶讀者去對應的名詞頁，不重印完整敘述——完整敘述已經是
+// 詳情頁的正文，兩頁都放整段文字會變成重複內容。只取第一句當作
+// 索引頁的線索，其餘留給詳情頁。
+function firstSentence(description: string) {
+  const end = description.indexOf("。");
+  return end === -1 ? description : description.slice(0, end + 1);
+}
+
 function EntityList({
   entities,
 }: {
@@ -102,7 +110,7 @@ function EntityList({
           {entity.aliases.length ? (
             <span className="growth-entity-aliases">（{entity.aliases.join("、")}）</span>
           ) : null}
-          <p>{entity.description}</p>
+          <p>{firstSentence(entity.description)}</p>
         </li>
       ))}
     </ul>

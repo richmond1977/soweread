@@ -26,6 +26,7 @@ import { renderGeoSection } from './lib/render-geo.mjs';
 import { renderCoverageSection } from './lib/coverage.mjs';
 import { findDeclines, findCannibalization } from './lib/gsc-signals.mjs';
 import { isDue, canCompare, compareExperiment } from './lib/experiments.mjs';
+import { freshestEndDate, staleNotice } from './lib/staleness.mjs';
 
 function fmtPct(x) {
   return (x * 100).toFixed(1) + '%';
@@ -201,7 +202,7 @@ function renderExperimentsSection(experiments, latestSnapshot, site) {
   return lines;
 }
 
-function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals) {
+function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals, freshest) {
   const { startDate, endDate, rawRows } = snapshot;
   const { striking, ctrGap, content } = result;
   const tc = rawRows.byQuery.reduce((s, r) => s + r.clicks, 0);
@@ -210,6 +211,11 @@ function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals
   const lines = [];
   lines.push(`## ${site.label}　${site.domain}`);
   lines.push('');
+  const notice = staleNotice(endDate, freshest);
+  if (notice) {
+    lines.push(notice);
+    lines.push('');
+  }
   lines.push(`區間：${startDate} ~ ${endDate}・資料源：Google Search Console`);
   lines.push('');
   lines.push(`**區間總覽**：${ti} 次曝光、${tc} 次點擊、整體 CTR ${fmtPct(ti ? tc / ti : 0)}`);
@@ -318,8 +324,9 @@ function renderReport(bySite, skippedSites, config, latestGeoJob) {
   );
   lines.push('');
 
+  const freshest = freshestEndDate(bySite.map((s) => s.snapshot.endDate));
   for (const { site, snapshot, result, serpSnapshot, signals } of bySite) {
-    lines.push(...renderSiteSection(site, snapshot, result, config, serpSnapshot, signals));
+    lines.push(...renderSiteSection(site, snapshot, result, config, serpSnapshot, signals, freshest));
     lines.push('---');
     lines.push('');
   }

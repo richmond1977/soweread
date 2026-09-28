@@ -69,6 +69,7 @@ export type GrowthArticle = {
   topicSlug: string | null;
   entitySlugs: string[];
   sourceIds: string[];
+  faq?: { question: string; answer: string }[];
 };
 
 export type GrowthKnowledge = {

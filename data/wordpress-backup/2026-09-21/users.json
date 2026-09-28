@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "name": "Winslet",
+    "url": "https://soweread.com",
+    "description": "",
+    "link": "https://soweread.com/author/qje0h/",
+    "slug": "qje0h",
+    "avatar_urls": {
+      "24": "https://secure.gravatar.com/avatar/9a68cb4da80e7d4a6b37b917aa7136b6bdb1d6a76c0daa4b32ae5e044c9a7227?s=24&d=mm&r=g",
+      "48": "https://secure.gravatar.com/avatar/9a68cb4da80e7d4a6b37b917aa7136b6bdb1d6a76c0daa4b32ae5e044c9a7227?s=48&d=mm&r=g",
+      "96": "https://secure.gravatar.com/avatar/9a68cb4da80e7d4a6b37b917aa7136b6bdb1d6a76c0daa4b32ae5e044c9a7227?s=96&d=mm&r=g"
+    },
+    "meta": [],
+    "_links": {
+      "self": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/users/1",
+          "targetHints": {
+            "allow": [
+              "GET"
+            ]
+          }
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://soweread.com/wp-json/wp/v2/users"
+        }
+      ]
+    }
+  }
+]

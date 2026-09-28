@@ -41,6 +41,70 @@ export const readerGuideSources = [
     version: "2022-05-23 修正",
     retrievedAt: "2026-09-08",
   },
+  {
+    id: "pesticide-mrl-std",
+    title: "農藥殘留容許量標準（全國法規資料庫）",
+    publisher: "法務部",
+    url: "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=L0040083",
+    version: "2026-04-21 修正",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "pesticide-survey-data",
+    title: "市售食品調查蔬果農藥殘留資料集",
+    publisher: "衛生福利部食品藥物管理署（政府資料開放平臺）",
+    url: "https://data.gov.tw/dataset/8935",
+    version: "頁面載明最後更新 2026-07-02",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "who-amr-2017",
+    title: "WHO guidelines on use of medically important antimicrobials in food-producing animals",
+    publisher: "World Health Organization",
+    url: "https://www.who.int/publications/i/item/9789241550130",
+    version: "2017-11-07",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "amr-plan-2025",
+    title: "114 年啟動「國家級防疫一體抗生素抗藥性管理行動計畫」",
+    publisher: "衛生福利部",
+    url: "https://www.mohw.gov.tw/cp-16-81065-1.html",
+    version: "2025-01-01",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "woah-one-health",
+    title: "One Health（OHHLEP 定義）",
+    publisher: "World Organisation for Animal Health (WOAH)",
+    url: "https://www.woah.org/en/what-we-do/global-initiatives/one-health/",
+    version: "未載明更新日期",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "organic-act",
+    title: "有機農業促進法：第 3 條第 6 款、第 20 條第 1 項、第 29 條第 1 款",
+    publisher: "全國法規資料庫（法務部）",
+    url: "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=M0030093",
+    version: "公布日 2018-05-30，施行日 2019-05-31",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "tfda-gmo-items",
+    title: "我國流通之基因改造食品項目（基因改造食品管理專區）",
+    publisher: "衛生福利部食品藥物管理署",
+    url: "https://www.fda.gov.tw/TC/sitecontent.aspx?sid=3976",
+    version: "頁面載明最後更新日 2025-05-05",
+    retrievedAt: "2026-09-03",
+  },
+  {
+    id: "tfda-gmo-registry",
+    title: "基因改造食品原料查驗登記許可證資料查詢",
+    publisher: "衛生福利部食品藥物管理署（食品藥物消費者專區）",
+    url: "https://consumer.fda.gov.tw/Food/GmoInfo.aspx?nodeID=167",
+    version: "動態查詢介面，未載明更新日期",
+    retrievedAt: "2026-09-03",
+  },
 ] as const;
 
 export const nutritionTeachingExamples = [
@@ -202,6 +266,198 @@ export const entityReaderGuides: ReaderGuide[] = [
       { href: "/articles/egg-production-systems", label: "延伸閱讀：蛋雞飼養方式與設施要求" },
       { href: "/entities/tap-traceability", label: "認識產銷履歷與追溯資訊" },
       { href: "/topics/food-production", label: "回到食品生產與飼養方式主題" },
+    ],
+  },
+  {
+    slug: "pesticide-residue-limit",
+    typeLabel: "法規標準",
+    title: "查不到這款農藥的容許量，代表什麼？先看懂附表架構",
+    introduction: "《農藥殘留容許量標準》不是一張表，是好幾張表的組合。查一款農藥前，先弄清楚要對到哪張附表、哪個農產品分類，再去看實際檢驗結果——法規數值跟抽驗數值回答的是不同問題，本頁教你分開讀。",
+    sections: [
+      {
+        id: "five-tables",
+        title: "第一步：這款農藥屬於哪一張附表",
+        paragraphs: [
+          "依引用法規，容許量標準除了主要的殘留容許量表，另外訂有外源性農藥容許量表、免訂容許量之農藥、公告禁用農藥，以及農產品分類共五個部分。同一款農藥可能出現在不只一張表裡，也可能因為屬於禁用農藥而完全不會出現在容許量表中。",
+          "查詢前先確認農產品分類怎麼歸類你手上的品項——例如某些葉菜類與根莖類的分類方式不一定符合直覺，分類錯了，對到的容許量數值也會錯。",
+        ],
+        steps: ["先查這款農藥是否在公告禁用農藥名單中。", "不在禁用名單，再查殘留容許量表或外源性農藥容許量表是否列有這款農藥與你手上的農產品分類組合。", "查不到對應組合時，先記下農藥名稱與農產品分類，再向公告本身或主管機關確認，不要自行假設結果。"],
+        sourceIds: ["pesticide-mrl-std"],
+      },
+      {
+        id: "law-vs-survey",
+        title: "第二步：法規容許量跟抽驗結果，是兩份不同的資料",
+        paragraphs: [
+          "容許量標準訂的是「上限」，抽驗資料集記錄的是「某一批次實際測到多少」。兩者都需要查，但問題不一樣：容許量回答「上限是多少」，抽驗結果回答「這次抽驗到的批次有沒有超標」。",
+          "抽驗資料集是官方定期公布的市售蔬果農藥殘留調查，依頁面資訊每 3 個月更新一次；它反映的是被抽到的批次，不是市售全部商品都逐一檢驗過。",
+        ],
+        sourceIds: ["pesticide-mrl-std", "pesticide-survey-data"],
+      },
+    ],
+    questions: [
+      { question: "容許量標準裡查不到某款農藥，代表完全不會被檢出嗎？", answer: "不能這樣推定。查不到可能是因為屬於免訂容許量之農藥、公告禁用農藥，也可能是分類或名稱沒有對上；本頁不作個別檢驗結果的合規判定，需要對照完整附表與農產品分類確認。" },
+      { question: "抽驗資料集顯示某批次『合格』，能保證我買到的那批也合格嗎？", answer: "不能。資料集記錄的是被抽驗的特定批次結果，不是每一批市售農產品都經過檢驗；未受檢的批次不在資料集涵蓋範圍內。" },
+    ],
+    links: [
+      { href: "/entities/glyphosate", label: "個案延伸：嘉磷塞（年年春）的容許量與國際評估分歧" },
+      { href: "/entities/veterinary-drug-residue-standard", label: "對照：動物用藥殘留標準怎麼定義未列品目？" },
+      { href: "/topics/pesticides-and-veterinary-drugs", label: "回到農藥與動物用藥主題" },
+    ],
+  },
+  {
+    slug: "antimicrobial-resistance",
+    typeLabel: "風險概念",
+    title: "『抗藥性』是誰產生的？先分清楚主體再往下讀",
+    introduction: "日常說法常把抗藥性講得像是人或動物本身的體質變化。實際上，抗藥性是微生物演化出來的耐受性，跟著微生物移動，不是使用者身體的反應。分清楚這個主體，才不會把後面的政策建議看反了。",
+    sections: [
+      {
+        id: "who-is-resistant",
+        title: "第一步：抗藥性發生在微生物身上，不是人或動物身上",
+        paragraphs: [
+          "抗生素抗藥性指的是微生物對原本有效的抗微生物製劑產生耐受性，使得既有治療失去效果。重點主體是微生物，不是接受治療的人或動物——這跟「我對這款藥有抗藥性」的日常講法，主體其實不同。",
+        ],
+        sourceIds: [],
+      },
+      {
+        id: "who-recommendation",
+        title: "第二步：WHO 2017 年的建議，針對的是哪種用法",
+        paragraphs: [
+          "WHO 於 2017 年發布的指引，建議的方向是停止對健康動物例行使用抗生素以促進生長或預防疾病。這句話裡有兩個限定：對象是健康動物，用途是例行性的促進生長或預防疾病；治療已生病動物的用藥情境，不是這句建議直接描述的對象。完整的適用條件與例外，仍需查閱指引原文，本頁只整理已公開的政策方向。",
+        ],
+        sourceIds: ["who-amr-2017"],
+      },
+      {
+        id: "taiwan-plan",
+        title: "第三步：台灣怎麼把這個議題放進行動計畫",
+        paragraphs: [
+          "台灣於民國 114 年啟動「國家級防疫一體抗生素抗藥性管理行動計畫」，由疾管署、食藥署與農業部共同執行。農業面向的工作包含研擬降低動物用抗生素使用的策略，以及評估替代物質——這代表這個議題橫跨公衛與農業，不是單一部會能獨立處理的事。",
+        ],
+        sourceIds: ["amr-plan-2025"],
+      },
+    ],
+    questions: [
+      { question: "是我或我家的動物『對抗生素產生了抗藥性』嗎？", answer: "嚴格來說，產生耐受性的是微生物，不是人或動物的身體本身。治療失效是因為感染的微生物對藥物不再敏感，不是身體對藥物的反應改變了。" },
+      { question: "WHO 的建議等於全面禁止動物用抗生素嗎？", answer: "不是。2017 年指引建議停止的是對健康動物例行使用抗生素以促進生長或預防疾病，不是禁止治療已生病動物；完整範圍與例外仍以指引原文為準。" },
+    ],
+    links: [
+      { href: "/entities/one-health", label: "接著讀：『防疫一體』是什麼樣的合作框架？" },
+      { href: "/entities/veterinary-drug-residue-standard", label: "對照：動物用藥殘留標準怎麼定義？" },
+      { href: "/topics/pesticides-and-veterinary-drugs", label: "回到農藥與動物用藥主題" },
+    ],
+  },
+  {
+    slug: "one-health",
+    typeLabel: "跨領域框架",
+    title: "『防疫一體』不是口號，是一個決策框架",
+    introduction: "看到「防疫一體」或「One Health」，先問這是在描述一個口號，還是一個實際被拿來用的合作框架。這頁先看官方定義，再看台灣怎麼把它放進實際的政策工具裡。",
+    sections: [
+      {
+        id: "official-definition",
+        title: "第一步：官方定義在說什麼",
+        paragraphs: [
+          "WOAH 引用的 OHHLEP 定義將防疫一體描述為「一種整合而統合的方法，目標是永續地平衡並優化人、動物與生態系的健康」。這個定義的重點是「三者一起優化」，不是只把動物防疫當成人類健康的附屬議題，也不是只談生態。",
+        ],
+        sourceIds: ["woah-one-health"],
+      },
+      {
+        id: "taiwan-application",
+        title: "第二步：台灣怎麼實際用這個框架",
+        paragraphs: [
+          "台灣在民國 114 年的抗生素抗藥性管理行動計畫中，以防疫一體作為跨部會合作的架構，由疾管署、食藥署與農業部共同執行。這代表「防疫一體」在這個案例裡不只是概念，而是被用來說明為什麼三個不同主管機關要放進同一份行動計畫。",
+        ],
+        sourceIds: ["amr-plan-2025"],
+      },
+    ],
+    questions: [
+      { question: "防疫一體只是動物防疫的概念嗎？", answer: "不是。依引用的 OHHLEP 定義，涵蓋人類健康、動物健康與生態系健康三者；動物防疫只是這個框架下的其中一個應用領域。" },
+      { question: "台灣官方文件裡，防疫一體具體做了什麼？", answer: "依已公開資料，它被用作 114 年跨部會抗生素抗藥性管理行動計畫的合作框架；本頁未涵蓋該計畫的完整內容，需要查看原始公告與計畫文件。" },
+    ],
+    links: [
+      { href: "/entities/antimicrobial-resistance", label: "延伸閱讀：抗生素抗藥性的定義與台灣的行動計畫" },
+      { href: "/topics/pesticides-and-veterinary-drugs", label: "回到農藥與動物用藥主題" },
+    ],
+  },
+  {
+    slug: "organic-certification-mark",
+    typeLabel: "驗證標章",
+    title: "看到『有機』兩個字，先確認有沒有這個標章",
+    introduction: "『有機』在法規上是一個需要驗證才能使用的標章名稱，不是行銷形容詞。這頁教你先找標章本身，再往下追驗證機構資訊，遇到查不到的部分就先記下問題，不自己判定合規與否。",
+    sections: [
+      {
+        id: "legal-basis",
+        title: "第一步：標章的法律定義與使用門檻",
+        paragraphs: [
+          "依《有機農業促進法》第 3 條第 6 款，有機農產品標章是用以證明農產品為有機的法定標章。依第 20 條第 1 項，只有經本法驗證合格的農產品才得使用這個標章——換句話說，標章本身是受規範的使用資格，不是任何人都能自行印上包裝。",
+        ],
+        sourceIds: ["organic-act"],
+      },
+      {
+        id: "penalty",
+        title: "第二步：未經驗證使用標章的罰則",
+        paragraphs: [
+          "第 29 條第 1 款規定，未經驗證合格而使用標章者，處新臺幣 20 萬元以上 200 萬元以下罰鍰，並得按次處罰。這一條罰則的對象是「使用標章」的行為；包裝上只用文字宣稱、沒有標章圖案的情況是否落入同一罰則，需要查對完整條文與個案事實，本頁不作違法性認定。",
+        ],
+        sourceIds: ["organic-act"],
+      },
+      {
+        id: "buying-checklist",
+        title: "第三步：買有機農產品時可以問什麼",
+        paragraphs: [
+          "看到標章之後，可以進一步追問驗證機構名稱與驗證範圍，而不是只確認有沒有貼標章。標章證明的是「經驗證合格」，不是特定批次的檢驗結果或營養成分——這兩件事法規定義的範圍不同，不要互相替代解讀。",
+        ],
+        steps: ["找標章圖案本身，不是只看『有機』文字。", "找驗證機構名稱，確認是可查證的第三方機構。", "資訊不足時，記下具體問題向業者或主管機關詢問，不自行推定合規或違規。"],
+        sourceIds: ["organic-act"],
+      },
+    ],
+    questions: [
+      { question: "包裝只寫『有機』兩個字，沒有標章圖案，算違法嗎？", answer: "引用的裁罰依據明文針對『使用標章』的行為；純文字宣稱是否適用同一罰則，需要查對完整條文與個案事實，本頁不作違法性認定。" },
+      { question: "未經驗證使用標章的罰鍰金額是多少？", answer: "依第 29 條第 1 款，處新臺幣 20 萬元以上 200 萬元以下罰鍰，並得按次處罰；具體個案的裁罰金額仍以主管機關認定為準。" },
+    ],
+    links: [
+      { href: "/entities/tap-traceability", label: "對照：產銷履歷（TAP）的驗證方式有什麼不同？" },
+      { href: "/topics/food-production", label: "回到食品生產與飼養方式主題" },
+    ],
+  },
+  {
+    slug: "tfda",
+    typeLabel: "主管機關",
+    title: "食安法第22條說『另行公告』，公告要去哪裡找？",
+    introduction: "食安法第 22 條把營養標示、基因改造標示的具體格式授權給主管機關另行公告——查條文本身查不到細節，還要再找到食藥署發布的公告頁面。這頁教你怎麼找、找到之後要注意什麼。",
+    sections: [
+      {
+        id: "law-vs-announcement",
+        title: "第一步：分清楚『法條』跟『公告』",
+        paragraphs: [
+          "食安法第 22 條列出十款強制標示事項，但其中營養標示與基因改造原料標示的具體呈現方式，是由中央主管機關以公告訂定——實務上由衛生福利部與食藥署發布。只查條文本身，看不到這兩項的實際規定內容。",
+        ],
+        sourceIds: [],
+      },
+      {
+        id: "where-to-look",
+        title: "第二步：去食藥署網站找哪個頁面",
+        paragraphs: [
+          "基因改造食品標示相關的公告與品項清單，收在食藥署「基因改造食品管理專區」；已核准的基因改造食品原料查驗登記紀錄，則在食品藥物消費者專區的查驗登記查詢頁面，但那是動態查詢介面，頁面本身沒有標明總筆數或更新日期。",
+        ],
+        steps: ["先到基因改造食品管理專區找相關公告與品項清單頁面，記下頁面標示的最後更新日期。", "需要查詢具體原料是否已核准登記，改到消費者專區的查驗登記查詢頁面查詢，不要用清單頁面的資訊代替查詢結果。", "頁面沒有標明更新日期或總筆數時，不要假設它已涵蓋最新全部資料。"],
+        sourceIds: ["tfda-gmo-items", "tfda-gmo-registry"],
+      },
+      {
+        id: "version-caution",
+        title: "第三步：留意二手轉載跟現行版本可能不一樣",
+        paragraphs: [
+          "公告與附表的數值會隨修正而變動；網路上流傳的二手整理，內容可能停留在修正前的版本。查到具體規定後，養成核對官方頁面標示的日期或版本說明的習慣，再決定要不要引用。",
+        ],
+        sourceIds: [],
+      },
+    ],
+    questions: [
+      { question: "食藥署跟衛生福利部是什麼關係？", answer: "食藥署是衛生福利部下轄的機關，主管食品、藥物與化粧品安全；食安法多處授權「中央主管機關」公告細節，實務上由衛生福利部或食藥署發布。" },
+      { question: "在食藥署網站查到的資料，一定是最新版嗎？", answer: "不一定要自行確認。頁面有標明最後更新日期時以該日期為準；遇到像查驗登記查詢這類沒有標明更新日或總筆數的動態介面，不要假設它已涵蓋最新全部資料。" },
+    ],
+    links: [
+      { href: "/articles/mandatory-food-labels", label: "延伸閱讀：包裝食品的強制標示" },
+      { href: "/entities/gmo-food-labeling", label: "接著讀：基因改造食品標示的適用範圍" },
+      { href: "/topics/food-labeling", label: "回到食品標示與消費選擇主題" },
     ],
   },
 ];
