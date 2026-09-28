@@ -12,6 +12,8 @@ import {
   publishedArticles,
   sourcesByIds,
 } from "@/lib/growth/knowledge-core";
+import { primaryArticles } from "@/data/primary-articles";
+import { primaryArticlesForTopic } from "@/lib/growth/primary-articles";
 
 // ISR, not force-dynamic: this page's content changes only when the growth
 // knowledge base is re-seeded, but every crawl used to cost a fresh SSR plus a
@@ -78,6 +80,10 @@ export default async function GrowthArticlePage({ params }: ArticlePageProps) {
     .map((entitySlug) => findPublicEntity(knowledge, entitySlug))
     .filter((entity): entity is NonNullable<typeof entity> => entity !== null);
   const sources = sourcesByIds(knowledge, article.sourceIds);
+  // 只取已公開的主題：草稿主題不該把主站文章連出去。
+  const relatedPrimary = primaryArticlesForTopic(primaryArticles, topic ? topic.slug : null, {
+    excludeUrl: article.primaryCtaUrl,
+  });
 
   const breadcrumbs = [
     { name: "首頁", href: "/" },
@@ -153,6 +159,19 @@ export default async function GrowthArticlePage({ params }: ArticlePageProps) {
           ) : null}
 
           <SourceList sources={sources} />
+
+          {relatedPrimary.length ? (
+            <section aria-labelledby="article-primary-reading">
+              <h2 id="article-primary-reading">潤讀主站延伸閱讀</h2>
+              <ul className="growth-entity-list">
+                {relatedPrimary.map((item) => (
+                  <li key={item.url}>
+                    <a href={item.url}>{item.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           {article.primaryCtaUrl ? (
             <PrimaryCta
