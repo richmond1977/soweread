@@ -224,6 +224,7 @@ async function main() {
         datePublished: toDate(article.datePublished),
         dateModified: toDate(article.dateModified),
         topicId: article.topicSlug === null ? null : topicIdBySlug.get(article.topicSlug),
+        faqJson: JSON.stringify(article.faq ?? []),
       };
       await prisma.growthArticle.upsert({
         where: { id: article.id },

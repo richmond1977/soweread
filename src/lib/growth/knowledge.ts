@@ -5,6 +5,7 @@ import { growthFixture } from "@/data/growth-fixture";
 import { getPrismaForRole } from "@/lib/prisma";
 import { getRequestSiteConfig } from "@/lib/request-site-config";
 import type { SiteConfig } from "@/lib/site-config";
+import { parseFaq } from "./faq";
 import {
   EMPTY_KNOWLEDGE,
   type GrowthKnowledge,
@@ -121,6 +122,7 @@ async function loadKnowledge(config: SiteConfig): Promise<GrowthKnowledge> {
         topicSlug: article.topic?.slug ?? null,
         entitySlugs: article.entities.map((link) => link.entity.slug),
         sourceIds: article.sources.map((link) => link.sourceId),
+        faq: parseFaq(article.faqJson),
       })),
     };
   } catch {
