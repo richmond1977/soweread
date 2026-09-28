@@ -32,10 +32,10 @@ const GROUP_RULES = [
     group: "food-production",
     keywords: ["格子籠", "平飼", "放牧", "蛋雞", "養雞", "飼養", "禽流感", "H5N1", "蛋荒", "溫室", "有機"],
   },
-  { group: "produce", keywords: ["洋蔥", "青蔥", "三星蔥", "蔬果"] },
+  { group: "produce", keywords: ["洋蔥", "青蔥", "三星蔥", "蔬果", "土雞"] },
   {
     group: "eating-out",
-    keywords: ["外食", "營養", "餐盤", "飢餓", "代謝", "鹹", "飲食陷阱", "飲食文化"],
+    keywords: ["外食", "營養", "餐盤", "飢餓", "代謝", "鹹", "飲食陷阱", "飲食文化", "減重"],
   },
   { group: "food-safety-culture", keywords: ["夜市", "街頭美食", "餐廳", "食安", "賣相", "美食"] },
 ];

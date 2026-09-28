@@ -189,6 +189,7 @@ model GrowthArticle {
   primaryCtaLabel String    @default("")
   datePublished   DateTime?
   dateModified    DateTime?
+  faqJson         String    @default("[]")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

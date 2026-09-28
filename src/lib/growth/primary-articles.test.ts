@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { primaryArticles } from "../../data/primary-articles.ts";
-import { groupPrimaryArticles } from "./primary-articles.ts";
+import type { PrimaryArticle } from "./primary-articles.ts";
+import { groupPrimaryArticles, primaryArticlesForTopic } from "./primary-articles.ts";
 
 /**
  * 主站文章索引的守門測試。
@@ -83,4 +84,51 @@ test("沒有文章的分組不會產生空區塊", () => {
 
 test("空索引不會產生任何區塊", () => {
   assert.deepEqual(groupPrimaryArticles([]), []);
+});
+
+// 文章頁的「潤讀主站延伸閱讀」：依知識站主題挑同組主站文章，給 Google 一條
+// 從已收錄的知識站頁面走到主站舊文的路（2026-09-28：主站 3–6 月外食與基改系列
+// 在 sitemap 裡卻一直是 URL is unknown to Google，首頁與分類頁都沒連到它們）。
+
+function fixture(title: string, group: PrimaryArticle["group"], datePublished: string): PrimaryArticle {
+  return { title, url: `https://soweread.com/${encodeURIComponent(title)}/`, datePublished, group };
+}
+
+const FIXTURE: PrimaryArticle[] = [
+  fixture("外食一", "eating-out", "2026-03-13"),
+  fixture("外食二", "eating-out", "2026-03-27"),
+  fixture("外食三", "eating-out", "2026-04-03"),
+  fixture("基改一", "gmo", "2026-05-01"),
+  fixture("其他一", "other", "2026-06-01"),
+];
+
+test("primaryArticlesForTopic 只回傳對應主題分組的文章，由新到舊", () => {
+  const titles = primaryArticlesForTopic(FIXTURE, "nutrition-and-eating-out").map((a) => a.title);
+  assert.deepEqual(titles, ["外食三", "外食二", "外食一"]);
+});
+
+test("primaryArticlesForTopic 排除已當作主要 CTA 的那一篇，不重複連結", () => {
+  const cta = FIXTURE[1].url;
+  const urls = primaryArticlesForTopic(FIXTURE, "nutrition-and-eating-out", { excludeUrl: cta }).map((a) => a.url);
+  assert.ok(!urls.includes(cta));
+  assert.equal(urls.length, 2);
+});
+
+test("primaryArticlesForTopic 依 limit 截斷", () => {
+  assert.equal(primaryArticlesForTopic(FIXTURE, "nutrition-and-eating-out", { limit: 1 }).length, 1);
+});
+
+test("primaryArticlesForTopic：沒有對應分組的主題、或 topicSlug 缺值時回空陣列", () => {
+  assert.deepEqual(primaryArticlesForTopic(FIXTURE, "no-such-topic"), []);
+  assert.deepEqual(primaryArticlesForTopic(FIXTURE, null), []);
+});
+
+test("「其他」分組不會被當成任何主題的延伸閱讀", () => {
+  for (const slug of ["nutrition-and-eating-out", "food-labeling", "food-production", "pesticides-and-veterinary-drugs"]) {
+    assert.ok(primaryArticlesForTopic(FIXTURE, slug).every((a) => a.group !== "other"));
+  }
+});
+
+test("真實索引：外食主題至少挑得出 5 篇主站外食文章", () => {
+  assert.ok(primaryArticlesForTopic(primaryArticles, "nutrition-and-eating-out").length >= 5);
 });

@@ -8,9 +8,27 @@ import type { PrimaryArticle } from "@/lib/growth/primary-articles";
  *
  * 只保存標題、網址與發布日期，不含任何內文。
  *
- * 快照來源：data\wordpress-backup\2026-09-03
+ * 快照來源：data\wordpress-backup\2026-09-28
  */
 export const primaryArticles: PrimaryArticle[] = [
+  {
+    "title": "產蛋率僅 52%？台灣蛋荒背後的真相：從天災、黑市到進口蛋風波，一顆雞蛋引爆的產業轉型危機",
+    "url": "https://soweread.com/%e7%94%a2%e8%9b%8b%e7%8e%87%e5%83%85-52%ef%bc%9f%e5%8f%b0%e7%81%a3%e8%9b%8b%e8%8d%92%e8%83%8c%e5%be%8c%e7%9a%84%e7%9c%9f%e7%9b%b8%ef%bc%9a%e5%be%9e%e5%a4%a9%e7%81%bd%e3%80%81%e9%bb%91%e5%b8%82/",
+    "datePublished": "2026-09-25",
+    "group": "food-production"
+  },
+  {
+    "title": "舒肥雞減重真的健康嗎？從低溫烹調風險、添加物到「氣冷雞」挑選全攻略",
+    "url": "https://soweread.com/%e8%88%92%e8%82%a5%e9%9b%9e%e6%b8%9b%e9%87%8d%e7%9c%9f%e7%9a%84%e5%81%a5%e5%ba%b7%e5%97%8e%ef%bc%9f%e5%be%9e%e4%bd%8e%e6%ba%ab%e7%83%b9%e8%aa%bf%e9%a2%a8%e9%9a%aa%e3%80%81%e6%b7%bb%e5%8a%a0%e7%89%a9/",
+    "datePublished": "2026-09-18",
+    "group": "eating-out"
+  },
+  {
+    "title": "台灣土雞全攻略：紅羽、黑羽、烏骨雞與白肉雞口感挑選指南",
+    "url": "https://soweread.com/%e5%8f%b0%e7%81%a3%e5%9c%9f%e9%9b%9e%e5%85%a8%e6%94%bb%e7%95%a5%ef%bc%9a%e7%b4%85%e7%be%bd%e3%80%81%e9%bb%91%e7%be%bd%e3%80%81%e7%83%8f%e9%aa%a8%e9%9b%9e%e8%88%87%e7%99%bd%e8%82%89%e9%9b%9e%e5%8f%a3/",
+    "datePublished": "2026-09-11",
+    "group": "produce"
+  },
   {
     "title": "台灣「無抗養殖」大革命：告別抗生素，迎向One Health大健康時代",
     "url": "https://soweread.com/%e5%8f%b0%e7%81%a3%e3%80%8c%e7%84%a1%e6%8a%97%e9%a4%8a%e6%ae%96%e3%80%8d%e5%a4%a7%e9%9d%a9%e5%91%bd%ef%bc%9a%e5%91%8a%e5%88%a5%e6%8a%97%e7%94%9f%e7%b4%a0%ef%bc%8c%e8%bf%8e%e5%90%91one-health%e5%a4%a7/",

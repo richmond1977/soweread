@@ -56,14 +56,14 @@ const SECTION_DEFINITIONS: Omit<PrimaryArticleSection, "articles">[] = [
   {
     group: "produce",
     name: "產地、品種與挑選",
-    intro: "洋蔥與青蔥的品種、產地、產銷歷程與挑選方式，偏向實用與產業觀察。",
+    intro: "洋蔥、青蔥與土雞的品種、產地、產銷歷程與挑選方式，偏向實用與產業觀察。",
     topicSlug: null,
   },
   {
     group: "eating-out",
     name: "外食與營養",
     intro: "外食比例、營養餐盤、飲食心理與代謝。這一組從日常餐桌出發，談的是長期累積的影響。",
-    topicSlug: null,
+    topicSlug: "nutrition-and-eating-out",
   },
   {
     group: "food-safety-culture",
@@ -90,4 +90,25 @@ export function groupPrimaryArticles(articles: PrimaryArticle[]): PrimaryArticle
       .filter((article) => article.group === section.group)
       .sort((a, b) => b.datePublished.localeCompare(a.datePublished)),
   })).filter((section) => section.articles.length > 0);
+}
+
+/**
+ * 文章頁「潤讀主站延伸閱讀」用：挑出對應知識站主題的主站文章，由新到舊。
+ *
+ * 對應關係沿用 SECTION_DEFINITIONS 的 topicSlug（與 /reading 索引頁同一份），
+ * 不另立一張表。excludeUrl 用來排除已經當主要 CTA 的那一篇，避免同頁重複。
+ */
+export function primaryArticlesForTopic(
+  articles: PrimaryArticle[],
+  topicSlug: string | null,
+  { excludeUrl, limit = 6 }: { excludeUrl?: string | null; limit?: number } = {}
+): PrimaryArticle[] {
+  if (!topicSlug) return [];
+  const groups = new Set(
+    SECTION_DEFINITIONS.filter((section) => section.topicSlug === topicSlug).map((section) => section.group)
+  );
+  return articles
+    .filter((article) => groups.has(article.group) && article.url !== excludeUrl)
+    .sort((a, b) => b.datePublished.localeCompare(a.datePublished))
+    .slice(0, limit);
 }
