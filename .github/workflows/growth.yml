@@ -29,6 +29,10 @@ name: Growth opportunities weekly
 #   DATABASE_URL / DATABASE_DIRECT_URL
 #   SMTP_HOST / SMTP_PORT / SMTP_SECURE / SMTP_USER / SMTP_PASS
 #   GROWTH_REPORT_TO
+#   SERPER_API_KEY（選配，2026-09-19：內容缺口候選的 SERP 驗證層。免費試用額度是
+#     一次性 2,500 次，不是每月重置。缺這個 secret 只會讓 serp_validate 那步警告
+#     後跳過，不影響 ingest → analyze → mail 這條鏈——Richmond 尚未把這個 secret
+#     加進 repo settings 前，週報會照常寄出，只是內容缺口章節維持純 GSC 版本）
 
 on:
   schedule:
@@ -68,6 +72,20 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
         run: npm run growth:ingest
+
+      - name: Validate content-gap candidates via SERP
+        # 選配步驟：缺 key 時腳本自己警告後 exit 0；但真的查詢失敗（額度用罄、
+        # Serper 掛點）不該擋住 ingest → analyze → mail 這條鏈，analyze.mjs 本來就
+        # 能在沒有 SerpSnapshot 時優雅降級。
+        continue-on-error: true
+        env:
+          # GSC_SITE_URL_* 這裡不是用來打 API，是 load-config.mjs 用來組站台標籤／網域。
+          GSC_SITE_URL_GROWTH: ${{ secrets.GSC_SITE_URL_GROWTH }}
+          GSC_SITE_URL_PRIMARY: ${{ secrets.GSC_SITE_URL_PRIMARY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
+        run: npm run growth:serp
 
       - name: Analyze opportunities
         env:
