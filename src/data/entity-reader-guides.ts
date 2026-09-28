@@ -264,6 +264,7 @@ export const entityReaderGuides: ReaderGuide[] = [
     ],
     links: [
       { href: "/articles/egg-production-systems", label: "延伸閱讀：蛋雞飼養方式與設施要求" },
+      { href: "/entities/enriched-cage", label: "深入看：豐富化籠飼的面積規定與動物福利爭議" },
       { href: "/entities/tap-traceability", label: "認識產銷履歷與追溯資訊" },
       { href: "/topics/food-production", label: "回到食品生產與飼養方式主題" },
     ],
