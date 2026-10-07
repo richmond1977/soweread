@@ -605,9 +605,9 @@ export const growthContent: GrowthKnowledge = {
         "嘉磷塞是一種非選擇性的除草劑成分，在台灣屬於核准登記的農藥，其在農產品上的殘留受《農藥殘留容許量標準》規範。它同時是國際上關於「危害鑑定」與「風險評估」結論不一致的代表案例：IARC 於 2015 年將其列為 2A 級「對人類可能致癌」，而 EFSA 於 2023 年的評估認為其不符合致癌性分類標準。兩個結論回答的不是同一個問題。",
       canonicalUrl: null,
       publicationStatus: "published",
-      seoTitle: "嘉磷塞（Glyphosate）：台灣的管理方式與國際評估分歧",
+      seoTitle: "嘉磷塞（草甘膦）在台灣：殘留管理規定與致癌評估分歧",
       seoDescription:
-        "嘉磷塞在台灣的殘留管理依據，以及 IARC 2015 年 2A 分類與 EFSA 2023 年評估結論的差異來源。",
+        "嘉磷塞（又稱草甘膦、Glyphosate）在台灣是核准登記的農藥，殘留受《農藥殘留容許量標準》規範；並說明 IARC 2015 年 2A 分類與 EFSA 2023 年評估結論的差異來源。",
       reviewedAt: null,
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-pesticide-residue-std", "src-iarc-glyphosate", "src-efsa-glyphosate"],
@@ -1141,9 +1141,9 @@ export const growthContent: GrowthKnowledge = {
       editorialStatus: "published",
       authorName: "潤讀知識站編輯部",
       reviewerName: "",
-      seoTitle: "包裝食品的強制標示：食安法第 22 條的十款事項",
+      seoTitle: "食安法第22條是什麼？包裝食品必須標示的十款事項",
       seoDescription:
-        "整理食品安全衛生管理法第 22 條的十款強制標示、營養標示 113 年新制、11 項過敏原，以及基因改造標示的適用範圍。",
+        "食安法第 22 條（食品安全衛生管理法）規定包裝食品必須標示的十款事項逐項整理，含營養標示 113 年新制、11 項過敏原，以及基因改造標示的適用範圍。",
       primaryCtaUrl: "https://soweread.com/2513-2/",
       primaryCtaLabel: "潤讀主站：基改原物料如何滲透你的餐盤？解析全球法規",
       datePublished: "2026-09-03",
