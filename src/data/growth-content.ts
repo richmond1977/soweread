@@ -719,7 +719,7 @@ export const growthContent: GrowthKnowledge = {
       slug: "egg-friendly-production-system",
       entityType: "production-method",
       name: "雞蛋友善生產系統",
-      aliases: ["友善雞蛋", "平飼", "放牧", "豐富化籠飼"],
+      aliases: ["友善雞蛋", "平飼", "放牧"],
       description:
         "《雞蛋友善生產系統定義及指南》是農業部訂定、規範蛋雞友善飼養方式的行政規則，訂定於民國 104-12-31，最近修正為民國 111-05-23。現行版本對放牧與平飼要求每隻雞可用面積至少 1,000 平方公分（兩者均不計入巢箱），對豐富化籠飼要求籠內活動面積達 750 平方公分以上、可用面積至少 600 平方公分，並須設置棲架、巢箱與磨爪材料。",
       canonicalUrl: null,
