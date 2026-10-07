@@ -201,3 +201,16 @@ test("導向主站的 CTA 指向具體文章，不是首頁", () => {
     assert.ok(article.primaryCtaLabel.length > 0, `文章 ${article.slug} 的 CTA 沒有標籤`);
   }
 });
+
+test("實體別名不與其他實體的名稱或別名重疊（避免 alternateName 互搶同一搜尋詞）", () => {
+  const entities = publishedEntities(growthContent);
+  for (const entity of entities) {
+    for (const other of entities) {
+      if (other.slug === entity.slug) continue;
+      const otherTerms = new Set([other.name, ...other.aliases]);
+      for (const alias of entity.aliases) {
+        assert.ok(!otherTerms.has(alias), `實體 ${entity.slug} 的別名「${alias}」也是實體 ${other.slug} 的名稱或別名`);
+      }
+    }
+  }
+});
