@@ -125,6 +125,8 @@ model Entity {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
   reviewedAt        DateTime?
+  // 內容實際變更日（含程式碼內的讀者指南）；取自內容檔，seed 重跑不會變動。
+  dateModified      DateTime?
 
   topics            TopicEntity[]
   sources           EntitySource[]

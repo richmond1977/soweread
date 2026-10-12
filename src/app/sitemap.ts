@@ -5,6 +5,8 @@ import {
   publishedArticles,
   publishedEntities,
   publishedTopics,
+  siteLastModified,
+  topicLastModified,
 } from "@/lib/growth/knowledge-core";
 import { getRequestSiteConfig } from "@/lib/request-site-config";
 
@@ -26,30 +28,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return primarySitemap(config.primarySiteUrl);
 }
 
+// Unknown dates omit lastmod rather than claim "now"; see latestDate().
+function lastModifiedOf(date: string | null): { lastModified?: Date } {
+  return date ? { lastModified: new Date(date) } : {};
+}
+
 async function growthSitemap(baseUrl: string): Promise<MetadataRoute.Sitemap> {
   const { knowledge } = await getGrowthKnowledge();
-  const now = new Date();
+  const siteModified = lastModifiedOf(siteLastModified(knowledge));
 
   return [
-    { url: baseUrl, lastModified: now, changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/topics`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/entities`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/reading`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
+    { url: baseUrl, ...siteModified, changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/topics`, ...siteModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/entities`, ...siteModified, changeFrequency: "weekly", priority: 0.9 },
+    // /reading lists the primary site's WordPress posts; we hold no change date for it.
+    { url: `${baseUrl}/reading`, changeFrequency: "weekly", priority: 0.6 },
     ...publishedTopics(knowledge).map((topic) => ({
       url: `${baseUrl}/topics/${topic.slug}`,
-      lastModified: now,
+      ...lastModifiedOf(topicLastModified(knowledge, topic.slug)),
       changeFrequency: "weekly" as const,
       priority: 0.8,
     })),
     ...publishedEntities(knowledge).map((entity) => ({
       url: `${baseUrl}/entities/${entity.slug}`,
-      lastModified: now,
+      ...lastModifiedOf(entity.dateModified),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
     ...publishedArticles(knowledge).map((article) => ({
       url: `${baseUrl}/articles/${article.slug}`,
-      lastModified: new Date(article.dateModified ?? article.datePublished ?? now),
+      ...lastModifiedOf(article.dateModified ?? article.datePublished),
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),

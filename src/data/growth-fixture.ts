@@ -79,6 +79,7 @@ export const growthFixture: GrowthKnowledge = {
       seoDescription:
         "營養標示的定義、揭露範圍與判讀限制：它提供哪些數據、不提供哪些資訊。",
       reviewedAt: null,
+      dateModified: null,
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-tfda-placeholder"],
     },
@@ -95,6 +96,7 @@ export const growthFixture: GrowthKnowledge = {
       seoTitle: "衛生福利部食品藥物管理署（食藥署）",
       seoDescription: "食藥署的職掌範圍，以及它在食品標示規範上的角色。",
       reviewedAt: null,
+      dateModified: null,
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-tfda-placeholder"],
     },
@@ -110,6 +112,7 @@ export const growthFixture: GrowthKnowledge = {
       seoTitle: "",
       seoDescription: "",
       reviewedAt: null,
+      dateModified: null,
       topicSlugs: ["food-labeling"],
       sourceIds: [],
     },

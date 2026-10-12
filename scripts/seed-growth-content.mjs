@@ -162,6 +162,8 @@ async function main() {
         seoTitle: entity.seoTitle,
         seoDescription: entity.seoDescription,
         reviewedAt: toDate(entity.reviewedAt),
+        // 同文章：取自內容檔，重跑不會謊報更新。
+        dateModified: toDate(entity.dateModified),
       };
       await prisma.entity.upsert({
         where: { id: entity.id },

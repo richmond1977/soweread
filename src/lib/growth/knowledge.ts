@@ -80,6 +80,7 @@ async function loadKnowledge(config: SiteConfig): Promise<GrowthKnowledge> {
         seoTitle: entity.seoTitle,
         seoDescription: entity.seoDescription,
         reviewedAt: entity.reviewedAt?.toISOString().slice(0, 10) ?? null,
+        dateModified: entity.dateModified?.toISOString().slice(0, 10) ?? null,
         topicSlugs: topics
           .filter((topic) => topic.entities.some((link) => link.entityId === entity.id))
           .map((topic) => topic.slug),

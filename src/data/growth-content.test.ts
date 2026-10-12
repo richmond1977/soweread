@@ -214,3 +214,10 @@ test("實體別名不與其他實體的名稱或別名重疊（避免 alternateN
     }
   }
 });
+
+test("每個公開實體都有真實的 dateModified，sitemap 才不必謊報 lastmod", () => {
+  for (const entity of publishedEntities(growthContent)) {
+    assert.ok(entity.dateModified, `實體 ${entity.slug} 缺 dateModified`);
+    assert.match(entity.dateModified, DATE_PATTERN, `實體 ${entity.slug} 的 dateModified 格式不合法`);
+  }
+});
