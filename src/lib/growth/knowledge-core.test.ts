@@ -9,11 +9,14 @@ import {
   findPublicEntity,
   findPublicTopic,
   growthSitemapPaths,
+  latestDate,
   publicRelationsForEntity,
   publishedArticles,
   publishedEntities,
   publishedTopics,
+  siteLastModified,
   sourcesByIds,
+  topicLastModified,
 } from "./knowledge-core.ts";
 
 test("only published rows are visible to readers", () => {
@@ -108,4 +111,38 @@ test("every fixture source is explicitly marked as an unverified placeholder", (
     assert.match(source.title, /佔位來源/);
     assert.ok(source.retrievedAt.length > 0);
   }
+});
+
+test("latestDate picks the newest known date and never invents one", () => {
+  assert.equal(latestDate([]), null);
+  assert.equal(latestDate([null, undefined]), null);
+  assert.equal(latestDate(["2026-09-03", null, "2026-09-21", "2026-09-08"]), "2026-09-21");
+});
+
+function withEntityDates(dates: Record<string, string | null>) {
+  return {
+    ...growthFixture,
+    entities: growthFixture.entities.map((entity) =>
+      entity.slug in dates ? { ...entity, dateModified: dates[entity.slug] } : entity
+    ),
+  };
+}
+
+test("a topic's lastmod follows its newest public entity or article", () => {
+  // The fixture article in food-labeling was modified 2026-09-03.
+  assert.equal(topicLastModified(growthFixture, "food-labeling"), "2026-09-03");
+
+  const knowledge = withEntityDates({ "nutrition-facts-label": "2026-09-21" });
+  assert.equal(topicLastModified(knowledge, "food-labeling"), "2026-09-21");
+});
+
+test("draft rows never move lastmod", () => {
+  const knowledge = withEntityDates({ "draft-example": "2026-12-31" });
+  assert.equal(siteLastModified(knowledge), "2026-09-03");
+});
+
+test("site lastmod is the newest public change anywhere", () => {
+  const knowledge = withEntityDates({ tfda: "2026-10-01", "nutrition-facts-label": "2026-09-21" });
+  assert.equal(siteLastModified(knowledge), "2026-10-01");
+  assert.equal(siteLastModified({ ...knowledge, entities: [], articles: [] }), null);
 });

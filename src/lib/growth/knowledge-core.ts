@@ -23,6 +23,8 @@ export type GrowthEntity = {
   seoTitle: string;
   seoDescription: string;
   reviewedAt: string | null;
+  /** Last real content change, including the code-owned reader guide (YYYY-MM-DD). */
+  dateModified: string | null;
   topicSlugs: string[];
   sourceIds: string[];
 };
@@ -177,6 +179,38 @@ export function publicRelationsForEntity(
       return { ...relation, subject, object, source };
     })
     .filter((relation): relation is NonNullable<typeof relation> => Boolean(relation));
+}
+
+/**
+ * Sitemap lastmod must reflect real content changes. Stamping every URL with
+ * "now" taught Google to ignore our lastmod, so pages fixed after their first
+ * crawl were never revisited. Null means "unknown" — omit lastmod, never guess.
+ */
+export function latestDate(dates: Array<string | null | undefined>): string | null {
+  return dates.reduce<string | null>(
+    (latest, date) => (date && (latest === null || date > latest) ? date : latest),
+    null
+  );
+}
+
+function articleLastModified(article: GrowthArticle): string | null {
+  return article.dateModified ?? article.datePublished;
+}
+
+/** A topic page lists its entities and articles, so it changes when they do. */
+export function topicLastModified(knowledge: GrowthKnowledge, topicSlug: string): string | null {
+  return latestDate([
+    ...entitiesForTopic(knowledge, topicSlug).map((entity) => entity.dateModified),
+    ...articlesForTopic(knowledge, topicSlug).map(articleLastModified),
+  ]);
+}
+
+/** Index pages (home, /topics, /entities) change whenever any public page does. */
+export function siteLastModified(knowledge: GrowthKnowledge): string | null {
+  return latestDate([
+    ...publishedEntities(knowledge).map((entity) => entity.dateModified),
+    ...publishedArticles(knowledge).map(articleLastModified),
+  ]);
 }
 
 /** Every canonical URL a growth sitemap may contain, relative to the site root. */

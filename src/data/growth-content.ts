@@ -609,6 +609,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "嘉磷塞（又稱草甘膦、Glyphosate）在台灣是核准登記的農藥，殘留受《農藥殘留容許量標準》規範；並說明 IARC 2015 年 2A 分類與 EFSA 2023 年評估結論的差異來源。",
       reviewedAt: null,
+      dateModified: "2026-10-07",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-pesticide-residue-std", "src-iarc-glyphosate", "src-efsa-glyphosate"],
     },
@@ -626,6 +627,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "農藥殘留容許量標準的法源與五份附表架構，以及官方蔬果農藥殘留抽驗結果的查詢入口。",
       reviewedAt: null,
+      dateModified: "2026-09-21",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-pesticide-residue-std", "src-data-pesticide"],
     },
@@ -643,6 +645,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "含藥物飼料添加物的法源、現行准用用途，以及「台灣已全面禁抗」這個說法為什麼與現行法規不符。",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-vet-drug-usage", "src-aphia-feed-additive"],
     },
@@ -660,6 +663,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "動物用藥殘留標準的法源、指標性殘留物質的意義，以及表中未列品目為何適用不得檢出。",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-vet-residue-std", "src-vet-drug-act"],
     },
@@ -677,6 +681,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "抗生素抗藥性的定義、WHO 2017 年對食用動物用藥的建議，以及台灣 114 年啟動的跨部會行動計畫內容。",
       reviewedAt: null,
+      dateModified: "2026-09-21",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-who-amr-2017", "src-amr-plan-2025"],
     },
@@ -693,6 +698,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "防疫一體（One Health）：定義與在台灣的實際應用",
       seoDescription: "One Health 的 OHHLEP 定義，以及台灣如何以此架構推動跨部會的抗藥性管理。",
       reviewedAt: null,
+      dateModified: "2026-09-21",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-woah-one-health", "src-amr-plan-2025"],
     },
@@ -709,6 +715,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "國際癌症研究總署（IARC）：分級的意義與常見誤讀",
       seoDescription: "IARC 致癌物分級回答的是危害而非風險，以及這個區別為何會造成新聞標題的誤導。",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: ["src-iarc-glyphosate"],
     },
@@ -728,6 +735,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "台灣蛋雞友善飼養的官方定義與面積要求，含放牧密度與豐富化籠飼的設施條件，依現行 111 年修正版。",
       reviewedAt: null,
+      dateModified: "2026-10-07",
       topicSlugs: ["food-production"],
       sourceIds: ["src-egg-friendly"],
     },
@@ -745,6 +753,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "豐富化籠飼的官方定義、面積與設施規定，與平飼、放牧、一般籠飼的差別，蛋殼生產方式代號，以及動物福利團體與業者的兩方說法。",
       reviewedAt: null,
+      dateModified: "2026-09-28",
       topicSlugs: ["food-production"],
       sourceIds: [
         "src-egg-friendly",
@@ -770,6 +779,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "產銷履歷的紀錄要求、第三方稽核機制與標章內容，教你怎麼用追溯碼或掃碼查詢，以及 TAP 認證與有機標章這兩套驗證制度的差別。",
       reviewedAt: null,
+      dateModified: "2026-09-28",
       topicSlugs: ["food-production"],
       sourceIds: ["src-tap-portal", "src-tap-standard", "src-tap-resume-lookup", "src-organic-act"],
     },
@@ -786,6 +796,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "有機農產品標章：法源、使用條件與罰則",
       seoDescription: "有機農產品標章的法定定義、必須先通過驗證的使用條件，以及違規使用的罰則金額。",
       reviewedAt: null,
+      dateModified: "2026-09-21",
       topicSlugs: ["food-production"],
       sourceIds: ["src-organic-act"],
     },
@@ -805,6 +816,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "營養標示的兩種一般範例格式、每份與相同重量的比較方式，以及標示能回答與不能回答的問題。",
       reviewedAt: null,
+      dateModified: "2026-09-08",
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-nutrition-label-2022", "src-nutrition-format-qa", "src-food-act-22"],
     },
@@ -821,6 +833,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "食品過敏原標示：台灣強制標示的 11 項過敏原",
       seoDescription: "台灣自 109 年 7 月起強制標示的 11 項過敏原清單、法源依據與生效日期。",
       reviewedAt: null,
+      dateModified: "2026-09-08",
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-allergen-2018", "src-food-act-22"],
     },
@@ -838,6 +851,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "台灣基改標示的適用範圍、3% 非有意攙入門檻與字體規定，以及經核准的五類基改食品原料。",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-gmo-label-2015", "src-tfda-gmo-items", "src-food-act-21"],
     },
@@ -854,6 +868,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "衛生福利部食品藥物管理署（食藥署）",
       seoDescription: "食藥署的職掌範圍，以及它在食品標示與基因改造食品查驗登記上的角色。",
       reviewedAt: null,
+      dateModified: "2026-09-21",
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-tfda-gmo-items", "src-tfda-gmo-registry"],
     },
@@ -872,6 +887,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "",
       seoDescription: "",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["food-labeling"],
       sourceIds: ["src-food-act-3"],
     },
@@ -888,6 +904,7 @@ export const growthContent: GrowthKnowledge = {
       seoTitle: "",
       seoDescription: "",
       reviewedAt: null,
+      dateModified: "2026-09-03",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
       sourceIds: [],
     },
@@ -907,6 +924,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "107 年版每日飲食指南的六大類食物官方名稱、七組熱量級距的建議份數，以及「我的餐盤」六句口訣原文與出處。",
       reviewedAt: null,
+      dateModified: "2026-09-28",
       topicSlugs: ["nutrition-and-eating-out"],
       sourceIds: [
         "src-daily-diet-guide-2018",
@@ -930,6 +948,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "CDRR（慢性疾病風險降低攝取量）是什麼、台灣 DRIs 第八版為何未訂鈉的上限攝取量、CDRR 各年齡層數值，以及它與營養標示每日參考值 2000 毫克的用途差異。",
       reviewedAt: null,
+      dateModified: "2026-09-28",
       topicSlugs: ["nutrition-and-eating-out"],
       sourceIds: [
         "src-dris-8th-sodium",
@@ -952,6 +971,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "連鎖飲料、便利商店與速食業現場調製飲料的強制標示項目、咖啡因分級門檻、不適用的業態，以及違規罰鍰金額。",
       reviewedAt: null,
+      dateModified: "2026-09-15",
       topicSlugs: ["nutrition-and-eating-out"],
       sourceIds: ["src-prepared-beverage-rule", "src-prepared-beverage-qa", "src-food-act-25"],
     },
@@ -969,6 +989,7 @@ export const growthContent: GrowthKnowledge = {
       seoDescription:
         "代謝症候群的指標共 5 項：腰圍、血壓、空腹血糖、三酸甘油酯、高密度脂蛋白膽固醇，國民健康署公布的數值與符合 3 項的判定規則，以及它與健保署收案條件的差別。",
       reviewedAt: null,
+      dateModified: "2026-09-28",
       topicSlugs: ["nutrition-and-eating-out"],
       sourceIds: ["src-metabolic-syndrome-hpa", "src-nhi-metabolic-syndrome-plan"],
     },
