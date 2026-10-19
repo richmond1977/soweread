@@ -24,6 +24,7 @@ import { classify } from './lib/opportunity-classify.mjs';
 import { CONTENT_TYPE_LABEL } from './lib/serp-intent.mjs';
 import { renderGeoSection } from './lib/render-geo.mjs';
 import { renderCoverageSection } from './lib/coverage.mjs';
+import { isObservationOnly, renderAbsorbCandidates } from './lib/render-observation.mjs';
 import { findDeclines, findCannibalization } from './lib/gsc-signals.mjs';
 import { isDue, canCompare, compareExperiment } from './lib/experiments.mjs';
 import { freshestEndDate, staleNotice } from './lib/staleness.mjs';
@@ -307,6 +308,38 @@ function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals
   return lines;
 }
 
+// 僅觀察的站（見 lib/render-observation.mjs）：保留曝光與收錄數字，不列待辦。
+function renderObservationSiteSection(site, snapshot, result, config, freshest) {
+  const { startDate, endDate, rawRows } = snapshot;
+  const tc = rawRows.byQuery.reduce((s, r) => s + r.clicks, 0);
+  const ti = rawRows.byQuery.reduce((s, r) => s + r.impressions, 0);
+
+  const lines = [];
+  lines.push(`## ${site.label}　${site.domain}（僅觀察）`);
+  lines.push('');
+  lines.push('> 本站目前無法修改，以下只列觀察數據，不列待辦。有搜尋需求的詞改由成長站評估承接。');
+  lines.push('');
+  const notice = staleNotice(endDate, freshest);
+  if (notice) {
+    lines.push(notice);
+    lines.push('');
+  }
+  lines.push(`區間：${startDate} ~ ${endDate}・資料源：Google Search Console`);
+  lines.push('');
+  lines.push(`**區間總覽**：${ti} 次曝光、${tc} 次點擊、整體 CTR ${fmtPct(ti ? tc / ti : 0)}`);
+  lines.push('');
+  lines.push(
+    ...renderCoverageSection(snapshot.coverage, {
+      impressions: ti,
+      minImpressions: config.minImpressions,
+      opportunityCount: result.striking.length + result.content.length,
+      listNotIndexed: false,
+    })
+  );
+  lines.push(...renderAbsorbCandidates(result));
+  return lines;
+}
+
 function renderReport(bySite, skippedSites, config, latestGeoJob) {
   const lines = [];
   lines.push('# 潤讀成長機會週報');
@@ -326,7 +359,11 @@ function renderReport(bySite, skippedSites, config, latestGeoJob) {
 
   const freshest = freshestEndDate(bySite.map((s) => s.snapshot.endDate));
   for (const { site, snapshot, result, serpSnapshot, signals } of bySite) {
-    lines.push(...renderSiteSection(site, snapshot, result, config, serpSnapshot, signals, freshest));
+    if (isObservationOnly(site.site, config)) {
+      lines.push(...renderObservationSiteSection(site, snapshot, result, config, freshest));
+    } else {
+      lines.push(...renderSiteSection(site, snapshot, result, config, serpSnapshot, signals, freshest));
+    }
     lines.push('---');
     lines.push('');
   }

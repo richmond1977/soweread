@@ -145,3 +145,9 @@ test('renderCoverageSection 標示抽驗被上限截斷', () => {
   const md = renderCoverageSection(c, STARVED).join('\n');
   assert.match(md, /sitemap 宣告 500 個 URL，本次抽驗 2 個（達單次上限 2，其餘未驗）/);
 });
+
+test('renderCoverageSection 在 listNotIndexed=false 時只列統計，不列未收錄頁面清單', () => {
+  const md = renderCoverageSection(coverageFixture(), { ...FULL_DATA, listNotIndexed: false }).join('\n');
+  assert.match(md, /已收錄/);
+  assert.doesNotMatch(md, /未收錄的頁面/);
+});
