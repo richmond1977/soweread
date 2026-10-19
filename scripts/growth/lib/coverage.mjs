@@ -94,8 +94,9 @@ function pathOf(url) {
  * 渲染「收錄進度」章節。
  *
  * @param {object} coverage ingest 寫進 GrowthSnapshot.coverage 的物件
- * @param {{ impressions: number, minImpressions: number, opportunityCount: number }} context
- *        本區間該站的總曝光、分析門檻與三層分析共產出幾條機會，用來決定要不要提醒
+ * @param {{ impressions: number, minImpressions: number, opportunityCount: number, listNotIndexed?: boolean }} context
+ *        本區間該站的總曝光、分析門檻與三層分析共產出幾條機會，用來決定要不要提醒；
+ *        listNotIndexed=false 時不列未收錄頁面清單（僅觀察的站，清單只是改不了的待辦）
  * @returns {string[]} Markdown 行陣列
  */
 export function renderCoverageSection(coverage, context) {
@@ -136,7 +137,7 @@ export function renderCoverageSection(coverage, context) {
     lines.push('');
   }
 
-  if (s.notIndexedUrls.length > 0) {
+  if (s.notIndexedUrls.length > 0 && context.listNotIndexed !== false) {
     lines.push('未收錄的頁面：');
     lines.push('');
     lines.push('| 頁面 | 狀態 |');
