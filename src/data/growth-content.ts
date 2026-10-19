@@ -26,6 +26,9 @@ const RETRIEVED_2026_09_15 = "2026-09-15";
 /** 2026-09-28 新增／強化內容（外食族點餐原則、TAP 查詢、代謝症候群與 CDRR 關鍵字強化）之來源擷取日。 */
 const RETRIEVED_2026_09_28 = "2026-09-28";
 
+/** 2026-10-19 新增（承接主站土雞、青蔥搜尋需求的兩個實體）之來源擷取日。 */
+const RETRIEVED_2026_10_19 = "2026-10-19";
+
 export const growthContent: GrowthKnowledge = {
   isFixture: false,
 
@@ -504,6 +507,78 @@ export const growthContent: GrowthKnowledge = {
       retrievedAt: RETRIEVED_2026_09_28,
       note: "報導台灣精緻洗選蛋品協會與日方學者在台日交流場合的主張，認為豐富籠設施通過與平飼、放牧相同的國際動物福利科研標準，不宜與傳統格子籠相提並論。屬產業團體與學者主張，非官方結論。",
     },
+
+    // ── 2026-10-19 新增：台灣土雞、青蔥實體之來源 ──────────────────
+    {
+      id: "src-native-chicken-industry",
+      title: "土雞產業之輔導成果及展望",
+      publisher: "農業部（原行政院農業委員會畜牧處）",
+      url: "https://www.moa.gov.tw/ws.php?id=22223",
+      sourceType: "government-guidance",
+      publishedAt: "2010-10-01",
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "農政與農情第 220 期（民國 99 年 10 月，頁面僅載年月，日取該月 1 日）。載明主流土雞品種、紅羽與黑羽約占飼養量 80% 以上、北雞與南雞的消費差異，以及一般上市週齡（紅羽 12-13 週、黑羽 14-15 週）。",
+    },
+    {
+      id: "src-native-chicken-tlri",
+      title: "雞隻品種特性及營養需要",
+      publisher: "農業部畜產試驗所",
+      url: "https://kmweb.moa.gov.tw/subject/subject.php?id=9189",
+      sourceType: "government-guidance",
+      publishedAt: null,
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "畜試所簡報，頁面未載明發布日。載明「土雞」泛指台灣本地雞種、來源難以考據，以及鉛色腳脛、有色羽毛、生產淺褐色蛋等共同特徵。",
+    },
+    {
+      id: "src-poultry-farm-stats-2025q1",
+      title: "臺閩地區畜禽飼養場數及在養量比較（114 年第 1 季）",
+      publisher: "農業部",
+      url: "https://kmweb.moa.gov.tw/subject/subject.php?id=63100",
+      sourceType: "government-statistics",
+      publishedAt: null,
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "統計期別為 114 年第 1 季（2025Q1），頁面未載明發布日。數字為在養量（某一時點養在場內的隻數），不是年屠宰量。",
+    },
+    {
+      id: "src-black-silky-fowl-registration",
+      title: "公告核准「黑絨烏骨雞」新品種登記及審定書",
+      publisher: "行政院農業委員會（行政院公報第 025 卷第 080 期）",
+      url: "https://kmweb.moa.gov.tw/redirect_files.php?id=173513",
+      sourceType: "government-regulation",
+      publishedAt: "2019-04-29",
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "民國 108 年 4 月 29 日農牧字第1080042730號公告，依畜牧法第 12 條核准；育成者為畜產試驗所。",
+    },
+    {
+      id: "src-green-onion-teaching",
+      title: "國產農漁畜產品教材：青蔥",
+      publisher: "農業部花蓮區農業改良場",
+      url: "https://fae.moa.gov.tw/redirect_files.php?id=119978",
+      sourceType: "government-guidance",
+      publishedAt: "2024-09-01",
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "2024 年 9 月出版（頁面僅載年月，日取該月 1 日）。縣市面積與產量引用農業部農業統計年報 109-111 年平均值。",
+    },
+    {
+      id: "src-shallot-teaching",
+      title: "國產農漁畜產品教材：紅蔥頭",
+      publisher: "農業部生物多樣性研究所",
+      url: "https://fae.moa.gov.tw/files/topics/3008/A02_2.pdf",
+      sourceType: "government-guidance",
+      publishedAt: "2024-09-01",
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "2024 年 9 月出版（頁面僅載年月，日取該月 1 日）。載明紅蔥頭在學術上稱為「分蔥」，面積與產量引用農糧署農情報告資源網 109-111 年平均。",
+    },
+    {
+      id: "src-green-onion-typhoon",
+      title: "青蔥簡易防颱網室栽培技術簡介",
+      publisher: "農業部花蓮區農業改良場",
+      url: "https://www.moa.gov.tw/ws.php?id=2506667",
+      sourceType: "government-guidance",
+      publishedAt: "2017-08-01",
+      retrievedAt: RETRIEVED_2026_10_19,
+      note: "民國 106 年 8 月（頁面僅載年月，日取該月 1 日）。載明青蔥性喜冷涼、7～10 月常因天然災害供貨不穩而價格波動，定植至採收約需 3 個月。",
+    },
   ],
 
   topics: [
@@ -799,6 +874,48 @@ export const growthContent: GrowthKnowledge = {
       dateModified: "2026-09-21",
       topicSlugs: ["food-production"],
       sourceIds: ["src-organic-act"],
+    },
+
+    {
+      id: "entity-taiwan-native-chicken",
+      slug: "taiwan-native-chicken",
+      entityType: "livestock-breed",
+      name: "台灣土雞",
+      aliases: ["土雞", "紅羽土雞", "黑羽土雞"],
+      description:
+        "「土雞」在台灣不是法規名詞。農業部畜產試驗所的說法是：土雞泛指台灣的本地雞種，來源與起始年代難以考據，共同特徵包括鉛色腳脛、有色羽毛、活躍性強、生產淺褐色蛋，耐熱性與抗病力較一般雞隻佳。依原農委會畜牧處在《農政與農情》（民國 99 年 10 月）的整理，市面上的主流土雞品種可分為紅羽土雞、黑羽土雞、閹雞、鬥雞、珍珠雞（裸頸雞）及烏骨雞，其中紅羽與黑羽土雞約占國內飼養量 80% 以上。紅羽與黑羽最實際的差別有兩個：一是上市週齡，同一份資料載明一般紅羽土雞為 12-13 週齡、黑羽土雞為 14-15 週齡；二是消費市場，北部消費者多買部位肉，所需的「北雞」以大型紅羽土雞、鬥雞為主，中南部多買全雞，「南雞」以體型較小的黑羽土雞、烏骨雞為主。至於兩者的口感差異，本站沒有找到官方的比較資料，因此不代為評價。農業部 114 年第 1 季（2025Q1）的統計顯示，臺閩地區在養的白肉雞為 1,026 場、25,898,679 隻，紅羽土雞為 1,565 場、12,396,967 隻，黑羽土雞為 1,271 場、8,271,543 隻，烏骨雞為 155 場、1,138,595 隻；這是某一時點養在場內的隻數，不是年屠宰量。常見的「黑羽烏骨雞」並不是官方品種名稱：烏骨雞在統計上另列一項，畜產試驗所育成的「黑絨烏骨雞」已於民國 108 年 4 月 29 日經原農委會依畜牧法公告核准新品種登記，審定書描述其成年後全身為黑色絲絨羽、玫瑰冠、多趾、烏皮，屠體為烏骨與烏肉。",
+      canonicalUrl: null,
+      publicationStatus: "published",
+      seoTitle: "紅羽土雞、黑羽土雞差別：上市週齡、北雞南雞與烏骨雞品種",
+      seoDescription:
+        "台灣土雞的官方說法與主流品種，紅羽土雞（12-13 週齡上市）與黑羽土雞（14-15 週齡）的差別、北雞與南雞的消費習慣、最新在養量統計，以及黑絨烏骨雞的品種登記。",
+      reviewedAt: null,
+      dateModified: "2026-10-19",
+      topicSlugs: ["food-production"],
+      sourceIds: [
+        "src-native-chicken-tlri",
+        "src-native-chicken-industry",
+        "src-poultry-farm-stats-2025q1",
+        "src-black-silky-fowl-registration",
+      ],
+    },
+    {
+      id: "entity-taiwan-green-onion",
+      slug: "taiwan-green-onion",
+      entityType: "crop",
+      name: "台灣青蔥",
+      aliases: ["青蔥", "四季蔥", "日蔥", "北蔥", "三星蔥"],
+      description:
+        "青蔥的學名為 Allium fistulosum L.。依農業部花蓮區農業改良場的教材（2024 年 9 月出版），台灣全年都有青蔥供應，近年栽培面積約 4,000 公頃，國產青蔥多為「日蔥」與「北蔥」兩類：日蔥（即四季蔥，又稱日本蔥、九條蔥）以宜蘭縣為主要產區，耐熱性較差，適合冷涼氣候；北蔥則以雲林縣、彰化縣為主要產地。另有大蔥，葉色濃綠、蔥白長約 30 公分、耐寒，適合秋冬栽培。依農業統計年報 109-111 年平均，栽培面積與產量最高的五個縣市依序為彰化縣、雲林縣、宜蘭縣、臺中市、高雄市。「三星蔥」指的是宜蘭縣三星地區出產的青蔥，不是單一品種：當地主要種植四季蔥，產量約占宜蘭縣青蔥的 60%，主流品種是花蓮場育成的「蘭陽四號」（商業名稱「清玉」）。產季方面，青蔥雖可周年供應，但性喜冷涼、夏季栽培不易，花蓮場指出 7～10 月常因颱風、豪雨等天然災害造成供貨不穩、價格波動，而且從定植到採收約需 3 個月，災後復耕期長，缺貨時間也拖得較久，這是夏秋蔥價容易跳動的主要原因。「分蔥」這個名稱容易混淆：農業部生物多樣性研究所的教材寫明，紅蔥頭在學術上稱為「分蔥」（Allium ascalonicum），它是做油蔥酥的紅蔥頭，與一般當青菜吃的青蔥是不同的作物；紅蔥頭依 109-111 年平均的生產面積為 1,176 公頃，臺南市、雲林縣、嘉義縣合計約占全台產量 99.6%。日常用語是否也把會分櫱的青蔥叫做分蔥，本站沒有找到官方說法，購買時以實際品項為準。",
+      canonicalUrl: null,
+      publicationStatus: "published",
+      seoTitle: "台灣青蔥品種與產季：四季蔥、北蔥、三星蔥，以及「分蔥」是什麼",
+      seoDescription:
+        "台灣青蔥的主要品種（四季蔥／日蔥、北蔥、大蔥）與產區，三星蔥的由來，7～10 月蔥價為何容易波動，以及官方教材中「分蔥」其實是指紅蔥頭。",
+      reviewedAt: null,
+      dateModified: "2026-10-19",
+      topicSlugs: ["food-production"],
+      sourceIds: ["src-green-onion-teaching", "src-green-onion-typhoon", "src-shallot-teaching"],
     },
 
     // ── 主題三：食品標示與消費選擇 ────────────────────────────────
