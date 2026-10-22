@@ -2132,7 +2132,7 @@ select {
   margin: 4px 0 0;
   font-size: 13px;
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text-light);
 }
 
 .growth-official-link {
@@ -2150,7 +2150,8 @@ select {
   text-align: center;
 }
 
-.growth-cta-link {
+/* 加上 .growth-main 前綴：否則 `.growth-main a` 的權重較高，會把文字色蓋成與底色相同 */
+.growth-main .growth-cta-link {
   display: inline-block;
   padding: 12px 24px;
   background: var(--primary);
@@ -2161,7 +2162,7 @@ select {
   text-decoration: none;
 }
 
-.growth-cta-link:hover {
+.growth-main .growth-cta-link:hover {
   background: var(--text-dark);
   color: var(--white);
 }
