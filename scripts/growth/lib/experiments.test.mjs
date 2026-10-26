@@ -41,23 +41,32 @@ test('isDue：差一天未到 reviewAfterDays → 未到期', () => {
 
 // canCompare --------------------------------------------------------------
 
-test('canCompare：最新快照期間早於改版日 → 不可比較，附原因', () => {
-  const exp = { changedAt: '2026-09-15' };
-  const latest = { startDate: '2026-09-01', endDate: '2026-09-08' };
-  const result = canCompare(exp, latest);
-  assert.equal(result.ok, false);
-  assert.equal(result.reason, '資料尚未涵蓋改版後期間');
-});
+const validExperiment = () => ({ changedAt: '2026-09-09', baseline: { startDate: '2026-09-01', endDate: '2026-09-08' } });
+const validLatest = () => ({ startDate: '2026-09-10', endDate: '2026-09-17' });
 
-test('canCompare：快照期間涵蓋改版後 → 可比較', () => {
-  const exp = { changedAt: '2026-09-01' };
-  const latest = { startDate: '2026-09-01', endDate: '2026-09-08' };
-  assert.equal(canCompare(exp, latest).ok, true);
+test('canCompare：純改版前後、等長無重疊才可比較', () => {
+  assert.equal(canCompare(validExperiment(), validLatest()).ok, true);
 });
-
-test('canCompare：沒有快照 → 不可比較', () => {
-  const exp = { changedAt: '2026-09-01' };
-  assert.equal(canCompare(exp, null).ok, false);
+test('canCompare：污染基準及旗標均拒絕', () => {
+  for (const baseline of [{ startDate: '2026-09-01', endDate: '2026-09-09' }, { ...validExperiment().baseline, includesPostChange: true }]) {
+    assert.match(canCompare({ ...validExperiment(), baseline }, validLatest()).reason, /基準污染/);
+  }
+});
+test('canCompare：日期完整且有效', () => {
+  for (const baseline of [{ startDate: '2026-09-01' }, { startDate: '2026-02-30', endDate: '2026-09-08' }]) {
+    assert.match(canCompare({ ...validExperiment(), baseline }, validLatest()).reason, /基準.*期間/);
+  }
+  assert.equal(canCompare(validExperiment(), { startDate: '2026-09-10' }).ok, false);
+  assert.equal(canCompare({ ...validExperiment(), changedAt: 'no' }, validLatest()).ok, false);
+});
+test('canCompare：排除改版日與前資料，包括重疊窗口', () => {
+  for (const startDate of ['2026-09-08', '2026-09-09']) {
+    assert.match(canCompare(validExperiment(), { ...validLatest(), startDate }).reason, /比較窗口混入/);
+  }
+});
+test('canCompare：長度不同與缺快照均不可比較', () => {
+  assert.match(canCompare(validExperiment(), { ...validLatest(), endDate: '2026-09-18' }).reason, /長度不同/);
+  assert.equal(canCompare(validExperiment(), null).ok, false);
 });
 
 // buildBaseline -----------------------------------------------------------
@@ -87,17 +96,17 @@ test('compareExperiment：資料未涵蓋改版後 → 回傳 ok:false 不強算
   const latest = snapshot({ startDate: '2026-09-01', endDate: '2026-09-08' });
   const cmp = compareExperiment(exp, latest);
   assert.equal(cmp.ok, false);
-  assert.equal(cmp.reason, '資料尚未涵蓋改版後期間');
+  assert.match(cmp.reason, /比較窗口混入/);
 });
 
 test('compareExperiment：可比較時計算 page 與 query 前後差值', () => {
   const before = snapshot();
   const baseline = buildBaseline('https://knowledge.soweread.com/topics/foo', ['關鍵字a'], before, '2026-09-08');
-  const exp = { changedAt: '2026-09-08', page: 'https://knowledge.soweread.com/topics/foo', queries: ['關鍵字a'], baseline };
+  const exp = { changedAt: '2026-09-09', page: 'https://knowledge.soweread.com/topics/foo', queries: ['關鍵字a'], baseline };
 
   const after = snapshot({
-    startDate: '2026-09-08',
-    endDate: '2026-09-15',
+    startDate: '2026-09-10',
+    endDate: '2026-09-17',
     rawRows: {
       byPage: [
         { page: 'https://knowledge.soweread.com/topics/foo', clicks: 15, impressions: 220, ctr: 0.068, position: 6 },

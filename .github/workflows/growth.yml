@@ -38,6 +38,11 @@ on:
   schedule:
     - cron: '0 2 * * 1' # 每週一 02:00 UTC（約台灣時間 10:00）
   workflow_dispatch:
+    inputs:
+      send_email:
+        description: '寄送週報（僅驗證流程時可關閉）'
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -61,6 +66,9 @@ jobs:
 
       - name: Generate Prisma client
         run: npx prisma generate
+
+      - name: Verify growth reporting rules
+        run: node --test scripts/growth/lib/*.test.mjs
 
       - name: Ingest GSC data
         env:
@@ -98,6 +106,7 @@ jobs:
         run: npm run growth:analyze
 
       - name: Email report to Richmond
+        if: github.event_name != 'workflow_dispatch' || inputs.send_email
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}

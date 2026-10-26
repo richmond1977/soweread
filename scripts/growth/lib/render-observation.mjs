@@ -8,6 +8,8 @@
  * 證明有搜尋需求的詞，由 knowledge.soweread.com 新增內容來接。
  */
 
+import { renderLandingPages } from './report-metrics.mjs';
+
 export function isObservationOnly(site, config) {
   return Array.isArray(config.observationOnlySites) && config.observationOnlySites.includes(site);
 }
@@ -37,7 +39,7 @@ export function renderAbsorbCandidates(result) {
   lines.push('');
   lines.push(
     '主站已有曝光、但排名在前三名之外的搜尋詞，代表這些題目確實有人在搜。' +
-      '可評估在成長站新增實體頁或文章來承接，再連回主站原文。'
+      '先核對成長站既有實體頁與文章及其查詢意圖；確認缺口後再評估補強或新增內容，並連回主站原文。'
   );
   lines.push('');
 
@@ -48,10 +50,11 @@ export function renderAbsorbCandidates(result) {
     return lines;
   }
 
-  lines.push('| 搜尋詞 | 曝光 | 點擊 | 主站排名 | 主站頁面 |');
+  lines.push('| 搜尋詞 | 搜尋詞曝光 | 搜尋詞點擊 | 搜尋詞平均排名 | 主站各頁（同詞的頁面級資料） |');
   lines.push('|---|--:|--:|--:|---|');
   for (const r of candidates.slice(0, 15)) {
-    lines.push(`| ${r.query} | ${r.impressions} | ${r.clicks} | ${r.position.toFixed(1)} | ${readablePath(r.page)} |`);
+    const pages = r.landingPages?.length ? renderLandingPages({ landingPages: r.landingPages.map(p => ({ ...p, page: readablePath(p.page) })) }) : readablePath(r.page);
+    lines.push(`| ${r.query} | ${r.impressions} | ${r.clicks} | ${r.position.toFixed(1)} | ${pages} |`);
   }
   lines.push('');
   return lines;

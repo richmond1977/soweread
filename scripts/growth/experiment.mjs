@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// 改版成效追蹤 CLI（純規則，不用 AI、不連外網）：
-//   add    — 記錄一次改版，從指定站台最新的 GrowthSnapshot 抓取基準值
+// 改版成效追蹤 CLI（純規則，不用 AI；add/repair 從 GSC 讀取改版前基準）：
+//   add    — 記錄一次改版，抓取改版日前 28 日 GSC 基準
+//   repair-baselines — 預設 dry-run；--apply 才修復 running 實驗的污染基準
 //   decide — 到期後由人決定 keep / revert / iterate
 //   list   — 列出全部紀錄
 //
@@ -16,6 +17,8 @@ import './lib/env.mjs';
 import { PrismaClient } from '@prisma/client';
 import { isDue, buildBaseline } from './lib/experiments.mjs';
 import { loadGrowthSites } from './lib/load-config.mjs';
+import { googlePost } from './lib/google-auth.mjs';
+import { fetchBaselineSnapshot, needsBaselineRepair, repairedBaseline, applyBaselineRepair, gscCalendarDate } from './lib/experiment-repair.mjs';
 
 function todayISODate() {
   return new Date().toISOString().slice(0, 10);
@@ -70,36 +73,21 @@ async function cmdAdd(args, prisma, sites) {
         .map((s) => s.trim())
         .filter(Boolean)
     : [];
-  const changedAt = args.date || todayISODate();
+  const changedAt = args.date || gscCalendarDate();
   const reviewAfterDays = args['review-days'] ? Number(args['review-days']) : 28;
   const allowEmptyBaseline = Boolean(args['allow-empty-baseline']);
 
-  const snapshot = await prisma.growthSnapshot.findFirst({
-    where: { site },
-    orderBy: { endDate: 'desc' },
-  });
-  if (!snapshot) {
-    console.error(`❌ 站台「${site}」沒有任何 GrowthSnapshot，請先執行 npm run growth:ingest`);
-    process.exit(1);
-  }
+  if (!Number.isInteger(reviewAfterDays) || reviewAfterDays < 1) throw new Error('--review-days 必須是正整數');
+  const snapshot = await fetchBaselineSnapshot(sites.find((s) => s.site === site), page, queries, changedAt, googlePost);
 
   const baseline = buildBaseline(page, queries, snapshot, snapshot.endDate);
 
   if (baseline.empty && !allowEmptyBaseline) {
     console.error(
-      `❌ page「${page}」在最新快照（${snapshot.endDate}）裡完全沒有資料。` +
+      `❌ page「${page}」在改版前基準（${snapshot.endDate}）裡完全沒有資料。` +
         '若確定要在無基準情況下建立追蹤，加 --allow-empty-baseline。'
     );
     process.exit(1);
-  }
-
-  // 基準期間若已涵蓋改版日（例如改完幾天才補登），基準就混入改版後數據，前後比較會失真
-  if (baseline.endDate && baseline.endDate >= changedAt) {
-    baseline.includesPostChange = true;
-    console.warn(
-      `⚠️ 基準快照期間（${baseline.startDate}～${baseline.endDate}）已涵蓋改版日 ${changedAt}，` +
-        '基準混有改版後數據，比較結果請保守解讀。'
-    );
   }
 
   const id = `exp-${Date.now()}`;
@@ -126,6 +114,35 @@ async function cmdAdd(args, prisma, sites) {
   console.log(`   change: ${change}`);
   console.log(`   基準快照: ${snapshot.endDate}${baseline.empty ? '（該頁無資料，empty baseline）' : ''}`);
   console.log(`   到期日: changedAt(${changedAt}) + ${reviewAfterDays} 天`);
+}
+
+async function cmdRepair(args, prisma, sites) {
+  if (args.apply !== undefined && args.apply !== true) throw new Error('--apply 為旗標，請勿帶值');
+  if (args['dry-run'] && args.apply) throw new Error('--dry-run 與 --apply 不可同時使用');
+  if (args.site) requireSite(args, sites);
+  if (args.id === true) throw new Error('--id 需要實驗 id');
+  const experiments = await prisma.experiment.findMany({
+    where: { status: 'running', ...(args.site ? { site: args.site } : {}), ...(args.id ? { id: args.id } : {}) },
+    orderBy: { createdAt: 'asc' },
+  });
+  const candidates = experiments.filter(needsBaselineRepair);
+  console.log(`${args.apply ? 'APPLY' : 'DRY-RUN（不寫入資料庫）'}：${candidates.length} 筆污染基準`);
+  let failures = 0;
+  for (const experiment of candidates) {
+    try {
+      const site = sites.find((s) => s.site === experiment.site);
+      if (!site) throw new Error(`未知站台 ${experiment.site}`);
+      if (!Array.isArray(experiment.queriesJson) || experiment.queriesJson.some((q) => typeof q !== 'string')) throw new Error('queriesJson 格式無效');
+      const snapshot = await fetchBaselineSnapshot(site, experiment.page, experiment.queriesJson, experiment.changedAt, googlePost);
+      const baseline = repairedBaseline(experiment, snapshot);
+      console.log(JSON.stringify({ id: experiment.id, mode: args.apply ? 'apply' : 'dry-run', baseline }, null, 2));
+      if (args.apply) await applyBaselineRepair(prisma, experiment, baseline);
+    } catch (error) {
+      failures++;
+      console.error(`❌ ${experiment.id}：${error.message}`);
+    }
+  }
+  if (failures) throw new Error(`${failures} 筆基準修復失敗；失敗項目未寫入`);
 }
 
 async function cmdDecide(args, prisma) {
@@ -187,6 +204,10 @@ async function main() {
       case 'add':
         await cmdAdd(args, prisma, sites);
         break;
+      case 'repair':
+      case 'repair-baselines':
+        await cmdRepair(args, prisma, sites);
+        break;
       case 'decide':
         await cmdDecide(args, prisma);
         break;
@@ -194,7 +215,7 @@ async function main() {
         await cmdList(args, prisma);
         break;
       default:
-        console.error('用法：node scripts/growth/experiment.mjs <add|decide|list> [options]');
+        console.error('用法：node scripts/growth/experiment.mjs <add|decide|list|repair-baselines> [options]');
         process.exit(1);
     }
   } finally {

@@ -15,6 +15,7 @@ import { PrismaClient } from '@prisma/client';
 import { googlePost } from './lib/google-auth.mjs';
 import { loadGrowthSites } from './lib/load-config.mjs';
 import { collectCoverage } from './lib/url-inspection.mjs';
+import { fetchPropertyTotals } from './lib/gsc-totals.mjs';
 
 const LOOKBACK_DAYS = Number(process.env.GSC_LOOKBACK_DAYS || 28);
 const LAG_DAYS = 3; // GSC 資料延遲緩衝
@@ -59,10 +60,11 @@ async function query(gscSiteUrl, range, dimensions) {
 async function ingestSite(prisma, site, range) {
   console.log(`GSC 取數：${site.label}（${site.gscSiteUrl}）  ${range.startDate} ~ ${range.endDate}`);
 
-  const [byQuery, byPage, byQueryPage] = await Promise.all([
+  const [byQuery, byPage, byQueryPage, propertyTotals] = await Promise.all([
     query(site.gscSiteUrl, range, ['query']),
     query(site.gscSiteUrl, range, ['page']),
     query(site.gscSiteUrl, range, ['query', 'page']),
+    fetchPropertyTotals(site.gscSiteUrl, range).catch(() => ({ status: 'UNKNOWN', ...range, reason: 'GSC 全站統計取數失敗' })),
   ]);
 
   console.log(`  query: ${byQuery.length} 列　page: ${byPage.length} 列　query+page: ${byQueryPage.length} 列`);
@@ -76,7 +78,7 @@ async function ingestSite(prisma, site, range) {
     console.warn(`  ⚠️  收錄檢查失敗（成效資料不受影響）：${coverage.error}`);
   }
 
-  const rawRows = { byQuery, byPage, byQueryPage };
+  const rawRows = { byQuery, byPage, byQueryPage, propertyTotals };
   const fetchedAt = new Date();
 
   await prisma.growthSnapshot.upsert({

@@ -155,7 +155,7 @@ export function renderCoverageSection(coverage, context) {
   // 明講一次，免得看報告的人把「無符合的機會」讀成「已經優化到沒東西可做」。
   // 用曝光總量而非「等於 0」來判斷，是因為一次 site: 之類的運算子查詢就會
   // 讓曝光變成 1，把這句最該出現的提醒關掉。
-  if (context.opportunityCount === 0 && context.impressions < context.minImpressions) {
+  if (context.opportunityCount === 0 && Number.isFinite(context.impressions) && context.impressions < context.minImpressions) {
     lines.push(
       `> 本區間總曝光僅 ${context.impressions} 次（未達單一搜尋詞門檻 ${context.minImpressions} 次），` +
         '下方三層機會分析必然全空——那是資料不足，不是沒有機會。' +

@@ -5,9 +5,9 @@
 // 執行：node --env-file=.env.local scripts/growth/analyze.mjs
 //
 // 機會分類（演算法移植自來源端，門檻與 CTR 基準改讀 config/growth.json）：
-//   striking  臨門一腳：排名 4–20、有曝光 → 強化既有頁面就能進前三（投報最高）
+//   striking  既有頁面候選：排名約 4–20、有曝光，需驗證改善方向
 //   ctrGap    點擊落差：排名已在前 5 但 CTR 偏低 → 改 title/description
-//   content   內容缺口：有曝光但排名 20+ → 需要新的專屬內容
+//   content   搜尋需求候選：有曝光但排名 20+，需 SERP 查證
 //   （品牌詞、雜訊詞會被濾除）
 //
 // 三層分析之前先放一節「收錄進度」（ingest 從 URL Inspection API 取數，渲染在
@@ -19,13 +19,15 @@
 
 import './lib/env.mjs';
 import { PrismaClient } from '@prisma/client';
+import { pathToFileURL } from 'node:url';
 import { loadGrowthConfig, loadGrowthSites } from './lib/load-config.mjs';
 import { classify } from './lib/opportunity-classify.mjs';
 import { CONTENT_TYPE_LABEL } from './lib/serp-intent.mjs';
 import { renderGeoSection } from './lib/render-geo.mjs';
 import { renderCoverageSection } from './lib/coverage.mjs';
 import { isObservationOnly, renderAbsorbCandidates } from './lib/render-observation.mjs';
-import { findDeclines, findCannibalization } from './lib/gsc-signals.mjs';
+import { findDeclines, findCannibalization, CANNIBAL_MIN_IMPRESSIONS_PER_PAGE } from './lib/gsc-signals.mjs';
+import { verifiedPropertyTotals, renderOverview, renderLandingPages } from './lib/report-metrics.mjs';
 import { isDue, canCompare, compareExperiment } from './lib/experiments.mjs';
 import { freshestEndDate, staleNotice } from './lib/staleness.mjs';
 
@@ -76,10 +78,10 @@ function renderCannibalizationSection(cannibals) {
   lines.push('');
   lines.push('_純規則訊號，為待檢查候選，非改寫建議。_');
   lines.push('');
-  lines.push('同一搜尋詞被本站多個頁面各自吃到曝光，可能互相競爭排名（keyword cannibalization）。');
+  lines.push(`同一搜尋詞至少兩個頁面各達 ${CANNIBAL_MIN_IMPRESSIONS_PER_PAGE} 次曝光才列為待檢查候選；同詞多頁不等於有害競爭。`);
   lines.push('');
   if (cannibals.length === 0) {
-    lines.push('_（本區間無符合的互搶情形）_');
+    lines.push('_（未發現達門檻候選；不能據此排除頁面間的競爭。）_');
   } else {
     lines.push('| 搜尋詞 | 對應頁面（曝光／排名） |');
     lines.push('|---|---|');
@@ -152,6 +154,8 @@ function renderExperimentsSection(experiments, latestSnapshot, site) {
       const cmp = compareExperiment(experiment, latestSnapshot);
       lines.push(`- **${e.id}**　${e.page}　${e.change}（假設：${e.hypothesis}）`);
       lines.push('');
+      lines.push(`  _基準：${baseline?.startDate ?? 'UNKNOWN'}～${baseline?.endDate ?? 'UNKNOWN'}；比較快照：${latestSnapshot.startDate}～${latestSnapshot.endDate}。GSC 日曆日；比較排除改版日。_`);
+      lines.push('');
       const check = canCompare(experiment, latestSnapshot);
       if (!check.ok) {
         lines.push(`  _${check.reason}，暫不比較。_`);
@@ -204,10 +208,9 @@ function renderExperimentsSection(experiments, latestSnapshot, site) {
 }
 
 function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals, freshest) {
-  const { startDate, endDate, rawRows } = snapshot;
+  const { startDate, endDate } = snapshot;
   const { striking, ctrGap, content } = result;
-  const tc = rawRows.byQuery.reduce((s, r) => s + r.clicks, 0);
-  const ti = rawRows.byQuery.reduce((s, r) => s + r.impressions, 0);
+  const ti = verifiedPropertyTotals(snapshot)?.impressions ?? null;
 
   const lines = [];
   lines.push(`## ${site.label}　${site.domain}`);
@@ -219,8 +222,7 @@ function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals
   }
   lines.push(`區間：${startDate} ~ ${endDate}・資料源：Google Search Console`);
   lines.push('');
-  lines.push(`**區間總覽**：${ti} 次曝光、${tc} 次點擊、整體 CTR ${fmtPct(ti ? tc / ti : 0)}`);
-  lines.push('');
+  lines.push(...renderOverview(snapshot));
 
   lines.push(
     ...renderCoverageSection(snapshot.coverage, {
@@ -230,34 +232,32 @@ function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals
     })
   );
 
-  lines.push('### 🎯 臨門一腳（強化既有頁面，投報最高）');
+  lines.push('### 🎯 既有頁面改善候選');
   lines.push('');
-  lines.push('排名 4–20 名、已有曝光的搜尋詞。優化對應頁面（補內容、加 FAQ、改標題）即可能進前三。');
+  lines.push('平均排名約 4–20 名、已有曝光的搜尋詞。搜尋詞數字與各頁數字分開列示；頁面按同詞曝光排序。分數僅供規則排序，不是預測收益或排名保證。');
   lines.push('');
   if (striking.length === 0) {
     lines.push('_（本區間無符合的機會）_');
   } else {
-    lines.push('| 搜尋詞 | 曝光 | 點擊 | 目前排名 | 機會分數 | 對應頁面 |');
+    lines.push('| 搜尋詞 | 搜尋詞曝光 | 搜尋詞點擊 | 搜尋詞平均排名 | 排序分數 | 各承接頁（同詞的頁面級資料） |');
     lines.push('|---|--:|--:|--:|--:|---|');
     for (const r of striking.slice(0, 15)) {
-      const p = r.page ? r.page.replace(/^https?:\/\/[^/]+/, '') || '/' : '—';
-      lines.push(`| ${r.query} | ${r.impressions} | ${r.clicks} | ${r.position.toFixed(1)} | ${r.opportunity} | ${p} |`);
+      lines.push(`| ${r.query} | ${r.impressions} | ${r.clicks} | ${r.position.toFixed(1)} | ${r.opportunity} | ${renderLandingPages(r)} |`);
     }
   }
   lines.push('');
 
   lines.push('### 📝 點擊落差（排名不錯但沒人點，改標題/描述）');
   lines.push('');
-  lines.push('排名已在前 5 名，但 CTR 明顯低於該名次的預期水準。通常是 title、meta description 不吸引人，或缺可被摘錄的答案段落。');
+  lines.push('平均排名約在前 5 名、CTR 低於設定基準的待查候選；可能同時列於既有頁面改善候選。須核對查詢意圖、搜尋結果版面、標題與摘要；基準落差不能直接歸因於文案，也不代表能回收的點擊。');
   lines.push('');
   if (ctrGap.length === 0) {
     lines.push('_（本區間無符合的機會）_');
   } else {
-    lines.push('| 搜尋詞 | 曝光 | 目前排名 | 目前CTR | 預期CTR | 損失點擊 | 對應頁面 |');
+    lines.push('| 搜尋詞 | 搜尋詞曝光 | 搜尋詞平均排名 | 搜尋詞CTR | 設定基準CTR | 基準差額（非損失估計） | 各承接頁（同詞的頁面級資料） |');
     lines.push('|---|--:|--:|--:|--:|--:|---|');
     for (const r of ctrGap.slice(0, 10)) {
-      const p = r.page ? r.page.replace(/^https?:\/\/[^/]+/, '') || '/' : '—';
-      lines.push(`| ${r.query} | ${r.impressions} | ${r.position.toFixed(1)} | ${fmtPct(r.ctr)} | ${fmtPct(r.expectedCtr)} | ${r.missedClicks} | ${p} |`);
+      lines.push(`| ${r.query} | ${r.impressions} | ${r.position.toFixed(1)} | ${fmtPct(r.ctr)} | ${fmtPct(r.expectedCtr)} | ${r.missedClicks} | ${renderLandingPages(r)} |`);
     }
   }
   lines.push('');
@@ -310,9 +310,8 @@ function renderSiteSection(site, snapshot, result, config, serpSnapshot, signals
 
 // 僅觀察的站（見 lib/render-observation.mjs）：保留曝光與收錄數字，不列待辦。
 function renderObservationSiteSection(site, snapshot, result, config, freshest) {
-  const { startDate, endDate, rawRows } = snapshot;
-  const tc = rawRows.byQuery.reduce((s, r) => s + r.clicks, 0);
-  const ti = rawRows.byQuery.reduce((s, r) => s + r.impressions, 0);
+  const { startDate, endDate } = snapshot;
+  const ti = verifiedPropertyTotals(snapshot)?.impressions ?? null;
 
   const lines = [];
   lines.push(`## ${site.label}　${site.domain}（僅觀察）`);
@@ -326,8 +325,7 @@ function renderObservationSiteSection(site, snapshot, result, config, freshest) 
   }
   lines.push(`區間：${startDate} ~ ${endDate}・資料源：Google Search Console`);
   lines.push('');
-  lines.push(`**區間總覽**：${ti} 次曝光、${tc} 次點擊、整體 CTR ${fmtPct(ti ? tc / ti : 0)}`);
-  lines.push('');
+  lines.push(...renderOverview(snapshot));
   lines.push(
     ...renderCoverageSection(snapshot.coverage, {
       impressions: ti,
@@ -340,7 +338,7 @@ function renderObservationSiteSection(site, snapshot, result, config, freshest) 
   return lines;
 }
 
-function renderReport(bySite, skippedSites, config, latestGeoJob) {
+export function renderReport(bySite, skippedSites, config, latestGeoJob) {
   const lines = [];
   lines.push('# 潤讀成長機會週報');
   lines.push('');
@@ -353,7 +351,7 @@ function renderReport(bySite, skippedSites, config, latestGeoJob) {
       '每站先列收錄進度（Google 收了幾頁），再列 SEO 三層機會分析。' +
       (latestGeoJob
         ? '文末另有 GEO AI 知識能見度章節。'
-        : 'GEO AI 知識能見度追蹤本期無已完成的批次結果，未列入。')
+        : 'GEO AI 知識能見度：UNKNOWN／本期無已完成批次；未測不代表未被引用。')
   );
   lines.push('');
 
@@ -446,6 +444,10 @@ async function main() {
     const endDate = bySite.reduce((max, s) => (s.snapshot.endDate > max ? s.snapshot.endDate : max), bySite[0].snapshot.endDate);
     const startDate = bySite.reduce((min, s) => (s.snapshot.startDate < min ? s.snapshot.startDate : min), bySite[0].snapshot.startDate);
 
+    if (process.argv.includes('--dry-run')) {
+      console.log(report);
+      return;
+    }
     await prisma.growthReport.upsert({
       where: { endDate },
       create: { id: `report-${endDate}`, startDate, endDate, markdown: report },
@@ -458,7 +460,7 @@ async function main() {
   }
 }
 
-main().catch((e) => {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main().catch((e) => {
   console.error('\n❌ analyze 失敗：', e.message);
   process.exit(1);
 });

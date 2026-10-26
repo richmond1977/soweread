@@ -41,22 +41,32 @@ export function isDue(experiment, today = todayISODate()) {
   return elapsed >= experiment.reviewAfterDays;
 }
 
-/**
- * 可比較條件：最新快照的 startDate 必須 >= experiment.changedAt，
- * 否則快照涵蓋的期間還在改版之前，比較沒有意義。
- * @param {{changedAt:string}} experiment
- * @param {{startDate:string,endDate:string}|null} latestSnapshot
- * @returns {{ok:boolean, reason?:string}}
- */
+/** GSC 日期為日曆日；拒絕缺漏、溢位及格式不完整的日期。 */
+export function isCalendarDate(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
+}
+
+function validRange(range) {
+  return range && isCalendarDate(range.startDate) && isCalendarDate(range.endDate) && range.startDate <= range.endDate;
+}
+
 export function canCompare(experiment, latestSnapshot) {
-  if (!latestSnapshot) {
-    return { ok: false, reason: '沒有可用的 GSC 快照' };
+  if (!latestSnapshot) return { ok: false, reason: '沒有可用的 GSC 快照' };
+  if (!isCalendarDate(experiment.changedAt)) return { ok: false, reason: '改版日期缺漏或無效' };
+  const baseline = experiment.baseline ?? experiment.baselineJson;
+  if (!validRange(baseline)) return { ok: false, reason: '基準缺少完整有效期間資訊' };
+  if (baseline.includesPostChange || baseline.endDate >= experiment.changedAt) {
+    return { ok: false, reason: '基準污染：基準涵蓋改版日或改版後資料，須重建基準' };
   }
-  if (!latestSnapshot.startDate) {
-    return { ok: false, reason: '快照缺少期間資訊' };
+  if (!validRange(latestSnapshot)) return { ok: false, reason: '快照缺少完整有效期間資訊' };
+  if (latestSnapshot.startDate <= experiment.changedAt) {
+    return { ok: false, reason: '比較窗口混入改版前資料或改版日，須等待純改版後期間' };
   }
-  if (latestSnapshot.startDate < experiment.changedAt) {
-    return { ok: false, reason: '資料尚未涵蓋改版後期間' };
+  if (latestSnapshot.startDate <= baseline.endDate) return { ok: false, reason: '基準與比較窗口重疊' };
+  if (daysBetween(baseline.startDate, baseline.endDate) !== daysBetween(latestSnapshot.startDate, latestSnapshot.endDate)) {
+    return { ok: false, reason: '基準與比較窗口長度不同' };
   }
   return { ok: true };
 }

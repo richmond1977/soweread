@@ -7,7 +7,7 @@
  * 那邊的 opportunity-classify.mjs 已經踩過一次（2026-09-19 與 Richmond 討論
  * 移植 SERP 驗證層時複查確認）。
  *
- *   striking  臨門一腳：排名 4–20、有曝光 → 強化既有頁面就能進前三
+ *   striking  臨門一腳：排名 4–20、有曝光 → 既有頁面優化候選
  *   ctrGap    點擊落差：排名已在前 5 但 CTR 偏低 → 改 title/description
  *   content   內容缺口：有曝光但排名 20+ → 新內容選題來源（GSC 曝光缺口，
  *             不代表已確認「內容深度不夠」——那個推論需要 SERP 查證，見
@@ -31,12 +31,14 @@ export function isBrandOrNoiseQuery(query, config) {
   return isNoise(query) || isBrand(query, config.brandTerms);
 }
 
-// 把 query 對應到目前排名最好的落地頁（供強化建議用）
-function landingPageFor(query, byQueryPage) {
-  const rows = byQueryPage.filter((r) => r.query === query);
-  if (rows.length === 0) return null;
-  rows.sort((a, b) => a.position - b.position);
-  return rows[0].page;
+// 頁面指標保留 query/page 維度；不可把主要頁面與 query 總曝光混為一談。
+// 主要承接頁依曝光、點擊、排名、URL 排序；不更動原始輸入。
+function landingPagesFor(query, byQueryPage) {
+  return byQueryPage
+    .filter((r) => r.query === query)
+    .map(({ page, clicks, impressions, ctr, position }) => ({ page, clicks, impressions, ctr, position }))
+    .sort((a, b) => b.impressions - a.impressions || b.clicks - a.clicks || a.position - b.position ||
+      (a.page < b.page ? -1 : a.page > b.page ? 1 : 0));
 }
 
 export function classify(rawRows, config) {
@@ -53,21 +55,22 @@ export function classify(rawRows, config) {
     if (r.impressions < minImpressions) continue;
     if (isBrand(r.query, brandTerms)) continue; // 品牌詞不當成長機會（不論目前排名）
 
-    const page = landingPageFor(r.query, byQueryPage);
-    const base = { ...r, page };
+    const landingPages = landingPagesFor(r.query, byQueryPage);
+    const base = { ...r, page: landingPages[0]?.page ?? null, landingPages };
 
     if (r.position > strikingMinPosition && r.position <= strikingMaxPosition) {
-      // 臨門一腳；離第一頁越近、曝光越高 → 分數越高
+      // 規則排序分數，非預測收益；曝光越高、排名越接近前段，分數越高。
       const proximity = Math.max(0, strikingMaxPosition + 0.5 - r.position) / proximityDenominator;
-      base.opportunity = Math.round(r.impressions * proximity);
-      striking.push(base);
-    } else if (r.position <= ctrGapMaxPosition && r.ctr < expectedCtr(r.position, config) * 0.6) {
-      base.expectedCtr = expectedCtr(r.position, config);
-      base.missedClicks = Math.round(r.impressions * (base.expectedCtr - r.ctr));
-      ctrGap.push(base);
-    } else if (r.position > strikingMaxPosition) {
-      base.opportunity = r.impressions;
-      content.push(base);
+      striking.push({ ...base, opportunity: Math.round(r.impressions * proximity) });
+    }
+    // 與排名機會獨立判斷，避免排名 4–5 的低 CTR 被前一類遮蔽。
+    if (r.position <= ctrGapMaxPosition && r.ctr < expectedCtr(r.position, config) * 0.6) {
+      const benchmark = expectedCtr(r.position, config);
+      ctrGap.push({ ...base, expectedCtr: benchmark,
+        missedClicks: Math.round(r.impressions * (benchmark - r.ctr)) });
+    }
+    if (r.position > strikingMaxPosition) {
+      content.push({ ...base, opportunity: r.impressions });
     }
   }
 
