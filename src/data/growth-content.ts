@@ -29,6 +29,9 @@ const RETRIEVED_2026_09_28 = "2026-09-28";
 /** 2026-10-19 新增（承接主站土雞、青蔥搜尋需求的兩個實體）之來源擷取日。 */
 const RETRIEVED_2026_10_19 = "2026-10-19";
 
+/** 2026-11-10 新增（洗選蛋蛋殼噴印標示實體，承接主站「好蛋怎麼挑」）之來源擷取日。 */
+const RETRIEVED_2026_11_10 = "2026-11-10";
+
 export const growthContent: GrowthKnowledge = {
   isFixture: false,
 
@@ -455,17 +458,17 @@ export const growthContent: GrowthKnowledge = {
       sourceType: "government-regulation",
       publishedAt: "2021-09-17",
       retrievedAt: RETRIEVED_2026_09_28,
-      note: "依農產品生產及驗證管理法第 16 條第 2、3 項訂定。公發布日 110-09-17，最近一次修正民國 115-06-30、自 115-07-01 生效。條文要求洗選鮮蛋蛋殼噴印生產方式代號；本站未取得可讀的附件 PDF 全文，代號與飼養方式的逐一對照改引查核媒體報導（見 src-egg-code-factcheck）。",
+      note: "依農產品生產及驗證管理法第 16 條第 2、3 項訂定。公發布日 110-09-17，最近一次修正民國 115-06-30、自 115-07-01 生效。條文要求洗選鮮蛋蛋殼噴印生產方式代號；代號對照以 115-06-30 修正後條文 PDF 為準（見 src-egg-code-rule-2026）。",
     },
     {
       id: "src-egg-code-announcement",
       title: "洗選鮮蛋逐顆噴印標示 111年1月1日正式啟動",
-      publisher: "農業部",
+      publisher: "行政院農業委員會（現農業部）",
       url: "https://www.moa.gov.tw/theme_data.php?theme=news&sub_theme=agri&id=8592",
       sourceType: "government-guidance",
       publishedAt: "2021-12-23",
       retrievedAt: RETRIEVED_2026_09_28,
-      note: "新聞稿載明洗選鮮蛋應噴印來源畜牧場溯源編碼、包裝日期及生產方式代號，自 111 年 1 月 1 日起正式啟動；新聞稿本文未列出代號與飼養方式的逐一對照表。",
+      note: "新聞稿載明洗選鮮蛋應噴印洗選廠（場、室）及來源畜牧場溯源編碼、包裝日期及生產方式代號，自 111 年 1 月 1 日起正式啟動；新聞稿本文未列出代號與飼養方式的逐一對照表。",
     },
     {
       id: "src-egg-code-factcheck",
@@ -475,7 +478,7 @@ export const growthContent: GrowthKnowledge = {
       sourceType: "fact-check",
       publishedAt: "2024-04-02",
       retrievedAt: RETRIEVED_2026_09_28,
-      note: "查核報導引用農業部 110 年 9 月公告，說明蛋殼噴印生產方式代號對照：O 有機、F 放牧、B 平飼、E 豐富化籠飼、C 一般籠飼。本站未能直接核對官方公告附件 PDF 內的代號表，此對照引用自本查核報導，非直接引自官方原文。",
+      note: "查核報導引用農業部 2021 年 9 月公告的噴印制度，並以「參考國際作法」列出 O 有機、F 放牧、B 平飼、E 豐富化籠飼、C 一般籠飼對照。官方代號表已改以 src-egg-code-rule-2026 條文原文核對，本報導僅作輔助。",
     },
     {
       id: "src-east-enriched-cage-eu",
@@ -506,6 +509,48 @@ export const growthContent: GrowthKnowledge = {
       publishedAt: "2026-08-11",
       retrievedAt: RETRIEVED_2026_09_28,
       note: "報導台灣精緻洗選蛋品協會與日方學者在台日交流場合的主張，認為豐富籠設施通過與平飼、放牧相同的國際動物福利科研標準，不宜與傳統格子籠相提並論。屬產業團體與學者主張，非官方結論。",
+    },
+
+    // ── 2026-11-10 新增：洗選蛋蛋殼噴印標示實體之來源 ─────────────────
+    {
+      id: "src-egg-code-rule-2026",
+      title: "指定洗選鮮蛋為應登錄溯源資訊之農產品與其應登錄之項目及標示方式（115 年 6 月 30 日修正條文）",
+      publisher: "農業部",
+      url: "https://law.moa.gov.tw/Download.ashx?FileID=45394&id=GL001387&type=LAW",
+      sourceType: "government-regulation",
+      publishedAt: "2026-06-30",
+      retrievedAt: RETRIEVED_2026_11_10,
+      note: "法規共用系統所附修正後條文 PDF，民國 115-06-30 修正、115-07-01 生效。第三點第（二）款噴印表：第一行溯源編碼第 1-3 碼為洗選廠（場、室）鮮蛋來源畜牧場編號、第 4-6 碼為洗選廠（場、室）編號；第二行第 1-6 碼為包裝日期、第 7 碼為生產方式代號（O 有機生產、F 放牧生產、B 平飼生產、E 豐富化籠飼生產、C 一般籠飼生產）。條文未規定包裝日期寫法與噴印位置。PDF 字型無法抽字，本站以逐頁圖像核對原文。",
+    },
+    {
+      id: "src-egg-code-amendment-2026",
+      title: "指定洗選鮮蛋為應登錄溯源資訊之農產品與其應登錄之項目及標示方式修正總說明及對照表",
+      publisher: "農業部",
+      url: "https://law.moa.gov.tw/Download.ashx?FileID=45393&id=GL001387&type=LAW",
+      sourceType: "government-regulation",
+      publishedAt: "2026-06-30",
+      retrievedAt: RETRIEVED_2026_11_10,
+      note: "115 年修正把指定對象由供應校園食材、國軍副食、超商、超市、量販店、大賣場及網購通路的洗選鮮蛋，擴大為洗選廠（場、室）供應之洗選鮮蛋；供加工原料或經農業部同意作其他用途者得免噴印；新增保留近三年進出貨憑證。修正前後對照表中的生產方式代號 O、F、B、E、C 未變更。",
+    },
+    {
+      id: "src-egg-code-briefing",
+      title: "洗選雞蛋噴印溯源管理政策（說明簡報）",
+      publisher: "行政院農業委員會（現農業部）",
+      url: "https://www.moa.gov.tw/redirect_files.php?id=41416",
+      sourceType: "government-guidance",
+      publishedAt: "2021-12-24",
+      retrievedAt: RETRIEVED_2026_11_10,
+      note: "110.12.24 政策說明簡報。以「A01001」「220101F」為噴印範例，並示意可印於鈍端或蛋身（直印、橫印皆可）；包裝日期寫法與噴印位置屬簡報範例，條文未明定。簡報早於 115 年修正，格式以修正後條文為準。",
+    },
+    {
+      id: "src-poultry-trace-portal",
+      title: "國產家禽溯源入口網：消費者查詢專區",
+      publisher: "中央畜產會（農業部輔導）",
+      url: "https://www.poultry-trace.org.tw/link/consumer.jsp",
+      sourceType: "official-programme",
+      publishedAt: null,
+      retrievedAt: RETRIEVED_2026_11_10,
+      note: "頁面未載明發布或更新日期。入口網列出「台灣雞蛋噴印管理系統」等消費者查詢系統，頁尾載明輔導單位農業部、執行單位中央畜產會；農委會 110.12.24 簡報指出以噴印溯源編碼查詢，可取得洗選廠（場）與原料蛋來源畜牧場等資訊。",
     },
 
     // ── 2026-10-19 新增：台灣土雞、青蔥實體之來源 ──────────────────
@@ -859,6 +904,33 @@ export const growthContent: GrowthKnowledge = {
       sourceIds: ["src-tap-portal", "src-tap-standard", "src-tap-resume-lookup", "src-organic-act"],
     },
     {
+      id: "entity-egg-shell-code-label",
+      slug: "egg-shell-code-label",
+      entityType: "labeling-requirement",
+      name: "洗選蛋蛋殼噴印標示",
+      aliases: ["雞蛋噴印", "蛋殼噴印", "雞蛋溯源碼", "蛋殼代碼", "雞蛋生產方式代號"],
+      description:
+        "洗選蛋蛋殼噴印標示是洗選鮮蛋蛋殼上的兩行代碼，依農業部《指定洗選鮮蛋為應登錄溯源資訊之農產品與其應登錄之項目及標示方式》訂定：民國 110-09-17 公告、自 111-01-01 起逐顆噴印，最近一次修正為 115-06-30、自 115-07-01 生效。第一行是 6 碼的溯源編碼，第 1-3 碼為鮮蛋來源畜牧場編號，第 4-6 碼為洗選廠（場、室）編號。第二行共 7 碼，第 1-6 碼為包裝日期，第 7 碼為生產方式代號：O 有機生產、F 放牧生產、B 平飼生產、E 豐富化籠飼生產、C 一般籠飼生產。條文只規定包裝日期占 6 碼，沒有明定寫法；農委會 110 年 12 月的政策說明簡報以「A01001」「220101F」為範例，但這是簡報示意，不是條文。條文也沒有規定噴印位置，簡報示意可印在鈍端或蛋身。條文把第 7 碼定為「生產方式代號」，用來區分有機、放牧、平飼、豐富化籠飼與一般籠飼等生產方式，並不是新鮮度或品質分級；農委會簡報建議以包裝日期搭配外包裝有效日期判斷新鮮度。放牧、平飼與豐富化籠飼各自的面積與設施要求，另見《雞蛋友善生產系統定義及指南》。115 年修正把指定對象從供應校園食材、國軍副食、超商、超市、量販店、大賣場及網購通路的洗選鮮蛋，擴大為洗選廠（場、室）供應的洗選鮮蛋，五個生產方式代號沒有變更；供加工原料或經農業部同意作其他用途的洗選鮮蛋可免噴印，但仍須登錄供應對象及用途。條文指定的噴印對象是洗選廠（場、室）供應的洗選鮮蛋，未經洗選的鮮蛋不在噴印指定之列（洗選廠仍須登錄未洗選鮮蛋的進貨數量）。依農委會 110 年的說明，消費者可到農業部輔導、中央畜產會執行的國產家禽溯源入口網消費者查詢專區，以噴印溯源編碼查詢洗選場與來源畜牧場資訊。",
+      canonicalUrl: "https://law.moa.gov.tw/LawContent.aspx?id=GL001387",
+      publicationStatus: "published",
+      seoTitle: "雞蛋噴印怎麼看？蛋殼溯源編碼與 O、F、B、E、C 生產方式代號",
+      seoDescription:
+        "洗選蛋蛋殼上兩行代碼的意思：第一行 6 碼是來源畜牧場與洗選場編號，第二行是包裝日期加生產方式代號（O 有機、F 放牧、B 平飼、E 豐富化籠飼、C 一般籠飼），依農業部 115 年 7 月 1 日生效的現行規定。",
+      reviewedAt: null,
+      dateModified: "2026-11-10",
+      topicSlugs: ["food-production"],
+      sourceIds: [
+        "src-egg-code-rule-2026",
+        "src-egg-code-amendment-2026",
+        "src-egg-code-regulation",
+        "src-egg-code-announcement",
+        "src-egg-code-briefing",
+        "src-poultry-trace-portal",
+        "src-egg-friendly",
+        "src-egg-code-factcheck",
+      ],
+    },
+    {
       id: "entity-organic-certification-mark",
       slug: "organic-certification-mark",
       entityType: "certification",
@@ -1194,6 +1266,15 @@ export const growthContent: GrowthKnowledge = {
       confidence: "documented",
       note: "依《雞蛋友善生產系統定義及指南》111-05-23 修正版，友善生產系統分為放牧、平飼與豐富化籠飼三種。",
     },
+    {
+      id: "rel-egg-shell-code-enriched-cage",
+      subjectSlug: "egg-shell-code-label",
+      predicate: "以生產方式代號 E 標示",
+      objectSlug: "enriched-cage",
+      sourceId: "src-egg-code-rule-2026",
+      confidence: "documented",
+      note: "依 115-06-30 修正條文第三點第（二）款，第二行第 7 碼「E：豐富化籠飼生產」。",
+    },
   ],
 
   articles: [
@@ -1258,6 +1339,7 @@ export const growthContent: GrowthKnowledge = {
         "enriched-cage",
         "tap-traceability",
         "organic-certification-mark",
+        "egg-shell-code-label",
       ],
       sourceIds: ["src-egg-friendly", "src-organic-act", "src-tap-portal"],
     },
