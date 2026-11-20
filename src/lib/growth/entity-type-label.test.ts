@@ -34,3 +34,11 @@ test("editor paragraph breaks are respected", () => {
     paragraphs: ["第二段。"],
   });
 });
+
+test("English descriptions split on sentence ends but not on abbreviations or inside parentheses", () => {
+  const description =
+    "An enriched cage is one of three systems (see Art. 2. of the guidelines). Each hen needs at least 750 cm². No. 2 applies, e.g. to colony cages. Critics disagree.";
+  const { definition, paragraphs } = splitEntityDescription(description);
+  assert.equal(definition, "An enriched cage is one of three systems (see Art. 2. of the guidelines).");
+  assert.equal([definition, ...paragraphs].join(" "), description);
+});

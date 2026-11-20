@@ -5,6 +5,7 @@ import type {
   GrowthSource,
   GrowthTopic,
 } from "@/lib/growth/knowledge-core";
+import { type GrowthLocale, IN_LANGUAGE, localePath, UI } from "@/lib/growth/locale";
 import type { PrimaryArticle } from "@/lib/growth/primary-articles";
 
 /** The shape `publicRelationsForEntity` returns: a relation with both ends resolved. */
@@ -30,6 +31,7 @@ function organizationNode(baseUrl: string) {
     "@type": "Organization",
     "@id": `${baseUrl}/#organization`,
     name: "潤讀知識站",
+    alternateName: UI.en.siteName,
     url: baseUrl,
     inLanguage: "zh-TW",
     // 與頁首實際顯示的標誌是同一個檔案，structured data 不得宣稱頁面上沒有的東西。
@@ -57,14 +59,19 @@ function organizationNode(baseUrl: string) {
   };
 }
 
-function websiteNode(baseUrl: string) {
+/** 每個語系各一個 WebSite 節點；英文版的 @id 掛在 /en 之下。 */
+function websiteId(baseUrl: string, locale: GrowthLocale) {
+  return `${baseUrl}${locale === "zh" ? "" : localePath(locale, "/")}/#website`;
+}
+
+function websiteNode(baseUrl: string, locale: GrowthLocale) {
   return {
     "@type": "WebSite",
-    "@id": `${baseUrl}/#website`,
-    url: baseUrl,
-    name: "潤讀知識站",
+    "@id": websiteId(baseUrl, locale),
+    url: `${baseUrl}${locale === "zh" ? "" : localePath(locale, "/")}`,
+    name: UI[locale].siteName,
     publisher: { "@id": `${baseUrl}/#organization` },
-    inLanguage: "zh-TW",
+    inLanguage: IN_LANGUAGE[locale],
   };
 }
 
@@ -74,8 +81,8 @@ function websiteNode(baseUrl: string) {
  * so a reference to a node defined only on a different page is a dangling
  * `@id` no crawler can resolve.
  */
-function siteNodes(baseUrl: string) {
-  return [organizationNode(baseUrl), websiteNode(baseUrl)];
+function siteNodes(baseUrl: string, locale: GrowthLocale = "zh") {
+  return [organizationNode(baseUrl), websiteNode(baseUrl, locale)];
 }
 
 function breadcrumbNode(baseUrl: string, breadcrumbs: Breadcrumb[]) {
@@ -104,15 +111,16 @@ interface GrowthSiteJsonLdProps {
   baseUrl: string;
   /** Omit on the home page, where the visible breadcrumb is a single item. */
   breadcrumbs?: Breadcrumb[];
+  locale?: GrowthLocale;
 }
 
-export function GrowthSiteJsonLd({ baseUrl, breadcrumbs }: GrowthSiteJsonLdProps) {
+export function GrowthSiteJsonLd({ baseUrl, breadcrumbs, locale = "zh" }: GrowthSiteJsonLdProps) {
   return (
     <JsonLd
       schema={{
         "@context": "https://schema.org",
         "@graph": [
-          ...siteNodes(baseUrl),
+          ...siteNodes(baseUrl, locale),
           ...(breadcrumbs && breadcrumbs.length > 1
             ? [breadcrumbNode(baseUrl, breadcrumbs)]
             : []),
@@ -183,17 +191,18 @@ interface TopicJsonLdProps {
   topic: GrowthTopic;
   breadcrumbs: Breadcrumb[];
   entities: GrowthEntity[];
+  locale?: GrowthLocale;
 }
 
-export function TopicJsonLd({ baseUrl, topic, breadcrumbs, entities }: TopicJsonLdProps) {
-  const url = `${baseUrl}/topics/${topic.slug}`;
+export function TopicJsonLd({ baseUrl, topic, breadcrumbs, entities, locale = "zh" }: TopicJsonLdProps) {
+  const url = `${baseUrl}${localePath(locale, `/topics/${topic.slug}`)}`;
 
   return (
     <JsonLd
       schema={{
         "@context": "https://schema.org",
         "@graph": [
-          ...siteNodes(baseUrl),
+          ...siteNodes(baseUrl, locale),
           {
             "@type": "CollectionPage",
             "@id": `${url}#collectionpage`,
@@ -201,13 +210,13 @@ export function TopicJsonLd({ baseUrl, topic, breadcrumbs, entities }: TopicJson
             name: topic.seoTitle || topic.name,
             description: topic.seoDescription || topic.summary,
             about: { "@type": "Thing", name: topic.name, description: topic.definition },
-            inLanguage: "zh-TW",
-            isPartOf: { "@id": `${baseUrl}/#website` },
+            inLanguage: IN_LANGUAGE[locale],
+            isPartOf: { "@id": websiteId(baseUrl, locale) },
             publisher: { "@id": `${baseUrl}/#organization` },
             ...(topic.reviewedAt ? { dateModified: topic.reviewedAt } : {}),
             hasPart: entities.map((entity) => ({
               "@type": "WebPage",
-              url: `${baseUrl}/entities/${entity.slug}`,
+              url: `${baseUrl}${localePath(locale, `/entities/${entity.slug}`)}`,
               name: entity.name,
             })),
           },
@@ -225,6 +234,7 @@ interface EntityJsonLdProps {
   sources: GrowthSource[];
   /** From `publicRelationsForEntity` — already filtered to published, sourced relations. */
   relations: ResolvedRelation[];
+  locale?: GrowthLocale;
 }
 
 /**
@@ -233,21 +243,34 @@ interface EntityJsonLdProps {
  * this rides on `WebPage.mentions` (already used the same way for articles'
  * `mentionedEntities`) instead of inventing a non-standard property.
  */
-function relationMentions(baseUrl: string, entitySlug: string, relations: ResolvedRelation[]) {
+function relationMentions(
+  baseUrl: string,
+  entitySlug: string,
+  relations: ResolvedRelation[],
+  locale: GrowthLocale
+) {
   return relations.map((relation) => {
     const other = relation.subjectSlug === entitySlug ? relation.object : relation.subject;
+    const otherUrl = `${baseUrl}${localePath(locale, `/entities/${other.slug}`)}`;
     return {
       "@type": "DefinedTerm",
-      "@id": `${baseUrl}/entities/${other.slug}#term`,
+      "@id": `${otherUrl}#term`,
       name: other.name,
-      url: `${baseUrl}/entities/${other.slug}`,
+      url: otherUrl,
       description: `${relation.subject.name} ${relation.predicate} ${relation.object.name}`,
     };
   });
 }
 
-export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources, relations }: EntityJsonLdProps) {
-  const url = `${baseUrl}/entities/${entity.slug}`;
+export function EntityJsonLd({
+  baseUrl,
+  entity,
+  breadcrumbs,
+  sources,
+  relations,
+  locale = "zh",
+}: EntityJsonLdProps) {
+  const url = `${baseUrl}${localePath(locale, `/entities/${entity.slug}`)}`;
 
   // Relation sources are shown next to each relation on the page (plan §7.2),
   // so they belong in `citation` too — merged with the entity's own sources
@@ -262,15 +285,20 @@ export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources, relations 
       schema={{
         "@context": "https://schema.org",
         "@graph": [
-          ...siteNodes(baseUrl),
+          ...siteNodes(baseUrl, locale),
           {
             "@type": "DefinedTerm",
             "@id": `${url}#term`,
             url,
             name: entity.name,
-            alternateName: entity.aliases,
+            // 英文版把中文正式名稱也列為 alternateName，與中文頁的 DefinedTerm 對得上。
+            alternateName: entity.originalName ? [...entity.aliases, entity.originalName] : entity.aliases,
             description: entity.description,
-            inDefinedTermSet: { "@type": "DefinedTermSet", name: "潤讀知識站詞彙", url: `${baseUrl}/topics` },
+            inDefinedTermSet: {
+              "@type": "DefinedTermSet",
+              name: locale === "zh" ? "潤讀知識站詞彙" : `${UI.en.siteName} glossary`,
+              url: `${baseUrl}${localePath(locale, "/topics")}`,
+            },
             ...(entity.canonicalUrl ? { sameAs: [entity.canonicalUrl] } : {}),
           },
           {
@@ -280,13 +308,13 @@ export function EntityJsonLd({ baseUrl, entity, breadcrumbs, sources, relations 
             name: entity.seoTitle || entity.name,
             description: entity.seoDescription || entity.description,
             mainEntity: { "@id": `${url}#term` },
-            inLanguage: "zh-TW",
-            isPartOf: { "@id": `${baseUrl}/#website` },
+            inLanguage: IN_LANGUAGE[locale],
+            isPartOf: { "@id": websiteId(baseUrl, locale) },
             publisher: { "@id": `${baseUrl}/#organization` },
             ...(entity.reviewedAt ? { dateModified: entity.reviewedAt } : {}),
             citation: citationNodes(dedupedSources),
             ...(relations.length
-              ? { mentions: relationMentions(baseUrl, entity.slug, relations) }
+              ? { mentions: relationMentions(baseUrl, entity.slug, relations, locale) }
               : {}),
           },
           breadcrumbNode(baseUrl, breadcrumbs),

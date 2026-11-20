@@ -2798,3 +2798,66 @@ select {
 .growth-main .growth-entity-aside .growth-eyebrow:first-child {
   margin-top: 0;
 }
+
+/* ── 語言切換與英文版譯註 ──────────────────────────────────────────── */
+
+.growth-strip-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 與主站右上角的「EN／中文」框線按鈕同樣式 */
+.growth-lang-switch {
+  display: inline-block;
+  min-width: 40px;
+  padding: 2px 10px;
+  border: 1px solid var(--g-gold);
+  color: var(--g-ink);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.growth-lang-switch:hover,
+.growth-lang-switch:focus-visible {
+  background: var(--g-ink);
+  border-color: var(--g-ink);
+  color: var(--g-paper);
+}
+
+.growth-translation-note {
+  max-width: var(--g-max);
+  width: calc(100% - 2 * var(--g-gutter));
+  margin: 10px auto 0;
+  font-family: var(--g-latin);
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--g-ink-muted);
+}
+
+/* 英文版：Noto TC 會把 ’ “ ” — … 排成全形，英文句子裡很突兀。比照主站英文版，
+   用 unicode-range 只把這幾個標點交給拉丁字體，其餘字形不變。 */
+@font-face {
+  font-family: "Latin Punct Serif";
+  src: local("Georgia"), local("Times New Roman");
+  unicode-range: U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+@font-face {
+  font-family: "Latin Punct Sans";
+  src: local("Segoe UI"), local("Helvetica Neue"), local("Arial");
+  unicode-range: U+2013-2014, U+2018-2019, U+201C-201D, U+2026;
+}
+
+.growth-shell[lang="en"] {
+  --g-serif: "Latin Punct Serif", "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --g-sans: "Latin Punct Sans", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+/* 英文版的眉標與標題同字時（Topics／Topics）不重複顯示眉標 */
+.growth-shell[lang="en"] .growth-home-aside .growth-eyebrow {
+  display: none;
+}

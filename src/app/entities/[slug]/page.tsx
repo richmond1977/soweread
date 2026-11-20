@@ -1,20 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { EntityJsonLd } from "@/components/growth-json-ld";
-import { EntityReaderGuide } from "@/components/entity-reader-guide";
-import { findEntityReaderGuide } from "@/data/entity-reader-guides";
-import { GrowthShell, PrimaryCta, SourceList } from "@/components/growth-shell";
-import { entityTypeLabel, splitEntityDescription } from "@/lib/growth/entity-type-label";
-import { getGrowthKnowledge } from "@/lib/growth/knowledge";
 import {
-  articlesForEntity,
-  findPublicEntity,
-  findPublicTopic,
-  publicRelationsForEntity,
-  publishedEntities,
-  sourcesByIds,
-} from "@/lib/growth/knowledge-core";
+  EntityPageView,
+  entityMetadata,
+  entityStaticParams,
+} from "@/components/growth-pages/entity-page";
 
 // ISR, not force-dynamic: this page's content changes only when the growth
 // knowledge base is re-seeded, but every crawl used to cost a fresh SSR plus a
@@ -34,176 +23,17 @@ import {
 // demand with the correct runtime env, exactly as it does today.
 export const revalidate = 3600;
 export async function generateStaticParams() {
-  const { knowledge } = await getGrowthKnowledge();
-  return publishedEntities(knowledge).map((entity) => ({ slug: entity.slug }));
+  return entityStaticParams("zh");
 }
-
 
 type EntityPageProps = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: EntityPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const { config, knowledge } = await getGrowthKnowledge();
-  if (!config.canServeGrowthContent) return { robots: { index: false, follow: false } };
-
-  const entity = findPublicEntity(knowledge, slug);
-  if (!entity) return { robots: { index: false, follow: false } };
-
-  return {
-    title: entity.seoTitle || entity.name,
-    description: entity.seoDescription || entity.description,
-    keywords: entity.aliases,
-    // Self-canonical: the growth site must rank for its own pages, so it never
-    // canonicalises an original entity page to soweread.com (plan §5.1).
-    alternates: { canonical: `${config.canonicalBaseUrl}/entities/${entity.slug}` },
-    robots: config.metaRobots,
-    openGraph: {
-      type: "article",
-      locale: "zh_TW",
-      url: `${config.canonicalBaseUrl}/entities/${entity.slug}`,
-      title: entity.seoTitle || entity.name,
-      description: entity.seoDescription || entity.description,
-    },
-  };
+  return entityMetadata("zh", slug);
 }
 
 export default async function EntityPage({ params }: EntityPageProps) {
   const { slug } = await params;
-  const { config, knowledge } = await getGrowthKnowledge();
-  if (!config.canServeGrowthContent) notFound();
-
-  const entity = findPublicEntity(knowledge, slug);
-  if (!entity) notFound();
-
-  const parentTopic = entity.topicSlugs
-    .map((topicSlug) => findPublicTopic(knowledge, topicSlug))
-    .find((topic) => topic !== null);
-  const relations = publicRelationsForEntity(knowledge, entity.slug);
-  const articles = articlesForEntity(knowledge, entity.slug);
-  const sources = sourcesByIds(knowledge, entity.sourceIds);
-  const readerGuide = findEntityReaderGuide(entity.slug);
-  const typeLabel = entityTypeLabel(entity.entityType);
-  const description = splitEntityDescription(entity.description);
-
-  const breadcrumbs = [
-    { name: "首頁", href: "/" },
-    { name: "知識主題", href: "/topics" },
-    ...(parentTopic ? [{ name: parentTopic.name, href: `/topics/${parentTopic.slug}` }] : []),
-    { name: entity.name, href: `/entities/${entity.slug}` },
-  ];
-
-  return (
-    <>
-      <EntityJsonLd
-        baseUrl={config.canonicalBaseUrl}
-        entity={entity}
-        breadcrumbs={breadcrumbs}
-        sources={sources}
-        relations={relations}
-      />
-      <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
-        <article className="growth-entity growth-wide">
-          {/* 辭典詞條的詞頭：類型眉標、詞目、別名與英文對照 */}
-          <header className="growth-entity-head">
-            <span className="growth-eyebrow">
-              {typeLabel.en} · {readerGuide?.typeLabel ?? typeLabel.zh}
-            </span>
-            <h1>{entity.name}</h1>
-            <p className="growth-entity-headline">
-              {entity.aliases.length ? <span>又稱 {entity.aliases.join("、")}</span> : null}
-              {parentTopic ? (
-                <span>
-                  所屬主題：<Link href={`/topics/${parentTopic.slug}`}>{parentTopic.name}</Link>
-                </span>
-              ) : null}
-              {/* 沒有審閱紀錄時保持沉默，而不是宣告「尚未審閱」——
-                  與文章頁 reviewerName 的顯示規則一致（growth-article page.tsx）。 */}
-              {entity.reviewedAt ? <span>最後審閱：{entity.reviewedAt}</span> : null}
-            </p>
-          </header>
-
-          <div className="growth-entity-body">
-            <section className="growth-entity-section" aria-label="釋義">
-              <p className="growth-entity-section-label" aria-hidden="true">
-                <span className="growth-eyebrow">Definition</span>釋義
-              </p>
-              <p className="growth-lede">{description.definition}</p>
-            </section>
-
-            {description.paragraphs.length ? (
-              <section className="growth-entity-section" aria-label="說明">
-                <p className="growth-entity-section-label" aria-hidden="true">
-                  <span className="growth-eyebrow">Notes</span>說明
-                </p>
-                {description.paragraphs.map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-              </section>
-            ) : null}
-
-            {readerGuide ? <EntityReaderGuide guide={readerGuide} /> : null}
-
-            <section aria-labelledby="entity-relations">
-              <h2 id="entity-relations">知識關係</h2>
-              {relations.length ? (
-                <ul className="growth-relation-list">
-                  {relations.map((relation) => (
-                    <li key={relation.id}>
-                      <Link href={`/entities/${relation.subject.slug}`}>{relation.subject.name}</Link>
-                      <span className="growth-predicate"> {relation.predicate} </span>
-                      <Link href={`/entities/${relation.object.slug}`}>{relation.object.name}</Link>
-                      <span className="growth-relation-source">
-                        （來源：
-                        <a href={relation.source.url} rel="noopener nofollow">
-                          {relation.source.publisher}
-                        </a>
-                        ）
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>目前沒有已附上來源的公開關係。</p>
-              )}
-            </section>
-
-            {articles.length ? (
-              <section aria-labelledby="entity-articles">
-                <h2 id="entity-articles">相關文章</h2>
-                <ul className="growth-article-list">
-                  {articles.map((article) => (
-                    <li key={article.slug}>
-                      <Link href={`/articles/${article.slug}`}>{article.title}</Link>
-                      <p>{article.summary}</p>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ) : null}
-
-            {entity.canonicalUrl ? (
-              <p className="growth-official-link">
-                官方資訊：
-                <a href={entity.canonicalUrl} rel="noopener nofollow">
-                  {entity.canonicalUrl}
-                </a>
-              </p>
-            ) : null}
-
-            <PrimaryCta
-              href="https://soweread.com/"
-              label="想讀更完整的脈絡分析，請前往潤讀主站"
-            />
-          </div>
-
-          {/* 來源放在邊欄：與編輯撰寫的正文在版面上分開，桌面版捲動時仍在視線內 */}
-          {sources.length ? (
-            <aside className="growth-entity-aside" aria-label="本詞條引用來源">
-              <SourceList sources={sources} />
-            </aside>
-          ) : null}
-        </article>
-      </GrowthShell>
-    </>
-  );
+  return <EntityPageView locale="zh" slug={slug} />;
 }

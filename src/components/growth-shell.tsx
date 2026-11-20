@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FIXTURE_NOTICE } from "@/data/growth-fixture";
+import { type GrowthLocale, localePath, UI } from "@/lib/growth/locale";
 
 type Breadcrumb = { name: string; href: string };
 
@@ -7,6 +8,12 @@ interface GrowthShellProps {
   breadcrumbs: Breadcrumb[];
   isFixture: boolean;
   children: React.ReactNode;
+  locale?: GrowthLocale;
+  /**
+   * 這一頁在另一個語系的網址（語言切換鈕的目的地）。沒有對應翻譯時傳 null，
+   * 切換鈕改連到另一個語系的首頁，而不是連到一個會 404 的頁面。
+   */
+  alternateHref?: string | null;
 }
 
 // 主站 soweread.com 使用的同一組字體。知識站是主站的附冊，字體必須一致，
@@ -14,46 +21,72 @@ interface GrowthShellProps {
 const FONT_STYLESHEET =
   "https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;900&family=Noto+Sans+TC:wght@400;500;700&family=Fraunces:ital,opsz,wght@1,9..144,400&family=Cinzel:wght@600&display=swap";
 
-export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellProps) {
+export function GrowthShell({
+  breadcrumbs,
+  isFixture,
+  children,
+  locale = "zh",
+  alternateHref,
+}: GrowthShellProps) {
+  const ui = UI[locale];
+  const otherLocale: GrowthLocale = locale === "zh" ? "en" : "zh";
+  const switchHref = alternateHref ?? localePath(otherLocale, "/");
+
   return (
-    <div className="growth-shell">
+    // 根 layout 的 <html lang> 是全站共用的 zh-Hant；英文頁在最外層容器上
+    // 宣告 lang="en"，讓螢幕閱讀器與瀏覽器用英文處理整頁內容。
+    <div className="growth-shell" lang={locale === "en" ? "en" : undefined}>
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <link rel="stylesheet" href={FONT_STYLESHEET} precedence="default" />
 
       <header className="growth-header">
         <div className="growth-strip">
-          <span>潤讀知識站 · 名詞、定義與可追溯的來源</span>
-          <a href="https://soweread.com/" rel="noopener">
-            回潤讀主站 ↗
-          </a>
+          <span>{ui.strip}</span>
+          <span className="growth-strip-links">
+            <Link
+              className="growth-lang-switch"
+              href={switchHref}
+              hrefLang={otherLocale === "en" ? "en" : "zh-Hant-TW"}
+              lang={otherLocale === "en" ? "en" : "zh-Hant"}
+              aria-label={ui.switchAria}
+            >
+              {ui.switchLabel}
+            </Link>
+            <a href={ui.primaryUrl} rel="noopener">
+              {ui.backToPrimary}
+            </a>
+          </span>
         </div>
         <div className="growth-masthead">
           {/* 子品牌鎖定：主站刊名 ＋ 本站名稱。刊名用文字排出，與主站刊頭一致；
               「知識站」是可選取的文字，不靠圖片傳達。 */}
-          <Link className="growth-brand" href="/" aria-label="潤讀知識站首頁">
+          <Link className="growth-brand" href={localePath(locale, "/")} aria-label={ui.brandAria}>
             <span className="growth-brand-name" aria-hidden="true">
-              <span className="growth-brand-zh">潤讀</span>
+              <span className="growth-brand-zh" lang="zh-Hant">
+                潤讀
+              </span>
               <span className="growth-brand-en">SO WE READ</span>
             </span>
             <span className="growth-brand-suffix" aria-hidden="true">
-              知識站
+              {ui.brandSuffix}
             </span>
           </Link>
           <p className="growth-masthead-motto">
             <span className="growth-eyebrow">The Lexicon</span>
-            讀食安新聞之前，先查清楚定義。
+            {ui.motto}
           </p>
         </div>
         <div className="growth-double-rule" aria-hidden="true" />
-        <nav className="growth-nav" aria-label="主要導覽">
+        <nav className="growth-nav" aria-label={ui.navAria}>
           {/* 名詞索引放進全站導覽，是為了讓每個名詞頁離任何一個已被收錄的頁面
               都只有兩跳。名詞頁原本只能從主題頁與文章頁進入，而那些頁面自己
               也還在等收錄，等於整批名詞頁躲在爬蟲搆不到的深處。 */}
-          <Link href="/entities">名詞索引</Link>
-          <Link href="/topics">議題</Link>
-          <Link href="/reading">主站文章</Link>
-          <a href="https://soweread.com/" rel="noopener">
-            潤讀主站
+          <Link href={localePath(locale, "/entities")}>{ui.navGlossary}</Link>
+          <Link href={localePath(locale, "/topics")}>{ui.navTopics}</Link>
+          {/* 「主站文章」整理的是主站的中文文章，英文版不列。 */}
+          {ui.navReading ? <Link href="/reading">{ui.navReading}</Link> : null}
+          <a href={ui.primaryUrl} rel="noopener">
+            {ui.navPrimary}
           </a>
         </nav>
       </header>
@@ -64,7 +97,7 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
         </p>
       ) : null}
 
-      <nav className="growth-breadcrumbs" aria-label="麵包屑">
+      <nav className="growth-breadcrumbs" aria-label={ui.breadcrumbAria}>
         <ol>
           {breadcrumbs.map((crumb, index) => (
             <li key={crumb.href}>
@@ -78,24 +111,31 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
         </ol>
       </nav>
 
+      {ui.translationNote ? (
+        <p className="growth-translation-note" role="note">
+          {ui.translationNote}
+        </p>
+      ) : null}
+
       <main className="growth-main">{children}</main>
 
       <footer className="growth-footer">
         <div className="growth-footer-inner">
           <div className="growth-double-rule" aria-hidden="true" />
           <p className="growth-footer-brand">
-            <span className="growth-eyebrow">So We Read · Knowledge</span>
-            潤讀知識站
+            <span className="growth-eyebrow">{ui.footerEyebrow}</span>
+            {ui.siteName}
           </p>
           <p>
-            潤讀知識站是獨立的知識整理站台，與{" "}
-            <a href="https://soweread.com/" rel="noopener">
-              潤讀 So We Read 主站
-            </a>{" "}
-            同屬一個編輯團隊。
+            {ui.footerAbout[0]}{" "}
+            <a href={ui.primaryUrl} rel="noopener">
+              {ui.footerAbout[1]}
+            </a>
+            {locale === "zh" ? " " : ""}
+            {ui.footerAbout[2]}
           </p>
           <p className="growth-footer-follow">
-            追蹤我們：
+            {ui.footerFollow}
             <a href="https://www.dcard.tw/@soweread" rel="noopener" target="_blank">
               Dcard
             </a>
@@ -103,7 +143,7 @@ export function GrowthShell({ breadcrumbs, isFixture, children }: GrowthShellPro
               Facebook
             </a>
             <a href="https://vocus.cc/user/@soweread" rel="noopener" target="_blank">
-              方格子
+              {locale === "en" ? "Vocus" : "方格子"}
             </a>
           </p>
         </div>
@@ -121,28 +161,39 @@ interface SourceListProps {
     publishedAt: string | null;
     retrievedAt: string;
     note: string;
+    originalTitle?: string;
   }>;
+  locale?: GrowthLocale;
 }
 
-export function SourceList({ sources }: SourceListProps) {
+export function SourceList({ sources, locale = "zh" }: SourceListProps) {
   if (!sources.length) return null;
+  const ui = UI[locale];
+  const sep = locale === "en" ? " · " : "｜";
 
   return (
     <section className="growth-sources" aria-labelledby="growth-sources-heading">
       <span className="growth-eyebrow" aria-hidden="true">
-        Sources
+        {ui.sourcesEyebrow}
       </span>
-      <h2 id="growth-sources-heading">來源</h2>
+      <h2 id="growth-sources-heading">{ui.sourcesHeading}</h2>
       <ol>
         {sources.map((source) => (
           <li key={source.id} id={`source-${source.id}`}>
             <a href={source.url} rel="noopener nofollow">
               {source.title}
             </a>
+            {source.originalTitle ? (
+              <span className="growth-source-meta">
+                {ui.originalTitle}: <span lang="zh-Hant">{source.originalTitle}</span>
+              </span>
+            ) : null}
             <span className="growth-source-meta">
               {source.publisher}
-              {source.publishedAt ? `｜發布 ${source.publishedAt}` : "｜發布日期未確認"}
-              {`｜擷取 ${source.retrievedAt}`}
+              {source.publishedAt
+                ? `${sep}${ui.published} ${source.publishedAt}`
+                : `${sep}${ui.publishedUnknown}`}
+              {`${sep}${ui.retrieved} ${source.retrievedAt}`}
             </span>
             {source.note ? <p className="growth-source-note">{source.note}</p> : null}
           </li>
@@ -155,12 +206,13 @@ export function SourceList({ sources }: SourceListProps) {
 interface PrimaryCtaProps {
   href: string;
   label: string;
+  locale?: GrowthLocale;
 }
 
-export function PrimaryCta({ href, label }: PrimaryCtaProps) {
+export function PrimaryCta({ href, label, locale = "zh" }: PrimaryCtaProps) {
   return (
     <aside className="growth-cta">
-      <span className="growth-eyebrow">Further Reading</span>
+      <span className="growth-eyebrow">{UI[locale].furtherReading}</span>
       <a className="growth-cta-link" href={href} rel="noopener">
         {label} →
       </a>
