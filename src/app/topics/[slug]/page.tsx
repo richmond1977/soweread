@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { TopicJsonLd } from "@/components/growth-json-ld";
 import { GrowthShell, PrimaryCta } from "@/components/growth-shell";
+import { entityTypeLabel } from "@/lib/growth/entity-type-label";
 import { getGrowthKnowledge } from "@/lib/growth/knowledge";
 import {
   articlesForTopic,
@@ -116,7 +117,7 @@ export default async function TopicHubPage({ params }: TopicPageProps) {
                 {entities.map((entity) => (
                   <li key={entity.slug}>
                     <Link href={`/entities/${entity.slug}`}>{entity.name}</Link>
-                    <span className="growth-entity-type">{entity.entityType}</span>
+                    <span className="growth-entity-type">{entityTypeLabel(entity.entityType).zh}</span>
                     <p>{entity.description}</p>
                   </li>
                 ))}

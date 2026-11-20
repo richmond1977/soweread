@@ -1791,62 +1791,175 @@ select {
 }
 
 /* ==========================================================================
-   Growth 知識站（SITE_ROLE=growth）
+   Growth 知識站（SITE_ROLE=growth）——「辭典卷」版式
    --------------------------------------------------------------------------
-   沿用本檔頂端既有的 design token，不另立一套色票。
-   版面刻意與主站區隔：內容以單欄長文寬度為主，來源區塊必須在視覺上明顯
-   獨立於內文，讀者才分得出「這是編輯寫的」與「這是引用的官方資料」。
+   知識站是主站 soweread.com 這本知識誌的附冊辭典：色票、字體、刊頭、
+   期號列與雙金線都直接沿用主站（2026-11 改版後的 :root token），
+   知識站自己只多一個金色「知識站」副標與辭典式的條目版面。
+
+   token 全部掛在 .growth-shell 上，不動本檔頂端給 backup 鏡像用的舊 token：
+   兩個角色共用同一份 globals.css，改到 :root 會連帶改到鏡像站。
+
+   來源區塊仍必須在視覺上明顯獨立於內文，讀者才分得出「這是編輯寫的」
+   與「這是引用的官方資料」。名詞頁把來源放在右側邊欄，就是為了這件事。
    ========================================================================== */
 
 .growth-shell {
+  --g-paper: #f4efe6;
+  --g-paper-light: #fbf8f2;
+  --g-paper-deep: #e9e1d2;
+  --g-ink: #1f1b16;
+  --g-ink-soft: #4a4238;
+  --g-ink-muted: #6b6052;
+  --g-gold: #9a690f;
+  --g-spark: #c9a25e;
+  --g-soil: #7a4e2d;
+  --g-rule: #cfc5b3;
+  --g-serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+  --g-sans: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --g-latin: "Fraunces", Georgia, serif;
+  --g-caps: "Cinzel", "Times New Roman", serif;
+  --g-max: 1120px;
+  --g-measure: 760px;
+  --g-gutter: clamp(16px, 4vw, 32px);
+
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background: var(--g-paper);
+  color: var(--g-ink);
+  font-family: var(--g-sans);
+  line-height: 1.8;
 }
 
-/* ── 頁首與導覽 ────────────────────────────────────────────────────── */
+/* 英文斜體眉標：主站「Knowledge Compass／知識羅盤」那種雙語層級 */
+.growth-eyebrow {
+  display: block;
+  font-family: var(--g-latin);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--g-gold);
+}
 
-.growth-header {
-  background: var(--white);
-  border-bottom: 1px solid var(--bg-dark);
-  padding: 18px 24px;
+/* 金色雙線：主站刊頭下方那一道 */
+.growth-double-rule {
+  height: 5px;
+  border-top: 2px solid var(--g-gold);
+  border-bottom: 1px solid var(--g-gold);
+}
+
+/* ── 刊頭與導覽 ────────────────────────────────────────────────────── */
+
+.growth-header > * {
+  max-width: var(--g-max);
+  margin-left: auto;
+  margin-right: auto;
+  width: calc(100% - 2 * var(--g-gutter));
+}
+
+.growth-strip {
   display: flex;
+  justify-content: space-between;
+  gap: 8px 16px;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 12px 28px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--g-rule);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--g-ink-soft);
+}
+
+.growth-strip a:hover {
+  color: var(--g-gold);
+}
+
+.growth-masthead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  padding: 28px 0 18px;
 }
 
 .growth-brand {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-dark);
-  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.growth-brand-name {
+  display: grid;
+  line-height: 1.05;
+}
+
+.growth-brand-zh {
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 40px;
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+}
+
+.growth-brand-en {
+  font-family: var(--g-caps);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  margin-top: 6px;
+}
+
+/* 「知識站」是子品牌，用一道金線與主站刊名區隔 */
+.growth-brand-suffix {
+  padding-left: 16px;
+  border-left: 1px solid var(--g-gold);
+  font-family: var(--g-serif);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--g-gold);
+  letter-spacing: 0.08em;
+}
+
+.growth-masthead-motto {
+  margin: 0;
+  font-family: var(--g-serif);
+  font-size: 15px;
+  color: var(--g-ink-soft);
+  text-align: right;
 }
 
 .growth-nav {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--g-rule);
   font-size: 15px;
+  font-weight: 500;
 }
 
 .growth-nav a {
-  color: var(--text-light);
   padding-bottom: 2px;
   border-bottom: 1px solid transparent;
 }
 
-.growth-nav a:hover {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+.growth-nav a:hover,
+.growth-nav a:focus-visible {
+  color: var(--g-gold);
+  border-bottom-color: var(--g-gold);
 }
 
 /* ── 測試資料警語：必須無法被忽略 ──────────────────────────────────── */
 
 .growth-fixture-notice {
   margin: 0;
-  padding: 12px 24px;
-  background: var(--accent-red);
-  color: var(--white);
+  padding: 12px var(--g-gutter);
+  background: #8f2f22;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
@@ -1855,11 +1968,12 @@ select {
 /* ── 麵包屑 ────────────────────────────────────────────────────────── */
 
 .growth-breadcrumbs {
-  max-width: 760px;
+  max-width: var(--g-max);
+  width: calc(100% - 2 * var(--g-gutter));
   margin: 0 auto;
-  padding: 20px 24px 0;
+  padding: 18px 0 0;
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--g-ink-muted);
 }
 
 .growth-breadcrumbs ol {
@@ -1874,11 +1988,11 @@ select {
 .growth-breadcrumbs li + li::before {
   content: "›";
   margin-right: 8px;
-  color: var(--bg-dark);
+  color: var(--g-gold);
 }
 
 .growth-breadcrumbs a:hover {
-  color: var(--primary);
+  color: var(--g-gold);
   text-decoration: underline;
 }
 
@@ -1886,31 +2000,45 @@ select {
 
 .growth-main {
   flex: 1;
-  max-width: 760px;
-  width: 100%;
+  max-width: var(--g-max);
+  width: calc(100% - 2 * var(--g-gutter));
   margin: 0 auto;
-  padding: 8px 24px 64px;
+  padding: 8px 0 72px;
+}
+
+/* 長文維持單欄閱讀寬度；名詞頁與首頁另有寬版面（.growth-wide） */
+.growth-main > :not(.growth-wide) {
+  max-width: var(--g-measure);
 }
 
 .growth-main h1 {
-  font-size: 32px;
-  line-height: 1.35;
-  color: var(--text-dark);
-  margin: 24px 0 12px;
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 40px;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--g-ink);
+  margin: 28px 0 14px;
+  text-wrap: balance;
 }
 
 .growth-main h2 {
-  font-size: 21px;
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 24px;
   line-height: 1.4;
-  color: var(--text-dark);
-  margin: 40px 0 12px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--bg-dark);
+  color: var(--g-ink);
+  margin: 48px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--g-gold);
+  text-wrap: balance;
 }
 
 .growth-main h3 {
-  font-size: 17px;
-  color: var(--text-dark);
+  font-family: var(--g-serif);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--g-ink);
   margin: 28px 0 8px;
 }
 
@@ -1928,27 +2056,40 @@ select {
   margin-bottom: 8px;
 }
 
+.growth-main li::marker {
+  color: var(--g-gold);
+}
+
 .growth-main a {
-  color: var(--primary);
+  color: var(--g-ink);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration-color: var(--g-spark);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .growth-main a:hover {
-  color: var(--text-dark);
+  color: var(--g-gold);
+  text-decoration-color: var(--g-gold);
+}
+
+.growth-main a:focus-visible,
+.growth-nav a:focus-visible,
+.growth-brand:focus-visible {
+  outline: 2px solid var(--g-gold);
+  outline-offset: 3px;
 }
 
 /* 摘要段：每頁最上方的一句話答案，GEO 的關鍵區塊 */
 .growth-lede {
-  font-size: 18px;
-  line-height: 1.75;
-  color: var(--text-dark);
-  border-left: 3px solid var(--primary);
-  padding-left: 16px;
+  font-family: var(--g-serif);
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--g-ink);
   margin: 0 0 28px;
 }
 
-/* ── 清單：主題、實體、文章 ────────────────────────────────────────── */
+/* ── 清單：主題、名詞、文章——辭典條目式 ────────────────────────────── */
 
 .growth-topic-list,
 .growth-entity-list,
@@ -1957,32 +2098,41 @@ select {
   list-style: none;
   padding: 0;
   margin: 0 0 8px;
+  border-top: 1px solid var(--g-rule);
 }
 
 .growth-topic-list > li,
 .growth-entity-list > li,
 .growth-article-list > li {
-  background: var(--white);
-  border: 1px solid var(--bg-dark);
-  border-radius: 6px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
+  padding: 16px 0;
+  margin: 0;
+  border-bottom: 1px dotted var(--g-rule);
 }
 
 .growth-topic-list > li > a,
+.growth-topic-list > li > h2 a,
 .growth-entity-list > li > a,
 .growth-article-list > li > a {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-dark);
+  font-family: var(--g-serif);
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--g-ink);
   text-decoration: none;
 }
 
+/* 議題總覽頁把名稱包在 h2 裡：拿掉 h2 的區段線，維持條目樣式 */
+.growth-topic-list > li > h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: inherit;
+}
+
 .growth-topic-list > li > a:hover,
+.growth-topic-list > li > h2 a:hover,
 .growth-entity-list > li > a:hover,
 .growth-article-list > li > a:hover {
-  color: var(--primary);
-  text-decoration: underline;
+  color: var(--g-gold);
 }
 
 .growth-topic-list p,
@@ -1990,249 +2140,514 @@ select {
 .growth-article-list p {
   margin: 6px 0 0;
   font-size: 15px;
-  color: var(--text-light);
+  color: var(--g-ink-soft);
 }
 
-/* 實體類型徽章 */
+/* 類型標籤：取代原本的等寬字代碼徽章 */
 .growth-entity-type {
   display: inline-block;
-  margin-left: 8px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--bg-medium);
-  color: var(--text-light);
-  font-size: 12px;
-  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
-  vertical-align: middle;
+  margin-left: 10px;
+  font-family: var(--g-latin);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--g-gold);
+  vertical-align: baseline;
 }
 
 .growth-entity-aliases {
   margin: 0 0 20px;
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--g-ink-muted);
 }
 
-/* 審閱日期：entity/topic 頁的 freshness 訊號，跟別名同一種次要文字處理 */
+/* 審閱日期：entity/topic 頁的 freshness 訊號 */
 .growth-reviewed {
   margin: 0 0 20px;
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--g-ink-muted);
+  font-variant-numeric: tabular-nums;
 }
 
-/* 索引頁把別名接在名稱後面當行內附註，不是名詞頁那種獨立段落 */
+/* 索引頁把別名接在名稱後面當行內附註 */
 .growth-entity-list .growth-entity-aliases {
   margin: 0;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 .growth-entity-index-count {
   font-size: 14px;
-  color: var(--text-muted);
-}
-
-/* 首頁的名詞清單：只有連結，密集排列，目的是讓每個名詞頁離首頁一跳 */
-.growth-entity-inline-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  margin: 12px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.growth-entity-inline-list > li > a {
-  font-size: 15px;
+  color: var(--g-ink-muted);
 }
 
 .growth-parent-topic {
   font-size: 14px;
-  color: var(--text-light);
+  color: var(--g-ink-soft);
 }
 
-/* ── 知識關係 ──────────────────────────────────────────────────────── */
+/* ── 首頁 ──────────────────────────────────────────────────────────── */
 
-.growth-relation-list > li {
-  padding: 10px 0;
-  border-bottom: 1px dashed var(--bg-dark);
-  font-size: 15px;
+.growth-home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 24px 56px;
+  align-items: end;
+  padding: 16px 0 32px;
+  border-bottom: 1px solid var(--g-rule);
 }
 
-.growth-predicate {
-  margin: 0 6px;
-  color: var(--text-light);
+.growth-home-hero h1 {
+  margin-top: 6px;
 }
 
-/* 沒有來源的關係不會被 render；有來源的一律把出處帶出來 */
-.growth-relation-source {
-  display: block;
-  margin-top: 4px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* ── 文章 ──────────────────────────────────────────────────────────── */
-
-.growth-byline {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin: 0 0 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--bg-dark);
-}
-
-.growth-article-body p {
-  font-size: 17px;
-  line-height: 1.85;
-  color: var(--text-medium);
-}
-
-.growth-article-body strong {
-  color: var(--text-dark);
-}
-
-/* ── 來源清單：視覺上必須明顯獨立於內文 ────────────────────────────── */
-
-.growth-sources {
-  margin: 48px 0 0;
-  padding: 20px 22px;
-  background: var(--bg-medium);
-  border-radius: 6px;
-  border-left: 4px solid var(--primary-light);
-}
-
-.growth-sources h2 {
-  margin-top: 0;
-  font-size: 17px;
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.growth-sources ol {
-  padding-left: 20px;
+.growth-home-hero .growth-lede {
   margin: 0;
 }
 
-.growth-sources li {
-  margin-bottom: 16px;
+.growth-home-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.growth-main .growth-home-stats li {
+  margin: 0;
+  display: grid;
+  font-size: 13px;
+  color: var(--g-ink-muted);
+}
+
+.growth-home-stats b {
+  font-family: var(--g-latin);
+  font-weight: 400;
+  font-size: 34px;
+  line-height: 1.1;
+  color: var(--g-gold);
+  font-variant-numeric: tabular-nums;
+}
+
+.growth-home-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0 56px;
+  align-items: start;
+}
+
+.growth-home-layout > * {
+  min-width: 0;
+}
+
+/* 辭典條目：詞頭、英文對照、類型、一句釋義 */
+.growth-lexicon {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 40px;
+}
+
+.growth-main .growth-lexicon > li {
+  margin: 0;
+  padding: 16px 0 18px;
+  border-bottom: 1px dotted var(--g-rule);
+}
+
+.growth-lexicon-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+
+.growth-main .growth-lexicon-head a {
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 19px;
+  text-decoration: none;
+}
+
+.growth-lexicon-latin {
+  font-family: var(--g-latin);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--g-ink-muted);
+}
+
+.growth-lexicon-type {
+  margin-left: auto;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--g-gold);
+}
+
+.growth-main .growth-lexicon p {
+  margin: 6px 0 0;
   font-size: 15px;
+  line-height: 1.75;
+  color: var(--g-ink-soft);
+}
+
+.growth-lexicon-group {
+  margin-top: 8px;
+}
+
+.growth-main .growth-lexicon-group > h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.growth-lexicon-group-count {
+  font-family: var(--g-sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--g-ink-muted);
+}
+
+/* 首頁右欄：議題與最新整理 */
+.growth-home-aside h2:first-child {
+  margin-top: 40px;
+}
+
+.growth-numbered {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: growth-num;
+}
+
+.growth-main .growth-numbered > li {
+  counter-increment: growth-num;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 4px 8px;
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px solid var(--g-rule);
+}
+
+.growth-numbered > li::before {
+  content: counter(growth-num, decimal-leading-zero);
+  font-family: var(--g-latin);
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--g-gold);
+}
+
+.growth-main .growth-numbered a {
+  font-family: var(--g-serif);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.6;
+  text-decoration: none;
+}
+
+.growth-main .growth-numbered p {
+  grid-column: 2;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--g-ink-muted);
+}
+
+/* ── 名詞頁：辭典詞條＋右側來源邊欄 ────────────────────────────────── */
+
+.growth-entity {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 0 56px;
+  align-items: start;
+}
+
+.growth-entity > * {
+  min-width: 0;
+}
+
+.growth-entity-head {
+  grid-column: 1 / -1;
+  padding: 12px 0 18px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--g-rule);
+}
+
+.growth-entity-head h1 {
+  margin: 4px 0 8px;
+  font-size: 46px;
+}
+
+.growth-entity-headline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--g-ink-soft);
+}
+
+.growth-entity-headline .growth-lexicon-latin {
+  font-size: 15px;
+}
+
+.growth-entity-body {
+  max-width: var(--g-measure);
+}
+
+.growth-entity-section {
+  margin: 0 0 24px;
+}
+
+.growth-main .growth-entity-section p {
+  font-family: var(--g-serif);
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--g-ink);
+}
+
+.growth-main .growth-entity-section .growth-lede {
+  font-size: 20px;
+  line-height: 1.85;
+}
+
+.growth-entity-section-label {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--g-ink-muted);
+}
+
+.growth-entity-section-label .growth-eyebrow {
+  display: inline;
+}
+
+/* 來源邊欄：桌面版放在正文右側，以金線與正文分開。
+   不做 sticky：來源常有七、八則，固定高度會變成框內捲動，反而難讀。 */
+.growth-entity-aside {
+  padding-left: 22px;
+  border-left: 1px solid var(--g-gold);
+}
+
+.growth-entity-aside .growth-sources {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+.growth-sources {
+  margin: 56px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--g-gold);
+}
+
+.growth-main .growth-sources h2 {
+  margin: 2px 0 14px;
+  padding: 0;
+  border: 0;
+  font-size: 20px;
+}
+
+.growth-main .growth-sources ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: growth-src;
+}
+
+.growth-main .growth-sources li {
+  counter-increment: growth-src;
+  position: relative;
+  padding-left: 28px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.growth-sources li::before {
+  content: counter(growth-src);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--g-latin);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--g-gold);
 }
 
 .growth-sources li:last-child {
   margin-bottom: 0;
 }
 
-.growth-source-meta {
-  display: block;
-  margin-top: 2px;
-  font-size: 13px;
-  color: var(--text-light);
+.growth-sources li:target {
+  background: var(--g-paper-deep);
+  outline: 6px solid var(--g-paper-deep);
 }
 
-.growth-source-note {
+.growth-source-meta {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--g-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.growth-main .growth-source-note {
   margin: 4px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--text-light);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--g-ink-soft);
 }
 
 .growth-official-link {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* ── 知識關係：A ─述語→ B ──────────────────────────────────────────── */
+
+.growth-relation-list > li {
+  padding: 12px 0;
+  border-bottom: 1px dotted var(--g-rule);
   font-size: 15px;
+}
+
+.growth-main .growth-relation-list a {
+  font-family: var(--g-serif);
+  font-weight: 600;
+}
+
+.growth-predicate {
+  margin: 0 8px;
+  color: var(--g-gold);
+}
+
+.growth-predicate::after {
+  content: " →";
+}
+
+/* 沒有來源的關係不會被 render；有來源的一律把出處帶出來 */
+.growth-relation-source {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--g-ink-muted);
+}
+
+/* ── 文章 ──────────────────────────────────────────────────────────── */
+
+.growth-byline {
+  font-size: 13px;
+  color: var(--g-ink-muted);
+  margin: 0 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--g-rule);
+  font-variant-numeric: tabular-nums;
+}
+
+.growth-main .growth-article-body p {
+  font-family: var(--g-serif);
+  font-size: 17px;
+  line-height: 1.95;
+  color: var(--g-ink);
+}
+
+.growth-article-body strong {
+  color: var(--g-ink);
+}
+
+.growth-main dt {
+  font-family: var(--g-serif);
+  margin-top: 16px;
+}
+
+.growth-main dd {
+  margin: 6px 0 0;
+  color: var(--g-ink-soft);
 }
 
 /* ── 導向主站的 CTA ────────────────────────────────────────────────── */
 
 .growth-cta {
-  margin: 40px 0 0;
-  padding: 20px 22px;
-  background: var(--white);
-  border: 1px solid var(--bg-dark);
-  border-radius: 6px;
-  text-align: center;
+  margin: 48px 0 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--g-rule);
+  border-bottom: 1px solid var(--g-rule);
 }
 
-/* 加上 .growth-main 前綴：否則 `.growth-main a` 的權重較高，會把文字色蓋成與底色相同 */
+/* 加上 .growth-main 前綴：否則 `.growth-main a` 的權重較高 */
 .growth-main .growth-cta-link {
   display: inline-block;
-  padding: 12px 24px;
-  background: var(--primary);
-  color: var(--white);
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 700;
+  margin-top: 4px;
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--g-ink);
   text-decoration: none;
 }
 
 .growth-main .growth-cta-link:hover {
-  background: var(--text-dark);
-  color: var(--white);
+  color: var(--g-gold);
 }
 
 /* ── 頁尾 ──────────────────────────────────────────────────────────── */
 
 .growth-footer {
-  background: var(--white);
-  border-top: 1px solid var(--bg-dark);
-  padding: 28px 24px;
+  margin-top: 24px;
+  padding: 0 0 40px;
   font-size: 13px;
-  color: var(--text-muted);
-  text-align: center;
+  color: var(--g-ink-soft);
+}
+
+.growth-footer-inner {
+  max-width: var(--g-max);
+  width: calc(100% - 2 * var(--g-gutter));
+  margin: 0 auto;
+}
+
+.growth-footer-inner > .growth-double-rule {
+  margin-bottom: 22px;
+}
+
+.growth-footer p {
+  margin: 0 0 8px;
+}
+
+.growth-footer-brand {
+  font-family: var(--g-serif);
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--g-ink);
 }
 
 .growth-footer a {
-  color: var(--text-light);
   text-decoration: underline;
+  text-decoration-color: var(--g-spark);
+  text-underline-offset: 3px;
 }
 
 .growth-footer-follow {
-  margin-top: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
 }
 
-.growth-footer-follow a {
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
-
-.growth-footer-follow a:hover {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-}
-
-/* ── 窄螢幕 ────────────────────────────────────────────────────────── */
-
-@media (max-width: 640px) {
-  .growth-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .growth-main {
-    padding: 8px 16px 48px;
-  }
-
-  .growth-main h1 {
-    font-size: 26px;
-  }
-
-  .growth-lede {
-    font-size: 17px;
-  }
-
-  .growth-breadcrumbs {
-    padding: 16px 16px 0;
-  }
+.growth-footer a:hover {
+  color: var(--g-gold);
 }
 
 /* ── 主站文章總覽 ──────────────────────────────────────────────────── */
 
 .growth-index-meta {
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--g-ink-muted);
   margin: -12px 0 24px;
 }
 
@@ -2240,6 +2655,7 @@ select {
   list-style: none;
   padding: 0;
   margin: 0 0 8px;
+  border-top: 1px solid var(--g-rule);
 }
 
 .growth-primary-list > li {
@@ -2249,26 +2665,23 @@ select {
   align-items: baseline;
   justify-content: space-between;
   gap: 4px 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--bg-dark);
+  padding: 12px 0;
+  margin: 0;
+  border-bottom: 1px dotted var(--g-rule);
 }
 
-.growth-primary-list > li:last-child {
-  border-bottom: none;
-}
-
-.growth-primary-list a {
+.growth-main .growth-primary-list a {
   flex: 1 1 auto;
   min-width: 0;
+  font-family: var(--g-serif);
+  font-weight: 600;
   font-size: 16px;
-  color: var(--text-dark);
+  color: var(--g-ink);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
 }
 
-.growth-primary-list a:hover {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+.growth-main .growth-primary-list a:hover {
+  color: var(--g-gold);
 }
 
 /* 發布日期靠右對齊，掃視時形成一條時間軸 */
@@ -2277,42 +2690,111 @@ select {
   margin-left: auto;
   white-space: nowrap;
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--g-ink-muted);
   font-variant-numeric: tabular-nums;
 }
 
+/* ── 窄螢幕 ────────────────────────────────────────────────────────── */
 
-/* ── 品牌鎖定：主站標誌 ＋ 本站名稱 ────────────────────────────────── */
+@media (max-width: 960px) {
+  .growth-home-layout,
+  .growth-entity {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-.growth-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  /* 邊欄改成接在正文之後，不再固定 */
+  .growth-entity-aside {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .growth-entity-aside .growth-sources {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--g-gold);
+  }
 }
 
-/* 標誌原圖 600x400，四周留白很多；用高度控制，寬度自動。 */
-.growth-brand-logo {
-  height: 44px;
-  width: auto;
-  display: block;
-}
+@media (max-width: 720px) {
+  .growth-home-hero,
+  .growth-lexicon {
+    grid-template-columns: minmax(0, 1fr);
+  }
 
-/* 「知識站」是子品牌，用一道分隔線與主站標誌區隔 */
-.growth-brand-suffix {
-  padding-left: 10px;
-  border-left: 1px solid var(--bg-dark);
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text-dark);
-  letter-spacing: 0.04em;
+  .growth-masthead-motto {
+    text-align: left;
+  }
 }
 
 @media (max-width: 640px) {
-  .growth-brand-logo {
-    height: 36px;
+  .growth-brand-zh {
+    font-size: 30px;
+  }
+
+  .growth-brand-en {
+    font-size: 12px;
   }
 
   .growth-brand-suffix {
-    font-size: 15px;
+    font-size: 18px;
+    padding-left: 12px;
   }
+
+  .growth-masthead {
+    padding: 20px 0 14px;
+  }
+
+  .growth-nav {
+    gap: 4px 20px;
+  }
+
+  .growth-main h1,
+  .growth-entity-head h1 {
+    font-size: 30px;
+  }
+
+  .growth-main h2 {
+    font-size: 21px;
+  }
+
+  .growth-lede,
+  .growth-main .growth-entity-section .growth-lede {
+    font-size: 17px;
+  }
+
+  .growth-main .growth-entity-section p,
+  .growth-main .growth-article-body p {
+    font-size: 16px;
+  }
+
+  .growth-home-stats b {
+    font-size: 28px;
+  }
+}
+
+/* `.growth-main ul/ol` 的縮排權重較高，條目式清單要明確歸零 */
+.growth-main .growth-topic-list,
+.growth-main .growth-entity-list,
+.growth-main .growth-article-list,
+.growth-main .growth-relation-list,
+.growth-main .growth-primary-list,
+.growth-main .growth-lexicon,
+.growth-main .growth-numbered,
+.growth-main .growth-home-stats {
+  padding-left: 0;
+}
+
+/* 眉標緊貼在下方標題上，不吃掉標題的區段間距 */
+.growth-main .growth-eyebrow + h1,
+.growth-main .growth-eyebrow + h2 {
+  margin-top: 4px;
+}
+
+.growth-main section > .growth-eyebrow:first-child,
+.growth-home-aside > section > .growth-eyebrow:first-child {
+  margin-top: 44px;
+}
+
+.growth-main .growth-entity-aside .growth-eyebrow:first-child {
+  margin-top: 0;
 }
