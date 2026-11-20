@@ -9,6 +9,8 @@ export type GrowthSource = {
   publishedAt: string | null;
   retrievedAt: string;
   note: string;
+  /** 英文版：來源原本的（中文）標題；title 已換成英文譯名時才有值。 */
+  originalTitle?: string;
 };
 
 export type GrowthEntity = {
@@ -27,6 +29,8 @@ export type GrowthEntity = {
   dateModified: string | null;
   topicSlugs: string[];
   sourceIds: string[];
+  /** 英文版：名詞的中文正式名稱。 */
+  originalName?: string;
 };
 
 export type GrowthRelation = {

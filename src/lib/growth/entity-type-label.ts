@@ -55,19 +55,51 @@ export function splitEntityDescription(description: string): {
     return { definition: blocks[0], paragraphs: blocks.slice(1) };
   }
 
-  const sentences = splitSentences(text);
+  // 英文版敘述沒有全形句號：改用英文斷句，段落長度門檻也放寬（英文字元數約為中文的 2.5 倍）。
+  const english = !text.includes("。");
+  const sentences = english ? splitEnglishSentences(text) : splitSentences(text);
+  const scale = english ? 2.5 : 1;
+  const joiner = english ? " " : "";
   const [definition, ...rest] = sentences;
   const paragraphs: string[] = [];
   let current = "";
   for (const sentence of rest) {
-    if (current && (current.length >= 110 || current.length + sentence.length > 220)) {
+    if (
+      current &&
+      (current.length >= 110 * scale || current.length + sentence.length > 220 * scale)
+    ) {
       paragraphs.push(current);
       current = "";
     }
-    current += sentence;
+    current += current ? joiner + sentence : sentence;
   }
   if (current) paragraphs.push(current);
   return { definition, paragraphs };
+}
+
+// 句點後面接這些縮寫時不算斷句（No. 2、e.g. the、Art. 15……）。
+const ABBREVIATIONS = /(?:\b(?:No|Nos|Art|Arts|para|paras|e\.g|i\.e|etc|approx|vs|Dr|St|Co|Ltd|Inc|cf|Fig|ed|eds|vol)\.|\b[A-Z]\.)$/;
+
+function splitEnglishSentences(text: string): string[] {
+  const sentences: string[] = [];
+  let depth = 0;
+  let start = 0;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === "(" || char === "“") depth += 1;
+    else if (char === ")" || char === "”") depth = Math.max(0, depth - 1);
+    else if ((char === "." || char === "?" || char === "!") && depth === 0) {
+      const next = text[index + 1];
+      const after = text[index + 2];
+      if (next !== " " || !after || !/[A-Z0-9“"‘(]/.test(after)) continue;
+      const sentence = text.slice(start, index + 1);
+      if (char === "." && ABBREVIATIONS.test(sentence)) continue;
+      sentences.push(sentence);
+      start = index + 2;
+    }
+  }
+  if (start < text.length) sentences.push(text.slice(start));
+  return sentences.map((sentence) => sentence.trim()).filter(Boolean);
 }
 
 const OPENERS = new Set(["「", "『", "《", "（", "(", "〈", "【"]);

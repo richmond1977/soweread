@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -5,8 +6,17 @@ import { GrowthHome } from "@/components/growth-home";
 import { HomeArticleGrid } from "@/components/home-article-grid";
 import { PublicShell } from "@/components/public-shell";
 import { getContent, getPublishedPosts } from "@/lib/content";
-import { getGrowthKnowledge } from "@/lib/growth/knowledge";
+import { getLocalizedKnowledge } from "@/lib/growth/knowledge-locale";
+import { languageAlternates } from "@/lib/growth/locale";
 import { getRequestSiteConfig } from "@/lib/request-site-config";
+
+// 知識站首頁要宣告中英文互指（hreflang）；只在首頁設定，不放進 root layout，
+// 否則沒有自訂 alternates 的頁面會繼承到首頁的 hreflang。
+export async function generateMetadata(): Promise<Metadata> {
+  const siteConfig = await getRequestSiteConfig();
+  if (!siteConfig.isGrowth || !siteConfig.canServeGrowthContent) return {};
+  return { alternates: languageAlternates(siteConfig.canonicalBaseUrl, "zh", "/") };
+}
 
 export default async function HomePage() {
   const siteConfig = await getRequestSiteConfig();
@@ -18,8 +28,8 @@ export default async function HomePage() {
     // the other growth routes rather than showing an empty landing page.
     if (!siteConfig.canServeGrowthContent) notFound();
 
-    const { knowledge } = await getGrowthKnowledge(siteConfig);
-    return <GrowthHome baseUrl={siteConfig.canonicalBaseUrl} knowledge={knowledge} />;
+    const { knowledge } = await getLocalizedKnowledge("zh", siteConfig);
+    return <GrowthHome baseUrl={siteConfig.canonicalBaseUrl} knowledge={knowledge} locale="zh" />;
   }
 
   const [content, posts] = await Promise.all([getContent(), getPublishedPosts()]);
