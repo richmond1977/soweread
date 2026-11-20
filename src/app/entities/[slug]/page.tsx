@@ -5,6 +5,7 @@ import { EntityJsonLd } from "@/components/growth-json-ld";
 import { EntityReaderGuide } from "@/components/entity-reader-guide";
 import { findEntityReaderGuide } from "@/data/entity-reader-guides";
 import { GrowthShell, PrimaryCta, SourceList } from "@/components/growth-shell";
+import { entityTypeLabel, splitEntityDescription } from "@/lib/growth/entity-type-label";
 import { getGrowthKnowledge } from "@/lib/growth/knowledge";
 import {
   articlesForEntity,
@@ -81,6 +82,8 @@ export default async function EntityPage({ params }: EntityPageProps) {
   const articles = articlesForEntity(knowledge, entity.slug);
   const sources = sourcesByIds(knowledge, entity.sourceIds);
   const readerGuide = findEntityReaderGuide(entity.slug);
+  const typeLabel = entityTypeLabel(entity.entityType);
+  const description = splitEntityDescription(entity.description);
 
   const breadcrumbs = [
     { name: "首頁", href: "/" },
@@ -99,81 +102,106 @@ export default async function EntityPage({ params }: EntityPageProps) {
         relations={relations}
       />
       <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
-        <article className="growth-entity">
-          <h1>{entity.name}</h1>
-          <p className="growth-entity-type">類型：{readerGuide?.typeLabel ?? entity.entityType}</p>
-          {entity.aliases.length ? (
-            <p className="growth-entity-aliases">別名：{entity.aliases.join("、")}</p>
-          ) : null}
-          {/* 沒有審閱紀錄時保持沉默，而不是宣告「尚未審閱」——
-              與文章頁 reviewerName 的顯示規則一致（growth-article page.tsx）。 */}
-          {entity.reviewedAt ? (
-            <p className="growth-reviewed">最後審閱：{entity.reviewedAt}</p>
-          ) : null}
-
-          <p className="growth-lede">{entity.description}</p>
-
-          {readerGuide ? <EntityReaderGuide guide={readerGuide} /> : null}
-
-          {parentTopic ? (
-            <p className="growth-parent-topic">
-              所屬主題：<Link href={`/topics/${parentTopic.slug}`}>{parentTopic.name}</Link>
+        <article className="growth-entity growth-wide">
+          {/* 辭典詞條的詞頭：類型眉標、詞目、別名與英文對照 */}
+          <header className="growth-entity-head">
+            <span className="growth-eyebrow">
+              {typeLabel.en} · {readerGuide?.typeLabel ?? typeLabel.zh}
+            </span>
+            <h1>{entity.name}</h1>
+            <p className="growth-entity-headline">
+              {entity.aliases.length ? <span>又稱 {entity.aliases.join("、")}</span> : null}
+              {parentTopic ? (
+                <span>
+                  所屬主題：<Link href={`/topics/${parentTopic.slug}`}>{parentTopic.name}</Link>
+                </span>
+              ) : null}
+              {/* 沒有審閱紀錄時保持沉默，而不是宣告「尚未審閱」——
+                  與文章頁 reviewerName 的顯示規則一致（growth-article page.tsx）。 */}
+              {entity.reviewedAt ? <span>最後審閱：{entity.reviewedAt}</span> : null}
             </p>
-          ) : null}
+          </header>
 
-          <section aria-labelledby="entity-relations">
-            <h2 id="entity-relations">知識關係</h2>
-            {relations.length ? (
-              <ul className="growth-relation-list">
-                {relations.map((relation) => (
-                  <li key={relation.id}>
-                    <Link href={`/entities/${relation.subject.slug}`}>{relation.subject.name}</Link>
-                    <span className="growth-predicate"> {relation.predicate} </span>
-                    <Link href={`/entities/${relation.object.slug}`}>{relation.object.name}</Link>
-                    <span className="growth-relation-source">
-                      （來源：
-                      <a href={relation.source.url} rel="noopener nofollow">
-                        {relation.source.publisher}
-                      </a>
-                      ）
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>目前沒有已附上來源的公開關係。</p>
-            )}
-          </section>
-
-          {articles.length ? (
-            <section aria-labelledby="entity-articles">
-              <h2 id="entity-articles">相關文章</h2>
-              <ul className="growth-article-list">
-                {articles.map((article) => (
-                  <li key={article.slug}>
-                    <Link href={`/articles/${article.slug}`}>{article.title}</Link>
-                    <p>{article.summary}</p>
-                  </li>
-                ))}
-              </ul>
+          <div className="growth-entity-body">
+            <section className="growth-entity-section" aria-label="釋義">
+              <p className="growth-entity-section-label" aria-hidden="true">
+                <span className="growth-eyebrow">Definition</span>釋義
+              </p>
+              <p className="growth-lede">{description.definition}</p>
             </section>
+
+            {description.paragraphs.length ? (
+              <section className="growth-entity-section" aria-label="說明">
+                <p className="growth-entity-section-label" aria-hidden="true">
+                  <span className="growth-eyebrow">Notes</span>說明
+                </p>
+                {description.paragraphs.map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
+              </section>
+            ) : null}
+
+            {readerGuide ? <EntityReaderGuide guide={readerGuide} /> : null}
+
+            <section aria-labelledby="entity-relations">
+              <h2 id="entity-relations">知識關係</h2>
+              {relations.length ? (
+                <ul className="growth-relation-list">
+                  {relations.map((relation) => (
+                    <li key={relation.id}>
+                      <Link href={`/entities/${relation.subject.slug}`}>{relation.subject.name}</Link>
+                      <span className="growth-predicate"> {relation.predicate} </span>
+                      <Link href={`/entities/${relation.object.slug}`}>{relation.object.name}</Link>
+                      <span className="growth-relation-source">
+                        （來源：
+                        <a href={relation.source.url} rel="noopener nofollow">
+                          {relation.source.publisher}
+                        </a>
+                        ）
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>目前沒有已附上來源的公開關係。</p>
+              )}
+            </section>
+
+            {articles.length ? (
+              <section aria-labelledby="entity-articles">
+                <h2 id="entity-articles">相關文章</h2>
+                <ul className="growth-article-list">
+                  {articles.map((article) => (
+                    <li key={article.slug}>
+                      <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+                      <p>{article.summary}</p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+
+            {entity.canonicalUrl ? (
+              <p className="growth-official-link">
+                官方資訊：
+                <a href={entity.canonicalUrl} rel="noopener nofollow">
+                  {entity.canonicalUrl}
+                </a>
+              </p>
+            ) : null}
+
+            <PrimaryCta
+              href="https://soweread.com/"
+              label="想讀更完整的脈絡分析，請前往潤讀主站"
+            />
+          </div>
+
+          {/* 來源放在邊欄：與編輯撰寫的正文在版面上分開，桌面版捲動時仍在視線內 */}
+          {sources.length ? (
+            <aside className="growth-entity-aside" aria-label="本詞條引用來源">
+              <SourceList sources={sources} />
+            </aside>
           ) : null}
-
-          <SourceList sources={sources} />
-
-          {entity.canonicalUrl ? (
-            <p className="growth-official-link">
-              官方資訊：
-              <a href={entity.canonicalUrl} rel="noopener nofollow">
-                {entity.canonicalUrl}
-              </a>
-            </p>
-          ) : null}
-
-          <PrimaryCta
-            href="https://soweread.com/"
-            label="想讀更完整的脈絡分析，請前往潤讀主站"
-          />
         </article>
       </GrowthShell>
     </>

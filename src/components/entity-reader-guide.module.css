@@ -5,7 +5,7 @@
 .tableScroll { overflow-x: auto; margin-block: 1.5rem; }
 .tableScroll:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 .tableScroll table { border-collapse: collapse; min-width: 36rem; width: 100%; }
-.tableScroll caption { text-align: left; font-weight: 600; padding-bottom: .75rem; }
-.tableScroll th, .tableScroll td { border: 1px solid #d9d5ce; padding: .75rem; text-align: left; vertical-align: top; }
-.tableScroll thead { background: #f4f1eb; color: #28231c; }
+.tableScroll caption { text-align: left; font-weight: 600; font-family: var(--g-serif, serif); padding-bottom: .75rem; }
+.tableScroll th, .tableScroll td { border: 1px solid var(--g-rule, #d9d5ce); padding: .75rem; text-align: left; vertical-align: top; }
+.tableScroll thead { background: var(--g-paper-deep, #f4f1eb); color: var(--g-ink, #28231c); }
 .citation { font-size: .875rem; }
