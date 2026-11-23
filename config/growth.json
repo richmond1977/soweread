@@ -3,8 +3,8 @@
 
   "brandTerms": ["潤讀", "so we read", "soweread"],
 
-  "_observationOnlySitesComment": "列在這裡的站，週報只列曝光與收錄數字，不列待辦；機會分析改成「成長站可承接的搜尋詞」。primary（soweread.com，WordPress）目前無法修改，2026-10-19 起改為僅觀察。見 scripts/growth/lib/render-observation.mjs。",
-  "observationOnlySites": ["primary"],
+  "_observationOnlySitesComment": "列在這裡的站，週報只列曝光與收錄數字，不列待辦；機會分析改成「成長站可承接的搜尋詞」。primary（soweread.com）2026-10-19 起曾因 WordPress 無法修改而改為僅觀察；2026-11-23 起主站改由 Astro repo 維護、可以修改，恢復完整機會分析。見 scripts/growth/lib/render-observation.mjs。",
+  "observationOnlySites": [],
 
   "minImpressions": 8,
 
