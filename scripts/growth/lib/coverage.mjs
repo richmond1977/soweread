@@ -22,6 +22,33 @@ export function parseSitemapUrls(xml) {
   return isIndex ? { urls: [], sitemaps: locs } : { urls: locs, sitemaps: [] };
 }
 
+/** robots.txt 沒宣告 sitemap 時依序嘗試的慣用路徑（WordPress/Next 用前者，Astro 用後者）。 */
+export const FALLBACK_SITEMAP_PATHS = ['/sitemap.xml', '/sitemap-index.xml'];
+
+/**
+ * 決定要讀哪些 sitemap：robots.txt 的 `Sitemap:` 宣告優先（站台自己說了算），
+ * 再接慣用路徑當備援。只收同主機的網址，避免 robots.txt 指去別站。
+ *
+ * @param {string} domain 例如 https://soweread.com
+ * @param {string | null} robotsTxt robots.txt 內容；讀不到時傳 null
+ * @returns {string[]} 依嘗試順序排列、去重後的 sitemap 網址
+ */
+export function sitemapCandidates(domain, robotsTxt) {
+  const host = new URL(domain).host;
+  const declared = [...(robotsTxt ?? '').matchAll(/^\s*sitemap\s*:\s*(\S+)/gim)]
+    .map((m) => {
+      try {
+        return new URL(m[1], domain);
+      } catch {
+        return null;
+      }
+    })
+    .filter((u) => u && u.host === host)
+    .map((u) => u.toString());
+  const fallbacks = FALLBACK_SITEMAP_PATHS.map((p) => new URL(p, domain).toString());
+  return [...new Set([...declared, ...fallbacks])];
+}
+
 function decodeXmlEntities(s) {
   return s
     .replace(/&lt;/g, '<')

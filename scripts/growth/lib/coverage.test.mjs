@@ -151,3 +151,24 @@ test('renderCoverageSection 在 listNotIndexed=false 時只列統計，不列未
   assert.match(md, /已收錄/);
   assert.doesNotMatch(md, /未收錄的頁面/);
 });
+
+test('sitemapCandidates：robots.txt 宣告優先，再接慣用路徑並去重', async () => {
+  const { sitemapCandidates } = await import('./coverage.mjs');
+  const robots = 'User-agent: *\nAllow: /\n\nSitemap: https://soweread.com/sitemap-index.xml\n';
+  assert.deepEqual(sitemapCandidates('https://soweread.com', robots), [
+    'https://soweread.com/sitemap-index.xml',
+    'https://soweread.com/sitemap.xml',
+  ]);
+});
+
+test('sitemapCandidates：沒有 robots.txt 時用慣用路徑，忽略別站的宣告', async () => {
+  const { sitemapCandidates } = await import('./coverage.mjs');
+  assert.deepEqual(sitemapCandidates('https://soweread.com', null), [
+    'https://soweread.com/sitemap.xml',
+    'https://soweread.com/sitemap-index.xml',
+  ]);
+  assert.deepEqual(
+    sitemapCandidates('https://soweread.com', 'sitemap: https://evil.example/s.xml'),
+    ['https://soweread.com/sitemap.xml', 'https://soweread.com/sitemap-index.xml'],
+  );
+});
