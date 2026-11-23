@@ -15,13 +15,10 @@ name: Growth opportunities weekly
 #
 # 也可在 Actions 頁手動觸發（workflow_dispatch）。
 #
-# Phase 4（GEO 引用追蹤，選配、有成本）目前暫停，本檔不含任何呼叫 Gemini 的步驟。
-# 2026-09-05 實測：Batch API（400 FAILED_PRECONDITION）與改回的同步 generateContent
-# + google_search grounding（429 RESOURCE_EXHAUSTED，訊息指向 plan/billing）都因
-# 免費層 GEMINI_API_KEY 的計費層級限制打不通——純文字同步呼叫本身沒問題，卡的是
-# grounding 這個工具本身的額度。詳見 docs/growth-weekly-report-migration.md 第 2 節、
-# scripts/growth/lib/gemini-grounded.mjs 檔頭。待 Richmond 決定是否開通計費後，
-# 再補回引用追蹤步驟（程式碼骨架已在 scripts/growth/lib/gemini-grounded.mjs）。
+# Phase 4（GEO 引用追蹤，選配、有成本）：2026-11-23 起 GEMINI_API_KEY 已開通計費，
+# 每週用同步 generateContent + google_search grounding 問 config/growth.json 的
+# citationQueries（24 題），結果寫入 CitationBatchJob，週報文末渲染 GEO 章節。
+# 見 scripts/growth/geo_citations.mjs、lib/geo-citations.mjs、lib/render-geo.mjs。
 #
 # 需要的 repo secrets（目前）：
 #   GOOGLE_OAUTH_CLIENT_ID / GOOGLE_OAUTH_CLIENT_SECRET / GOOGLE_OAUTH_REFRESH_TOKEN
@@ -94,6 +91,17 @@ jobs:
           DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
         run: npm run growth:serp
+
+      - name: GEO citation check (Gemini + Google Search grounding)
+        # 選配步驟：缺 GEMINI_API_KEY 時腳本警告後 exit 0；額度用罄或 API 出錯
+        # 不該擋住 analyze → mail，analyze.mjs 沒有新的 CitationBatchJob 時會沿用
+        # 上一筆或省略 GEO 章節。
+        continue-on-error: true
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+        run: npm run growth:geo
 
       - name: Analyze opportunities
         env:

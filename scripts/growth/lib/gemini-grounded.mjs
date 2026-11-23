@@ -28,6 +28,25 @@ export function getCitationModel() {
   return process.env.GEMINI_MODEL_CITATIONS || DEFAULT_MODEL;
 }
 
+// 429 的回應主體很長，真正有用的「哪一個額度用完」（QuotaFailure.violations 的
+// quotaMetric／quotaId）在 details 後段，直接截前 500 字會剛好切掉。這裡只取
+// message 與額度名稱，讓 Actions log 一眼看出是免費層、每日上限還是 grounding 額度。
+export function summarizeApiError(body) {
+  try {
+    const e = JSON.parse(body).error ?? {};
+    const quotas = (e.details ?? [])
+      .flatMap((d) => d.violations ?? [])
+      .map((v) => [v.quotaMetric, v.quotaId, v.quotaValue ? `上限 ${v.quotaValue}` : ''].filter(Boolean).join(' / '))
+      .filter(Boolean);
+    const retry = (e.details ?? []).find((d) => d.retryDelay)?.retryDelay;
+    return [e.status, e.message?.trim(), quotas.length ? `額度：${quotas.join('；')}` : '', retry ? `建議 ${retry} 後重試` : '']
+      .filter(Boolean)
+      .join('｜');
+  } catch {
+    return String(body ?? '').slice(0, 500);
+  }
+}
+
 async function callOnce({ key, model, question, timeoutMs }) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -44,7 +63,7 @@ async function callOnce({ key, model, question, timeoutMs }) {
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
-      const err = new Error(`HTTP ${res.status}: ${detail.slice(0, 500)}`);
+      const err = new Error(`HTTP ${res.status}: ${summarizeApiError(detail)}`);
       err.status = res.status;
       throw err;
     }
