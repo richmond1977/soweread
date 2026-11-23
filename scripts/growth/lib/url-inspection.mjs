@@ -1,4 +1,4 @@
-// 收錄進度取數：讀站台自己的 sitemap.xml，逐一送 Search Console URL Inspection
+// 收錄進度取數：讀站台自己的 sitemap（robots.txt 宣告優先），逐一送 Search Console URL Inspection
 // API，回傳可直接寫進 GrowthSnapshot.coverage 的物件。
 //
 // API：POST https://searchconsole.googleapis.com/v1/urlInspection/index:inspect
@@ -11,7 +11,7 @@
 // 純函式（sitemap 解析、統計、渲染）在 coverage.mjs，這裡只放有副作用的部分。
 
 import { googlePost } from './google-auth.mjs';
-import { parseSitemapUrls, summarizeCoverage } from './coverage.mjs';
+import { parseSitemapUrls, sitemapCandidates, summarizeCoverage } from './coverage.mjs';
 
 const INSPECT_ENDPOINT = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect';
 const MAX_URLS = Number(process.env.GROWTH_COVERAGE_MAX_URLS || 100);
@@ -35,8 +35,29 @@ async function fetchText(url) {
  * @returns {Promise<string[]>} 去重後的頁面 URL
  */
 export async function fetchSitemapUrls(domain) {
-  const root = new URL('/sitemap.xml', domain).toString();
-  const parsed = parseSitemapUrls(await fetchText(root));
+  // 先看 robots.txt 宣告的 sitemap，再試慣用路徑。主站改用 Astro 之後只有
+  // /sitemap-index.xml，寫死 /sitemap.xml 會 404，整站收錄資料就空了。
+  let robotsTxt = null;
+  try {
+    robotsTxt = await fetchText(new URL('/robots.txt', domain).toString());
+  } catch {
+    // 沒有 robots.txt 不是錯，直接走慣用路徑。
+  }
+
+  let root;
+  let rootXml;
+  const failures = [];
+  for (const candidate of sitemapCandidates(domain, robotsTxt)) {
+    try {
+      rootXml = await fetchText(candidate);
+      root = candidate;
+      break;
+    } catch (e) {
+      failures.push(e.message);
+    }
+  }
+  if (!root) throw new Error(failures.join('；'));
+  const parsed = parseSitemapUrls(rootXml);
 
   let urls = parsed.urls;
   if (parsed.sitemaps.length > 0) {
