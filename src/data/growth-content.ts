@@ -815,8 +815,9 @@ export const growthContent: GrowthKnowledge = {
         "防疫一體是一個把人類健康、動物健康與生態系健康視為互相牽動的整合性架構。WOAH 引用的 OHHLEP 定義為「一種整合而統合的方法，目標是永續地平衡並優化人、動物與生態系的健康」。台灣在民國 114 年的抗生素抗藥性管理行動計畫中，即以防疫一體作為跨部會合作的架構。",
       canonicalUrl: "https://www.woah.org/en/what-we-do/global-initiatives/one-health/",
       publicationStatus: "published",
-      seoTitle: "防疫一體（One Health）：定義與在台灣的實際應用",
-      seoDescription: "One Health 的 OHHLEP 定義，以及台灣如何以此架構推動跨部會的抗藥性管理。",
+      seoTitle: "防疫一體（One Health）是什麼？定義與台灣的實際應用",
+      seoDescription:
+        "防疫一體（One Health）是把人、動物與環境的健康當成一件事來管：抗藥性細菌會在三者之間流動，只顧其中一邊擋不住。說明國際定義，以及台灣如何用它推動跨部會的抗藥性管理。",
       reviewedAt: null,
       dateModified: "2026-09-21",
       topicSlugs: ["pesticides-and-veterinary-drugs"],
