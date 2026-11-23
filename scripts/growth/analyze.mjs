@@ -350,7 +350,7 @@ export function renderReport(bySite, skippedSites, config, latestGeoJob) {
     `門檻：最低曝光 ${config.minImpressions} 次。以下建議皆為規則式分析結果，需人工判斷後執行。` +
       '每站先列收錄進度（Google 收了幾頁），再列 SEO 三層機會分析。' +
       (latestGeoJob
-        ? '文末另有 GEO AI 知識能見度章節。'
+        ? '文末另有 GEO（AI 引用能見度）章節。'
         : 'GEO AI 知識能見度：UNKNOWN／本期無已完成批次；未測不代表未被引用。')
   );
   lines.push('');
