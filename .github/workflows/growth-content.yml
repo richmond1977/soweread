@@ -1,0 +1,113 @@
+name: Growth content seed
+
+# 把 src/data/growth-content.ts 寫進 growth 資料庫（scripts/seed-growth-content.mjs），
+# 並可選擇在同一次執行裡建立改版成效追蹤（scripts/growth/experiment.mjs add）。
+#
+# 為什麼要有這個流程：知識站頁面讀的是資料庫，合併 growth-content.ts 的 PR 之後
+# 線上不會自動更新；而本機通常沒有 DATABASE_URL。這裡沿用 growth.yml 已有的
+# repo secrets，不新增任何 secret。
+#
+# 用法（Actions 頁 → Growth content seed → Run workflow）：
+#   1. 先用預設的 dry_run=true 跑一次：檢查內容檔引用完整性＋連線預檢（只讀）。
+#   2. 確認 log 無誤後，dry_run=false 再跑：真正寫入。
+#   3. 若這次寫入包含標題／描述改版，同一次填 experiment_page 等欄位，
+#      寫入成功後就會用今天的日期建立追蹤，改版前基準不會混到新版本數據。
+#
+# 安全：
+#   - db-preflight.mjs 先確認目標庫裡已有公開的 growth 實體與主題，否則停止，
+#     避免 secret 指到 WordPress 鏡像庫時把內容寫錯地方。
+#   - 只能手動觸發，沒有排程。
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '只檢查不寫入（第一次請保持勾選）'
+        type: boolean
+        default: true
+      expect_entity:
+        description: '預檢時印出此實體目前的標題／描述（slug，可留空）'
+        type: string
+        default: ''
+      experiment_page:
+        description: '寫入後建立改版追蹤的頁面，例如 /entities/one-health（留空＝不建立）'
+        type: string
+        default: ''
+      experiment_change:
+        description: '改了什麼'
+        type: string
+        default: ''
+      experiment_hypothesis:
+        description: '預期效果'
+        type: string
+        default: ''
+      experiment_queries:
+        description: '要追蹤的搜尋詞，逗號分隔（可留空）'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: growth-content-seed
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Content integrity check (no database)
+        run: node scripts/seed-growth-content.mjs --dry-run
+
+      - name: Database preflight (read-only)
+        env:
+          EXPECT_ENTITY: ${{ inputs.expect_entity }}
+        run: |
+          if [ -n "$EXPECT_ENTITY" ]; then
+            node scripts/growth/db-preflight.mjs --expect-entity "$EXPECT_ENTITY"
+          else
+            node scripts/growth/db-preflight.mjs
+          fi
+
+      - name: Seed growth content
+        if: ${{ !inputs.dry_run }}
+        run: node scripts/seed-growth-content.mjs
+
+      - name: Show entity after seed
+        if: ${{ !inputs.dry_run && inputs.expect_entity != '' }}
+        env:
+          EXPECT_ENTITY: ${{ inputs.expect_entity }}
+        run: node scripts/growth/db-preflight.mjs --expect-entity "$EXPECT_ENTITY"
+
+      - name: Record experiment
+        if: ${{ !inputs.dry_run && inputs.experiment_page != '' }}
+        env:
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          GOOGLE_OAUTH_REFRESH_TOKEN: ${{ secrets.GOOGLE_OAUTH_REFRESH_TOKEN }}
+          GSC_SITE_URL_GROWTH: ${{ secrets.GSC_SITE_URL_GROWTH }}
+          GSC_SITE_URL_PRIMARY: ${{ secrets.GSC_SITE_URL_PRIMARY }}
+          EXP_PAGE: ${{ inputs.experiment_page }}
+          EXP_CHANGE: ${{ inputs.experiment_change }}
+          EXP_HYPOTHESIS: ${{ inputs.experiment_hypothesis }}
+          EXP_QUERIES: ${{ inputs.experiment_queries }}
+        run: |
+          set -- add --site growth --page "$EXP_PAGE" --change "$EXP_CHANGE" --hypothesis "$EXP_HYPOTHESIS"
+          if [ -n "$EXP_QUERIES" ]; then set -- "$@" --queries "$EXP_QUERIES"; fi
+          node scripts/growth/experiment.mjs "$@"
