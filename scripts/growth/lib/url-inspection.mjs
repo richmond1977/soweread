@@ -4,9 +4,9 @@
 // API：POST https://searchconsole.googleapis.com/v1/urlInspection/index:inspect
 //      body { inspectionUrl, siteUrl }
 //      scope 沿用既有的 webmasters.readonly，不需要重跑 growth:auth。
-//      配額（Google 公告值）：每站每日 2000 次、每分鐘 600 次。潤讀目前 sitemap
-//      只有 20 多個 URL，離配額很遠；仍設 MAX_URLS 上限，避免日後 sitemap 長大
-//      之後某週無聲把配額吃光。
+//      配額（Google 公告值）：每站每日 2000 次、每分鐘 600 次。2026-11 成長站
+//      sitemap 約 60 個 URL、主站約 210 個，離配額很遠；仍設 MAX_URLS 上限，避免
+//      日後 sitemap 長大之後某週無聲把配額吃光。
 //
 // 純函式（sitemap 解析、統計、渲染）在 coverage.mjs，這裡只放有副作用的部分。
 
@@ -14,7 +14,7 @@ import { googlePost } from './google-auth.mjs';
 import { parseSitemapUrls, sitemapCandidates, summarizeCoverage } from './coverage.mjs';
 
 const INSPECT_ENDPOINT = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect';
-const MAX_URLS = Number(process.env.GROWTH_COVERAGE_MAX_URLS || 100);
+const MAX_URLS = Number(process.env.GROWTH_COVERAGE_MAX_URLS || 300);
 const CONCURRENCY = Number(process.env.GROWTH_COVERAGE_CONCURRENCY || 4);
 const MAX_CHILD_SITEMAPS = 5; // sitemap index 只往下展開這麼多個子 sitemap
 const FETCH_TIMEOUT_MS = 20_000;
