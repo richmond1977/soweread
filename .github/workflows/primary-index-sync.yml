@@ -1,0 +1,79 @@
+name: Primary article index sync
+
+# 主站（soweread.com）發新文章後，自動更新知識站的「潤讀主站文章索引」
+# （/reading、/en/reading，資料檔 src/data/primary-articles*.ts）。
+#
+# 做法：定時讀主站公開的 RSS（/feed.xml、/en/feed.xml），用
+# scripts/build-primary-article-index.mjs --from-feeds 重新產生資料檔；
+# 有變動就推到固定分支 automation/primary-index-sync 並開（或更新）PR。
+#
+# 為什麼是開 PR 而不是直接上線：計畫書 §8.2 要求公開發布經過 human review gate，
+# PR review 就是那道關卡（docs/growth-content-evaluation.md）。合併後 Vercel 照常部署。
+#
+# 只取標題、網址與發布日期，不取主站內文。
+#
+# 前置設定（repo 管理員一次性）：Settings → Actions → General →
+# Workflow permissions 勾選「Allow GitHub Actions to create and approve pull requests」，
+# 否則推分支會成功、開 PR 那一步會失敗（log 會提示）。
+
+on:
+  schedule:
+    # 每 3 小時檢查一次（UTC）。
+    - cron: "23 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: primary-index-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH: automation/primary-index-sync
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Rebuild the index from soweread.com feeds
+        run: node scripts/build-primary-article-index.mjs --from-feeds
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- src/data/primary-articles.ts src/data/primary-articles-en.ts; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "索引沒有變動。"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat
+          fi
+
+      - name: Push branch and open or update the PR
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git add src/data/primary-articles.ts src/data/primary-articles-en.ts
+          git commit -m "Sync the primary article index from soweread.com feeds"
+          git push --force origin "$BRANCH"
+
+          if [ -n "$(gh pr list --head "$BRANCH" --state open --json number --jq '.[].number')" ]; then
+            echo "已更新既有的同步 PR。"
+          else
+            gh pr create --head "$BRANCH" --base main \
+              --title "同步潤讀主站文章索引" \
+              --body "排程讀取 soweread.com 的 /feed.xml 與 /en/feed.xml，重新產生 \`src/data/primary-articles.ts\` 與 \`primary-articles-en.ts\`（只含標題、網址與發布日期）。
+
+          請檢視 diff：新文章的分組若落在「其他」，到 \`scripts/build-primary-article-index.mjs\` 的 GROUP_RULES 補關鍵字。合併後 Vercel 會部署，/reading 與 /en/reading 隨之更新。" \
+              || { echo "::error::開 PR 失敗。請 repo 管理員到 Settings → Actions → General 開啟「Allow GitHub Actions to create and approve pull requests」，或手動從分支 $BRANCH 開 PR。"; exit 1; }
+          fi

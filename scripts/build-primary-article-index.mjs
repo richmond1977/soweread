@@ -14,6 +14,13 @@
  *
  *   SOWEREAD_WEB_DIR=../Soweread_Web npm run build:primary-index
  *
+ * 也可以改讀主站公開的 RSS（中文 /feed.xml、英文 /en/feed.xml，兩者都列出全部文章）：
+ *
+ *   npm run build:primary-index -- --from-feeds
+ *
+ * GitHub Actions 的 primary-index-sync.yml 就是用這個模式定時檢查，有變動時開 PR，
+ * 合併前仍由人檢視 diff——自動化只負責「發現新文章並備好 PR」，不會讓內容直接上線。
+ *
  * 分組是確定性的關鍵字比對（以中文標題比對，先命中者勝），不是模型判斷；
  * 英文文章沿用對應中文文章的分組。比對不到的文章會落到「其他」並在執行時
  * 列出，由人決定要不要調整關鍵字表。
@@ -21,6 +28,7 @@
 
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 
 const WEB_DIR = path.resolve(process.env.SOWEREAD_WEB_DIR ?? path.join("..", "Soweread_Web"));
 const OUTPUT = path.join("src", "data", "primary-articles.ts");
@@ -66,6 +74,76 @@ function groupFor(title) {
   return "other";
 }
 
+const FROM_FEEDS = process.argv.includes("--from-feeds");
+
+const XML_ENTITIES = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" };
+
+/** 解 RSS 文字節點：CDATA 與 XML 實體（含數字實體）。 */
+export function decodeXmlText(raw) {
+  const cdata = raw.match(/^<!\[CDATA\[([\s\S]*)\]\]>$/);
+  if (cdata) return cdata[1];
+  return raw.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, name) => {
+    if (name[0] === "#") {
+      const code = name[1].toLowerCase() === "x" ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
+      return String.fromCodePoint(code);
+    }
+    return XML_ENTITIES[name.toLowerCase()] ?? whole;
+  });
+}
+
+/** 從 RSS 取出每篇的標題、連結與發布日期（UTC 日期；主站 pubDate 不帶時區，RSS 原樣輸出為 GMT）。 */
+export function parseFeedItems(xml) {
+  return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map(([, item]) => {
+    const field = (name) => {
+      const match = item.match(new RegExp(String.raw`<${name}>([\s\S]*?)</${name}>`));
+      return match ? decodeXmlText(match[1].trim()) : null;
+    };
+    const title = field("title");
+    const link = field("link");
+    const pubDate = field("pubDate");
+    if (!title || !link || !pubDate) throw new Error(`RSS 項目缺少 title、link 或 pubDate：${item.slice(0, 200)}`);
+    const date = new Date(pubDate);
+    if (Number.isNaN(date.getTime())) throw new Error(`無法解析 pubDate：${pubDate}`);
+    return { title, link, datePublished: date.toISOString().slice(0, 10) };
+  });
+}
+
+async function fetchFeed(url) {
+  const response = await fetch(url, { headers: { "user-agent": "soweread-knowledge-index-sync" } });
+  if (!response.ok) throw new Error(`讀取 ${url} 失敗：HTTP ${response.status}`);
+  const items = parseFeedItems(await response.text());
+  if (items.length === 0) throw new Error(`${url} 沒有任何文章，停止以免清空索引`);
+  return items;
+}
+
+/** 文章網址的 slug：https://soweread.com/<slug>/ 或 https://soweread.com/en/<slug>/。 */
+function slugOf(link) {
+  const parts = new URL(link).pathname.split("/").filter(Boolean);
+  return decodeURIComponent(parts[parts.length - 1]);
+}
+
+async function collectFromFeeds() {
+  const [zhItems, enItems] = await Promise.all([fetchFeed(`${SITE}/feed.xml`), fetchFeed(`${SITE}/en/feed.xml`)]);
+  const zhBySlug = new Map();
+  for (const item of zhItems) {
+    const slug = slugOf(item.link);
+    zhBySlug.set(slug, {
+      title: item.title,
+      url: `${SITE}/${encodeURI(slug)}/`,
+      datePublished: item.datePublished,
+      group: groupFor(item.title),
+    });
+  }
+  // 英文版的網址 slug 與中文原文相同（主站 posts-en/<slug>.md 的 source 一律等於檔名）。
+  const entriesEn = enItems.map((item) => {
+    const slug = slugOf(item.link);
+    const source = zhBySlug.get(slug);
+    if (!source) throw new Error(`英文文章 ${item.link} 對不到中文文章`);
+    return { title: item.title, url: `${SITE}/en/${encodeURI(slug)}/`, datePublished: source.datePublished, group: source.group };
+  });
+  return { zhBySlug, entriesEn, sourceLabel: `${SITE} 的 RSS` };
+}
+
 const byDateDesc = (a, b) => b.datePublished.localeCompare(a.datePublished) || a.url.localeCompare(b.url);
 
 function render(exportName, entries, note) {
@@ -83,7 +161,7 @@ export const ${exportName}: PrimaryArticle[] = ${JSON.stringify(entries, null, 2
 `;
 }
 
-function main() {
+function collectFromFiles() {
   const postsDir = path.join(WEB_DIR, "src", "content", "posts");
   const postsEnDir = path.join(WEB_DIR, "src", "content", "posts-en");
   if (!existsSync(postsDir)) {
@@ -105,8 +183,6 @@ function main() {
       group: groupFor(title),
     });
   }
-  const entries = [...zhBySlug.values()].sort(byDateDesc);
-
   const entriesEn = [];
   if (existsSync(postsEnDir)) {
     for (const name of readdirSync(postsEnDir).filter((f) => f.endsWith(".md"))) {
@@ -123,6 +199,12 @@ function main() {
       });
     }
   }
+  return { zhBySlug, entriesEn, sourceLabel: WEB_DIR };
+}
+
+async function main() {
+  const { zhBySlug, entriesEn, sourceLabel } = FROM_FEEDS ? await collectFromFeeds() : collectFromFiles();
+  const entries = [...zhBySlug.values()].sort(byDateDesc);
   entriesEn.sort(byDateDesc);
 
   writeFileSync(OUTPUT, render("primaryArticles", entries, "潤讀主站（https://soweread.com）的中文文章索引。"), "utf8");
@@ -136,7 +218,7 @@ function main() {
     acc[entry.group] = (acc[entry.group] ?? 0) + 1;
     return acc;
   }, {});
-  console.log(`主站：${WEB_DIR}`);
+  console.log(`主站：${sourceLabel}`);
   console.log(`中文：${entries.length} 篇 → ${OUTPUT}`);
   console.log(`英文：${entriesEn.length} 篇 → ${OUTPUT_EN}`);
   console.log("分組：", JSON.stringify(byGroup));
@@ -147,4 +229,7 @@ function main() {
   }
 }
 
-main();
+// 被測試 import 時不執行；直接用 node 執行才跑。
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  await main();
+}
