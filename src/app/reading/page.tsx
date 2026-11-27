@@ -5,6 +5,7 @@ import { PrimaryArticleIndexJsonLd } from "@/components/growth-json-ld";
 import { GrowthShell } from "@/components/growth-shell";
 import { primaryArticles } from "@/data/primary-articles";
 import { getGrowthKnowledge } from "@/lib/growth/knowledge";
+import { languageAlternates } from "@/lib/growth/locale";
 import { publishedTopics } from "@/lib/growth/knowledge-core";
 import { groupPrimaryArticles } from "@/lib/growth/primary-articles";
 
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: TITLE,
     description: DESCRIPTION,
-    alternates: { canonical: `${config.canonicalBaseUrl}/reading` },
+    alternates: languageAlternates(config.canonicalBaseUrl, "zh", "/reading"),
     robots: config.metaRobots,
     openGraph: {
       type: "website",
@@ -58,7 +59,7 @@ export default async function PrimaryArticleIndexPage() {
         description={DESCRIPTION}
         articles={primaryArticles}
       />
-      <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs}>
+      <GrowthShell isFixture={knowledge.isFixture} breadcrumbs={breadcrumbs} alternateHref="/en/reading">
         <h1>{TITLE}</h1>
         <p className="growth-lede">{DESCRIPTION}</p>
 

@@ -136,6 +136,9 @@ interface PrimaryArticleIndexJsonLdProps {
   name: string;
   description: string;
   articles: PrimaryArticle[];
+  /** 這一頁在本站的路徑；英文版是 /en/reading。 */
+  path?: string;
+  inLanguage?: string;
 }
 
 /**
@@ -151,8 +154,10 @@ export function PrimaryArticleIndexJsonLd({
   name,
   description,
   articles,
+  path = "/reading",
+  inLanguage = "zh-TW",
 }: PrimaryArticleIndexJsonLdProps) {
-  const url = `${baseUrl}/reading`;
+  const url = `${baseUrl}${path}`;
 
   return (
     <JsonLd
@@ -166,7 +171,7 @@ export function PrimaryArticleIndexJsonLd({
             url,
             name,
             description,
-            inLanguage: "zh-TW",
+            inLanguage,
             isPartOf: { "@id": `${baseUrl}/#website` },
             mainEntity: {
               "@type": "ItemList",

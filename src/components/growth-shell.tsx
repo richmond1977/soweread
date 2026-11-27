@@ -83,8 +83,8 @@ export function GrowthShell({
               也還在等收錄，等於整批名詞頁躲在爬蟲搆不到的深處。 */}
           <Link href={localePath(locale, "/entities")}>{ui.navGlossary}</Link>
           <Link href={localePath(locale, "/topics")}>{ui.navTopics}</Link>
-          {/* 「主站文章」整理的是主站的中文文章，英文版不列。 */}
-          {ui.navReading ? <Link href="/reading">{ui.navReading}</Link> : null}
+          {/* 「主站文章」：中文列主站中文文章，英文列主站英文版文章。 */}
+          {ui.navReading ? <Link href={localePath(locale, "/reading")}>{ui.navReading}</Link> : null}
           <a href={ui.primaryUrl} rel="noopener">
             {ui.navPrimary}
           </a>

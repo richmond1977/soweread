@@ -63,8 +63,8 @@ async function growthSitemap(baseUrl: string): Promise<MetadataRoute.Sitemap> {
     ...pair("/", { ...siteModified, changeFrequency: "weekly", priority: 1 }, true),
     ...pair("/topics", { ...siteModified, changeFrequency: "weekly", priority: 0.9 }, true),
     ...pair("/entities", { ...siteModified, changeFrequency: "weekly", priority: 0.9 }, true),
-    // /reading lists the primary site's WordPress posts; we hold no change date for it.
-    { url: `${baseUrl}/reading`, changeFrequency: "weekly", priority: 0.6 },
+    // /reading and /en/reading list the primary site's articles; we hold no change date for them.
+    ...pair("/reading", { changeFrequency: "weekly", priority: 0.6 }, true),
     ...publishedTopics(knowledge).flatMap((topic) =>
       pair(
         `/topics/${topic.slug}`,
