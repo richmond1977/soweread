@@ -12,6 +12,12 @@ import type { PrimaryArticle } from "@/lib/growth/primary-articles";
  */
 export const primaryArticles: PrimaryArticle[] = [
   {
+    "title": "香草莢全攻略：台灣香草vs.馬達加斯加香草評比、真假辨識與保存秘訣",
+    "url": "https://soweread.com/vanilla-bean-guide/",
+    "datePublished": "2026-11-27",
+    "group": "produce"
+  },
+  {
     "title": "產蛋率僅 52%？台灣蛋荒背後的真相：從天災、黑市到進口蛋風波，一顆雞蛋引爆的產業轉型危機",
     "url": "https://soweread.com/%e7%94%a2%e8%9b%8b%e7%8e%87%e5%83%85-52%ef%bc%9f%e5%8f%b0%e7%81%a3%e8%9b%8b%e8%8d%92%e8%83%8c%e5%be%8c%e7%9a%84%e7%9c%9f%e7%9b%b8%ef%bc%9a%e5%be%9e%e5%a4%a9%e7%81%bd%e3%80%81%e9%bb%91%e5%b8%82/",
     "datePublished": "2026-09-25",
