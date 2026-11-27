@@ -140,10 +140,10 @@ export const growthContentEn: GrowthContentEn = {
       aliases: ["One Health approach"],
       description:
         "One Health is an integrated framework that treats human health, animal health and ecosystem health as interdependent. The OHHLEP definition cited by WOAH is “an integrated, unifying approach that aims to sustainably balance and optimize the health of people, animals and ecosystems”. Taiwan’s 2025 action plan on antimicrobial resistance uses One Health as the framework for cooperation across government agencies.",
-      seoTitle: "One Health: Definition and How Taiwan Applies It",
+      seoTitle: "What Is One Health? Definition and How Taiwan Applies It",
       seoDescription:
-        "The OHHLEP definition of One Health, and how Taiwan uses the framework to coordinate antimicrobial resistance work across government agencies.",
-      zhDigest: "8ff967a5",
+        "One Health manages the health of people, animals and the environment as one problem: drug-resistant bacteria move between all three, so guarding only one side cannot stop them. The international definition, and how Taiwan uses it to coordinate antimicrobial resistance work across ministries.",
+      zhDigest: "c68ee1b5",
     },
     iarc: {
       name: "International Agency for Research on Cancer (IARC)",

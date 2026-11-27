@@ -105,5 +105,8 @@ export const digestTopic = (t: ZhTopic) =>
   zhDigest([t.name, t.summary, t.definition, t.keyQuestions, t.seoTitle, t.seoDescription]);
 export const digestEntity = (e: ZhEntity) =>
   zhDigest([e.name, e.aliases, e.description, e.seoTitle, e.seoDescription]);
-export const digestRelation = (r: ZhRelation) => zhDigest([r.predicate, r.note]);
+/** 讀者指南：連結不列入，英文版刻意只連到有英文版的頁面。 */
+export const digestReaderGuide = (g: { title: string; introduction: string; sections: unknown; questions: unknown }) =>
+  zhDigest([g.title, g.introduction, g.sections, g.questions]);
+export const digestRelation =(r: ZhRelation) => zhDigest([r.predicate, r.note]);
 export const digestSource = (s: ZhSource) => zhDigest([s.title, s.publisher, s.note]);

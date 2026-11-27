@@ -5,6 +5,7 @@ import { EntityJsonLd } from "@/components/growth-json-ld";
 import { EntityReaderGuide } from "@/components/entity-reader-guide";
 import { GrowthShell, PrimaryCta, SourceList } from "@/components/growth-shell";
 import { findEntityReaderGuide } from "@/data/entity-reader-guides";
+import { findEnglishReaderGuide } from "@/data/entity-reader-guides-en";
 import { entityTypeLabel, splitEntityDescription } from "@/lib/growth/entity-type-label";
 import { getLocalizedKnowledge, growthContentEn } from "@/lib/growth/knowledge-locale";
 import {
@@ -120,8 +121,9 @@ export async function EntityPageView({ locale, slug }: { locale: GrowthLocale; s
   const relations = publicRelationsForEntity(knowledge, entity.slug);
   const articles = articlesForEntity(knowledge, entity.slug);
   const sources = sourcesByIds(knowledge, entity.sourceIds);
-  // 讀者指南（含表格與步驟）目前只有中文：英文頁只放一行指引連過去。
+  // 讀者指南（含表格與步驟）：英文頁用英文版；還沒翻譯的才放一行指引連到中文版。
   const readerGuide = findEntityReaderGuide(entity.slug);
+  const englishGuide = locale === "en" ? findEnglishReaderGuide(entity.slug) : undefined;
   const typeLabel = entityTypeLabel(entity.entityType);
   const description = splitEntityDescription(entity.description);
   const path = `/entities/${entity.slug}`;
@@ -218,7 +220,8 @@ export async function EntityPageView({ locale, slug }: { locale: GrowthLocale; s
             ) : null}
 
             {readerGuide && locale === "zh" ? <EntityReaderGuide guide={readerGuide} /> : null}
-            {readerGuide && locale === "en" ? (
+            {englishGuide ? <EntityReaderGuide guide={englishGuide} locale="en" /> : null}
+            {readerGuide && locale === "en" && !englishGuide ? (
               <p className="growth-parent-topic">
                 {text.guideInChinese}{" "}
                 <Link href={`${path}#reader-guide-title`} hrefLang="zh-Hant-TW">

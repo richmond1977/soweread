@@ -100,3 +100,42 @@ test("沒有英文翻譯的名詞不會出現在英文版（fail closed）", () 
   const en = localizeKnowledge(growthContent, "en", { ...growthContentEn, entities: rest });
   assert.ok(!en.entities.some((e) => e.slug === "glyphosate"));
 });
+
+test("每份中文讀者指南都有英文版，中文摘要一致，結構與中文對齊", async () => {
+  const { entityReaderGuides, readerGuideSources, nutritionTeachingExamples, sodiumForGrams } = await import("./entity-reader-guides.ts");
+  const { entityReaderGuidesEn, readerGuideSourcesEn } = await import("./entity-reader-guides-en.ts");
+  const { digestReaderGuide } = await import("../lib/growth/localize.ts");
+  assert.deepEqual(Object.keys(entityReaderGuidesEn).sort(), entityReaderGuides.map((g) => g.slug).sort());
+  for (const zh of entityReaderGuides) {
+    const en = entityReaderGuidesEn[zh.slug];
+    assert.equal(en.slug, zh.slug);
+    assert.equal(en.zhDigest, digestReaderGuide(zh), `讀者指南 ${zh.slug} 的中文已修改，英文需要同步更新`);
+    assert.deepEqual(en.sections.map((s) => s.id), zh.sections.map((s) => s.id), `${zh.slug}: 章節不一致`);
+    en.sections.forEach((section, index) => {
+      const zhSection = zh.sections[index];
+      assert.deepEqual(section.sourceIds, zhSection.sourceIds, `${zh.slug}/${section.id}: 來源不一致`);
+      assert.equal(section.paragraphs.length, zhSection.paragraphs.length, `${zh.slug}/${section.id}: 段落數不一致`);
+      assert.equal(section.steps?.length, zhSection.steps?.length, `${zh.slug}/${section.id}: 步驟數不一致`);
+      assert.equal(section.table?.rows.length, zhSection.table?.rows.length, `${zh.slug}/${section.id}: 表格列數不一致`);
+      if (section.table) for (const row of section.table.rows) assert.equal(row.length, section.table.columns.length);
+    });
+    assert.equal(en.questions.length, zh.questions.length, `${zh.slug}: 問答數不一致`);
+    for (const link of en.links) {
+      const match = link.href.match(/^\/en\/(entities|topics)\/([a-z0-9-]+)$/);
+      assert.ok(match, `${zh.slug}: 英文連結必須指向 /en/entities 或 /en/topics：${link.href}`);
+      const pool = match[1] === "entities" ? growthContentEn.entities : growthContentEn.topics;
+      assert.ok(pool[match[2]], `${zh.slug}: 連結目標沒有英文版：${link.href}`);
+      if (match[1] === "entities") assert.ok(publishedSlugs.has(match[2]), `${zh.slug}: 連結目標未發布：${link.href}`);
+    }
+  }
+  for (const source of readerGuideSources) assert.ok(readerGuideSourcesEn[source.id], `指南來源 ${source.id} 缺英文標題`);
+  const table = entityReaderGuidesEn["nutrition-facts-label"].sections.find((s) => s.id === "compare-same-weight")?.table;
+  nutritionTeachingExamples.forEach((example, index) => {
+    assert.deepEqual(table?.rows[index].slice(1), [
+      `${example.servingGrams} g`,
+      `${example.sodiumMgPerServing} mg`,
+      `${sodiumForGrams(example.sodiumMgPerServing, example.servingGrams, 100)} mg`,
+      `${sodiumForGrams(example.sodiumMgPerServing, example.servingGrams, 60)} mg`,
+    ]);
+  });
+});
