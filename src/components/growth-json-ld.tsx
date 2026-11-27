@@ -48,13 +48,13 @@ function organizationNode(baseUrl: string) {
     },
     // 站外帳號的實體對應（Growth Plan §26 GEO Citation Optimization）：讓搜尋引擎與
     // AI 系統把這些帳號跟同一個「潤讀」實體綁在一起，而不是各自獨立、無關聯的頁面。
-    // 網址皆已實際解析驗證過（2026-09-05）；Facebook／Vocus 兩個是經營者 Winslet
-    // Chang（同時是站上文章的作者/審閱者）的個人帳號，非品牌粉專——Richmond 已
-    // 確認這是刻意的發文方式，不是誤貼連結。
+    // 網址已實際解析驗證過（2026-09-05）；Facebook 是經營者 Winslet Chang（同時是
+    // 站上文章的作者/審閱者）的個人帳號，非品牌粉專——Richmond 已確認這是刻意的
+    // 發文方式，不是誤貼連結。Substack 是潤讀的電子報（2026-11-27 加入）；Dcard、
+    // 方格子已於同日停止列出。
     sameAs: [
-      "https://www.dcard.tw/@soweread",
       "https://www.facebook.com/people/Winslet-Chang/61560169946019/",
-      "https://vocus.cc/user/@soweread",
+      "https://soweread.substack.com/",
     ],
   };
 }
