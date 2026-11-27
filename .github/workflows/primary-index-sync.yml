@@ -18,8 +18,9 @@ name: Primary article index sync
 
 on:
   schedule:
-    # 每 3 小時檢查一次（UTC）。
-    - cron: "23 */3 * * *"
+    # 每週一、四台灣時間 09:23 檢查一次（cron 用 UTC，即週一、四 01:23）。
+    # 發文當下要更新的話，到 Actions 頁手動執行 Run workflow。
+    - cron: "23 1 * * 1,4"
   workflow_dispatch:
 
 permissions:
