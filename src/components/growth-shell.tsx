@@ -136,14 +136,11 @@ export function GrowthShell({
           </p>
           <p className="growth-footer-follow">
             {ui.footerFollow}
-            <a href="https://www.dcard.tw/@soweread" rel="noopener" target="_blank">
-              Dcard
-            </a>
             <a href="https://www.facebook.com/people/Winslet-Chang/61560169946019/" rel="noopener" target="_blank">
               Facebook
             </a>
-            <a href="https://vocus.cc/user/@soweread" rel="noopener" target="_blank">
-              {locale === "en" ? "Vocus" : "方格子"}
+            <a href="https://soweread.substack.com/" rel="noopener" target="_blank">
+              Substack
             </a>
           </p>
         </div>
