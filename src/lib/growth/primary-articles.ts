@@ -24,6 +24,9 @@ export type PrimaryArticle = {
 export type PrimaryArticleSection = {
   group: PrimaryArticleGroup;
   name: string;
+  /** 英文版 /en/reading 用的名稱與說明。 */
+  nameEn: string;
+  introEn: string;
   /** 這一群在讀什麼、為什麼放在一起。索引頁的編輯價值來自這幾句話。 */
   intro: string;
   /** 對應的知識站主題，讓索引頁連得回站內內容（計畫書 §9.2）。 */
@@ -35,6 +38,9 @@ const SECTION_DEFINITIONS: Omit<PrimaryArticleSection, "articles">[] = [
   {
     group: "pesticides-and-veterinary-drugs",
     name: "農藥、動物用藥與抗藥性",
+    nameEn: "Pesticides, veterinary drugs and resistance",
+    introEn:
+      "From herbicide residues to drugs used on livestock and poultry, these articles ask what is used, how much residue remains and who regulates it. Read them alongside the matching topic page here for the legal definitions.",
     intro:
       "從除草劑殘留到畜禽用藥，這一組談的是「用了什麼、殘留多少、誰在管」。想先弄清楚法規怎麼定義的，可以搭配知識站的主題頁一起看。",
     topicSlug: "pesticides-and-veterinary-drugs",
@@ -42,6 +48,9 @@ const SECTION_DEFINITIONS: Omit<PrimaryArticleSection, "articles">[] = [
   {
     group: "food-production",
     name: "飼養方式與生產現場",
+    nameEn: "How food is produced and animals are raised",
+    introEn:
+      "How laying hens are kept, how avian flu is controlled and how welfare-friendly farming differs from conventional systems. These are mostly reports from the industry; the legal definitions are on the topic pages here.",
     intro:
       "蛋雞怎麼養、禽流感怎麼防、友善生產跟一般飼養差在哪。這一組多半寫的是產業現場，法規上的定義在知識站的主題頁。",
     topicSlug: "food-production",
@@ -49,6 +58,9 @@ const SECTION_DEFINITIONS: Omit<PrimaryArticleSection, "articles">[] = [
   {
     group: "gmo",
     name: "基因改造與基因編輯",
+    nameEn: "Genetic modification and gene editing",
+    introEn:
+      "From bulk imported ingredients to CRISPR and gene flow, these articles span science, regulation and international trade, one of the largest series on So We Read.",
     intro:
       "從大宗進口原料到 CRISPR 與基因逃逸，這一組橫跨科學、法規與國際貿易，是主站篇數最多的系列之一。",
     topicSlug: "food-labeling",
@@ -56,24 +68,36 @@ const SECTION_DEFINITIONS: Omit<PrimaryArticleSection, "articles">[] = [
   {
     group: "produce",
     name: "產地、品種與挑選",
-    intro: "洋蔥、青蔥與土雞的品種、產地、產銷歷程與挑選方式，偏向實用與產業觀察。",
+    nameEn: "Origins, varieties and how to choose",
+    introEn:
+      "Varieties, origins, supply chains and buying tips for onions, scallions, native chicken, eggs and spices such as pepper and vanilla: practical guides and industry observations.",
+    intro: "洋蔥、青蔥、土雞、雞蛋與胡椒、香草等香料的品種、產地、產銷歷程與挑選方式，偏向實用與產業觀察。",
     topicSlug: null,
   },
   {
     group: "eating-out",
     name: "外食與營養",
+    nameEn: "Eating out and nutrition",
+    introEn:
+      "How often people eat out, balanced plates, the psychology of eating and metabolism: starting from the everyday table, these articles look at effects that build up over time.",
     intro: "外食比例、營養餐盤、飲食心理與代謝。這一組從日常餐桌出發，談的是長期累積的影響。",
     topicSlug: "nutrition-and-eating-out",
   },
   {
     group: "food-safety-culture",
     name: "餐飲文化與食安",
+    nameEn: "Food culture and food safety",
+    introEn:
+      "Hygiene at night markets, street food stalls and chain restaurants, and the trade-offs behind food culture that are easy to overlook.",
     intro: "夜市、街頭美食與連鎖餐廳的衛生條件，以及美食文化背後容易被忽略的取捨。",
     topicSlug: null,
   },
   {
     group: "other",
     name: "其他",
+    nameEn: "Other",
+    introEn:
+      "Articles not yet placed in one of the groups above.",
     intro: "尚未歸入上列主題的文章。",
     topicSlug: null,
   },

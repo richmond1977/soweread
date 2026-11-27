@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { primaryArticles } from "../../data/primary-articles.ts";
+import { primaryArticlesEn } from "../../data/primary-articles-en.ts";
 import type { PrimaryArticle } from "./primary-articles.ts";
 import { groupPrimaryArticles, primaryArticlesForTopic } from "./primary-articles.ts";
 
@@ -131,4 +132,23 @@ test("「其他」分組不會被當成任何主題的延伸閱讀", () => {
 
 test("真實索引：外食主題至少挑得出 5 篇主站外食文章", () => {
   assert.ok(primaryArticlesForTopic(primaryArticles, "nutrition-and-eating-out").length >= 5);
+});
+
+test("英文索引同樣只有四個欄位、指向主站 /en/ 下的文章頁，且網址不重複", () => {
+  assert.ok(primaryArticlesEn.length > 0, "英文索引是空的");
+  for (const article of primaryArticlesEn) {
+    assert.deepEqual(Object.keys(article).sort(), [...ALLOWED_FIELDS].sort(), `「${article.title}」帶了預期外的欄位`);
+    const url = new URL(article.url);
+    assert.equal(url.hostname, "soweread.com", `「${article.title}」不是指向主站`);
+    assert.ok(url.pathname.startsWith("/en/") && url.pathname !== "/en/", `「${article.title}」不是主站英文文章頁`);
+    assert.match(article.datePublished, DATE_PATTERN, `「${article.title}」的日期格式不合法`);
+  }
+  const urls = primaryArticlesEn.map((article) => article.url);
+  assert.equal(new Set(urls).size, urls.length, "英文索引裡有重複的網址");
+});
+
+test("每一組都有英文名稱與說明", () => {
+  for (const section of groupPrimaryArticles([...primaryArticles, ...primaryArticlesEn])) {
+    assert.ok(section.nameEn.length > 0 && section.introEn.length > 0, `${section.name} 缺少英文名稱或說明`);
+  }
 });

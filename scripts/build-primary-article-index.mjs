@@ -1,25 +1,31 @@
 /**
- * 由主站快照產生「潤讀主站文章索引」的資料檔。
+ * 由主站原始檔產生「潤讀主站文章索引」的資料檔（中文與英文各一份）。
  *
  * 只取標題、網址與發布日期——**不取任何內文**。計畫書 §8.2 禁止把主站
  * 全文或改寫版發布到 growth 站；標題與連結屬於 §11 允許的導流方式。
  *
- * 輸出是版控裡的 TypeScript 檔而不是執行期讀取快照，理由是計畫書 §8.2
+ * 輸出是版控裡的 TypeScript 檔而不是執行期讀取主站，理由是計畫書 §8.2
  * 要求公開發布必須經過 human review gate——產生的檔案會出現在 PR diff 裡，
  * 那就是那道關卡。排程同步不得直接讓內容上線。
  *
- *   npm run backup:wordpress          # 先更新快照
- *   node scripts/build-primary-article-index.mjs
+ * 來源是主站 Astro repo（WordPress 已下線，舊的 wordpress-backup 快照不再更新）：
+ *   中文 src/content/posts/<slug>/index.md → https://soweread.com/<slug>/
+ *   英文 src/content/posts-en/<slug>.md    → https://soweread.com/en/<slug>/
  *
- * 分組是確定性的關鍵字比對（先命中者勝），不是模型判斷；比對不到的文章
- * 會落到「其他」並在執行時列出，由人決定要不要調整關鍵字表。
+ *   SOWEREAD_WEB_DIR=../Soweread_Web npm run build:primary-index
+ *
+ * 分組是確定性的關鍵字比對（以中文標題比對，先命中者勝），不是模型判斷；
+ * 英文文章沿用對應中文文章的分組。比對不到的文章會落到「其他」並在執行時
+ * 列出，由人決定要不要調整關鍵字表。
  */
 
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
-const BACKUP_ROOT = path.join("data", "wordpress-backup");
+const WEB_DIR = path.resolve(process.env.SOWEREAD_WEB_DIR ?? path.join("..", "Soweread_Web"));
 const OUTPUT = path.join("src", "data", "primary-articles.ts");
+const OUTPUT_EN = path.join("src", "data", "primary-articles-en.ts");
+const SITE = "https://soweread.com";
 
 /** 先命中者勝，順序即優先序。 */
 const GROUP_RULES = [
@@ -32,7 +38,10 @@ const GROUP_RULES = [
     group: "food-production",
     keywords: ["格子籠", "平飼", "放牧", "蛋雞", "養雞", "飼養", "禽流感", "H5N1", "蛋荒", "溫室", "有機"],
   },
-  { group: "produce", keywords: ["洋蔥", "青蔥", "三星蔥", "蔬果", "土雞", "香草", "胡椒", "香料"] },
+  {
+    group: "produce",
+    keywords: ["洋蔥", "青蔥", "三星蔥", "蔬果", "土雞", "香草", "胡椒", "香料", "雞蛋", "好蛋", "洗選蛋"],
+  },
   {
     group: "eating-out",
     keywords: ["外食", "營養", "餐盤", "飢餓", "代謝", "鹹", "飲食陷阱", "飲食文化", "減重"],
@@ -40,30 +49,14 @@ const GROUP_RULES = [
   { group: "food-safety-culture", keywords: ["夜市", "街頭美食", "餐廳", "食安", "賣相", "美食"] },
 ];
 
-function latestSnapshotDir() {
-  const entries = readdirSync(BACKUP_ROOT, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-
-  if (entries.length === 0) {
-    throw new Error(`${BACKUP_ROOT} 底下沒有任何快照，請先執行 npm run backup:wordpress`);
-  }
-  return path.join(BACKUP_ROOT, entries[entries.length - 1]);
-}
-
-/** WordPress 的 rendered 標題帶 HTML entity，這裡只還原實際會用到的幾個。 */
-function decodeTitle(value) {
-  return value
-    .replace(/&amp;/g, "&")
-    .replace(/&#8211;/g, "–")
-    .replace(/&#8217;/g, "’")
-    .replace(/&#8220;/g, "“")
-    .replace(/&#8221;/g, "”")
-    .replace(/&hellip;/g, "…")
-    .replace(/&nbsp;/g, " ")
-    .replace(/<[^>]+>/g, "")
-    .trim();
+/** 讀 Markdown frontmatter 的單行字串欄位（主站的 title / pubDate / source 都是單行）。 */
+function frontmatterField(text, field) {
+  const fm = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!fm) return null;
+  const line = fm[1].match(new RegExp(`^${field}:\s*(.*)$`, "m"));
+  if (!line) return null;
+  const raw = line[1].trim();
+  return raw.startsWith('"') ? JSON.parse(raw) : raw.replace(/^'(.*)'$/, "$1");
 }
 
 function groupFor(title) {
@@ -73,45 +66,81 @@ function groupFor(title) {
   return "other";
 }
 
+const byDateDesc = (a, b) => b.datePublished.localeCompare(a.datePublished) || a.url.localeCompare(b.url);
+
+function render(exportName, entries, note) {
+  return `import type { PrimaryArticle } from "@/lib/growth/primary-articles";
+
+/**
+ * ${note}
+ *
+ * 由 \`scripts/build-primary-article-index.mjs\` 從主站原始檔產生，請勿手動編輯——
+ * 更新方式是重跑 npm run build:primary-index，並在 PR 裡檢視 diff。
+ *
+ * 只保存標題、網址與發布日期，不含任何內文。
+ */
+export const ${exportName}: PrimaryArticle[] = ${JSON.stringify(entries, null, 2)};
+`;
+}
+
 function main() {
-  const dir = latestSnapshotDir();
-  const posts = JSON.parse(readFileSync(path.join(dir, "posts.json"), "utf8"));
+  const postsDir = path.join(WEB_DIR, "src", "content", "posts");
+  const postsEnDir = path.join(WEB_DIR, "src", "content", "posts-en");
+  if (!existsSync(postsDir)) {
+    throw new Error(`找不到主站文章資料夾 ${postsDir}，請用 SOWEREAD_WEB_DIR 指定主站 repo 的位置`);
+  }
 
-  const entries = posts
-    .map((post) => ({
-      title: decodeTitle(post.title.rendered),
-      url: post.link,
-      datePublished: post.date.slice(0, 10),
-      group: groupFor(decodeTitle(post.title.rendered)),
-    }))
-    .sort((a, b) => b.datePublished.localeCompare(a.datePublished));
+  const zhBySlug = new Map();
+  for (const slug of readdirSync(postsDir)) {
+    const file = path.join(postsDir, slug, "index.md");
+    if (!existsSync(file)) continue;
+    const text = readFileSync(file, "utf8");
+    const title = frontmatterField(text, "title");
+    const date = frontmatterField(text, "pubDate");
+    if (!title || !date) throw new Error(`${file} 缺少 title 或 pubDate`);
+    zhBySlug.set(slug, {
+      title,
+      url: `${SITE}/${encodeURI(slug)}/`,
+      datePublished: date.slice(0, 10),
+      group: groupFor(title),
+    });
+  }
+  const entries = [...zhBySlug.values()].sort(byDateDesc);
 
-  const ungrouped = entries.filter((entry) => entry.group === "other");
+  const entriesEn = [];
+  if (existsSync(postsEnDir)) {
+    for (const name of readdirSync(postsEnDir).filter((f) => f.endsWith(".md"))) {
+      const text = readFileSync(path.join(postsEnDir, name), "utf8");
+      const slug = name.replace(/\.md$/, "");
+      const source = zhBySlug.get(frontmatterField(text, "source") ?? slug);
+      const title = frontmatterField(text, "title");
+      if (!source || !title) throw new Error(`${name} 的 source 或 title 對不到中文文章`);
+      entriesEn.push({
+        title,
+        url: `${SITE}/en/${encodeURI(slug)}/`,
+        datePublished: source.datePublished,
+        group: source.group,
+      });
+    }
+  }
+  entriesEn.sort(byDateDesc);
+
+  writeFileSync(OUTPUT, render("primaryArticles", entries, "潤讀主站（https://soweread.com）的中文文章索引。"), "utf8");
+  writeFileSync(
+    OUTPUT_EN,
+    render("primaryArticlesEn", entriesEn, "潤讀主站英文版（https://soweread.com/en/）的文章索引，分組沿用對應的中文文章。"),
+    "utf8"
+  );
+
   const byGroup = entries.reduce((acc, entry) => {
     acc[entry.group] = (acc[entry.group] ?? 0) + 1;
     return acc;
   }, {});
-
-  const body = `import type { PrimaryArticle } from "@/lib/growth/primary-articles";
-
-/**
- * 潤讀主站（https://soweread.com）的文章索引。
- *
- * 由 \`scripts/build-primary-article-index.mjs\` 從主站快照產生，請勿手動編輯——
- * 更新方式是重跑 npm run backup:wordpress 之後再跑該腳本，並在 PR 裡檢視 diff。
- *
- * 只保存標題、網址與發布日期，不含任何內文。
- *
- * 快照來源：${dir.replace(/\\\\/g, "/")}
- */
-export const primaryArticles: PrimaryArticle[] = ${JSON.stringify(entries, null, 2)};
-`;
-
-  writeFileSync(OUTPUT, body, "utf8");
-
-  console.log(`快照：${dir}`);
-  console.log(`文章：${entries.length} 篇 → ${OUTPUT}`);
+  console.log(`主站：${WEB_DIR}`);
+  console.log(`中文：${entries.length} 篇 → ${OUTPUT}`);
+  console.log(`英文：${entriesEn.length} 篇 → ${OUTPUT_EN}`);
   console.log("分組：", JSON.stringify(byGroup));
+  const ungrouped = entries.filter((entry) => entry.group === "other");
   if (ungrouped.length > 0) {
     console.log(`\n未分組 ${ungrouped.length} 篇，請檢查關鍵字表：`);
     for (const entry of ungrouped) console.log(`  - ${entry.title}`);

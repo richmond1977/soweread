@@ -86,7 +86,7 @@ export const UI = {
     navAria: "Main navigation",
     navGlossary: "Glossary",
     navTopics: "Topics",
-    navReading: "",
+    navReading: "Articles",
     navPrimary: "So We Read",
     breadcrumbAria: "Breadcrumb",
     home: "Home",
